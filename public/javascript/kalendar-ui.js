@@ -3,6 +3,10 @@ var Kalendar = {
   title:null,
   startFolio:null,
   endFolio:null,
+  startFolioNum:null,
+  startFolioSide:null,
+  endFolioNum:null,
+  endFolioSide:null,
 
   readCreateMs: function(e, theForm) {
     e.preventDefault();
@@ -10,6 +14,8 @@ var Kalendar = {
     $.each(data, function(){
       Kalendar[this.name] = this.value;
     });
+    Kalendar.createFolios(Kalendar.startFolio, Kalendar.endFolio)
+    console.log(Kalendar)
   },
 
   start: function(div_id) {
@@ -31,7 +37,40 @@ var Kalendar = {
     });
   },
 
+  folioLessThan: function(first, second) {
+    var firstLower = first.toLowerCase();
+    var secondLower = second.toLowerCase();
+    var patt = /(\d+)([rv])/;
+    var firstResult = firstLower.match(patt);
+    var secondResult  = secondLower.match(patt);
+    var firstNum = Number(firstResult[1]);
+    var secondNum = Number(secondResult[1])
+    if (firstNum == secondNum) {
+      return firstResult[2] < secondResult[2];
+    } else {
+      return firstNum < secondNum
+    }
+  },
+
   createFolios: function(startFolio, endFolio) {
-    
+    startLower = $.trim(startFolio).toLowerCase();
+    endLower = $.trim(endFolio).toLowerCase();
+    var patt = /(\d+)([rv])/i;
+    var folios = [];
+    folios.push(startLower)
+    while(Kalendar.folioLessThan(folios[folios.length-1], endLower)) {
+      var last = folios[folios.length-1];
+      var result = last.match(patt);
+      var num = result[1];
+      var side = result[2];
+      var next = '';
+      if (side == 'v') {
+        next = String(Number(num) + 1) + 'r';
+      } else {
+        next = String(num) + 'v';
+      }
+      folios.push(next);
+    }
+    Kalendar.folios = folios
   },
 }
