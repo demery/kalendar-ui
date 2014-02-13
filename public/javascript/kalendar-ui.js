@@ -3,10 +3,9 @@ var Kalendar = {
   title:null,
   startFolio:null,
   endFolio:null,
-  startFolioNum:null,
-  startFolioSide:null,
-  endFolioNum:null,
-  endFolioSide:null,
+  folios: null,
+  columnTypes: { month: "Month", day: "Day", goldenNumber: "Golden number", 
+    dominicalLetter: "Domminical letter", gregorianDate: "Gregorian date", item: "Item" },
 
   readCreateMs: function(e, theForm) {
     e.preventDefault();
@@ -24,6 +23,7 @@ var Kalendar = {
       .append("<label>Title</label><input type='text' name='title'/><br/>")
       .append("<label>First calendar folio (e.g., 4r)</label><input type='text' name='startFolio'/><br/>")
       .append("<label>Last calendar folio (e.g., 10v)</label><input type='text' name='endFolio'/><br/>")
+      .append(Kalendar.columnSelects(Object.keys(this.columnTypes).length))
       .append("<input type='submit' value='Submit'/>");
     $(div_id).append(msForm);
     $('#create-ms').submit(this.readCreateMs);
@@ -73,4 +73,34 @@ var Kalendar = {
     }
     Kalendar.folios = folios
   },
+
+  columnSelects: function(count) {
+    s = '';
+    for (i=1; i <= count; i++) {
+      s += this.columnSelect(i);
+    }
+    return s;
+  },
+
+  columnSelect: function(columnNumber) {
+    s = "<label>Column "
+    s += columnNumber
+    s += "</label> "
+    s += "<select name='column";
+    s += String(columnNumber);
+    s += "'>";
+    s += this.columnOptions();
+    s += "</select>";
+    s += "<br/>";
+    return s;
+  },
+
+  columnOptions: function() {
+    opts = [];
+    opts.push("<option/>")
+    $.each(Kalendar.columnTypes, function(k,v) {
+      opts.push("<option value='" + k + "'>" + v + "</option>");
+    });
+    return opts.join();
+  }
 }
