@@ -4,6 +4,7 @@ var Kalendar = {
   startFolio:null,
   endFolio:null,
   folios: null,
+  currFolioIndex: null,
   columnTypes: { month: "Month", day: "Day", goldenNumber: "Golden number", 
     dominicalLetter: "Domminical letter", gregorianDate: "Gregorian date", item: "Item" },
 
@@ -13,18 +14,19 @@ var Kalendar = {
     $.each(data, function(){
       Kalendar[this.name] = this.value;
     });
-    Kalendar.createFolios(Kalendar.startFolio, Kalendar.endFolio)
-    console.log(Kalendar)
+    Kalendar.createFolios(Kalendar.startFolio, Kalendar.endFolio);
+    var id = $(this).parent('div').attr('id');
+    Kalendar.nextFolio($(this).parent('div').attr('id'));
   },
 
   start: function(div_id) {
     msForm = $('<form id="create-ms">')
-      .append("<label>Shelfmark</label><input type='text' name='shelfmark'/><br/>")
-      .append("<label>Title</label><input type='text' name='title'/><br/>")
-      .append("<label>First calendar folio (e.g., 4r)</label><input type='text' name='startFolio'/><br/>")
-      .append("<label>Last calendar folio (e.g., 10v)</label><input type='text' name='endFolio'/><br/>")
+      .append("<label>Shelfmark</label> <input type='text' name='shelfmark'/><br/>")
+      .append("<label>Title</label> <input type='text' name='title'/><br/>")
+      .append("<label>First calendar folio (e.g., 4r)</label> <input type='text' name='startFolio'/><br/>")
+      .append("<label>Last calendar folio (e.g., 10v)</label> <input type='text' name='endFolio'/><br/>")
       .append(Kalendar.columnSelects(Object.keys(this.columnTypes).length))
-      .append("<input type='submit' value='Submit'/>");
+      .append("<input type='submit' value='Submit'/><br/>");
     $(div_id).append(msForm);
     $('#create-ms').submit(this.readCreateMs);
     $('#create-ms').validate({
@@ -35,6 +37,36 @@ var Kalendar = {
         endFolio: "required"
       }
     });
+  },
+
+  nextFolio: function(div_id) {
+    if (null == Kalendar.currFolioIndex) Kalendar.currFolioIndex = 0;
+    var currFolio = Kalendar.folios[Kalendar.currFolioIndex];
+    var folioForm = $("<form id='folio-lines'>")
+      .append(Kalendar.textInput('Number of lines', 'lineCount'))
+      .append('<br/>')
+      .append('<input type="hidden" name="folioIndex" value="' + Kalendar.currFolioIndex + '"/>')
+      .append('<input type="submit" value="Submit"/>');
+    $('#' + div_id).empty()
+      .append("<h1>" + Kalendar['shelfmark'] + ' fol. ' + currFolio + '</h1>')
+      .append(folioForm);
+    $('#add-folio').submit(this.transcribeFolio);
+    $('#add-folio').validate({ lineCount: { required: true, digits: true } })
+  },
+
+  transcribeFolio: function(e, theForm) {
+    e.preventDefault();
+    var data = this.serializedArrayToMap($(this).serializeArray());
+    console.log(data);
+    var transcribeForm = $('<form id="transciption-folio">');
+  },
+
+  serializedArrayToMap: function(array) {
+    map = {};
+    $.each(array, function() {
+      map[this.name] = this.value;
+    }); 
+    return map;
   },
 
   folioLessThan: function(first, second) {
@@ -50,6 +82,10 @@ var Kalendar = {
     } else {
       return firstNum < secondNum
     }
+  },
+
+  textInput: function(title,name) {
+    return '<label>' + title + '</label><input name="' + name + '"/>'
   },
 
   createFolios: function(startFolio, endFolio) {
