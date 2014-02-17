@@ -28,6 +28,7 @@ var Kalendar = {
       .append(Kalendar.columnSelects(Object.keys(this.columnTypes).length))
       .append("<input type='submit' value='Submit'/><br/>");
     $(div_id).append(msForm);
+    $(div_id + ' input[type="text"]:first').focus();
     $('#create-ms').submit(this.readCreateMs);
     $('#create-ms').validate({
       rules: {
@@ -50,15 +51,23 @@ var Kalendar = {
     $('#' + div_id).empty()
       .append("<h1>" + Kalendar['shelfmark'] + ' fol. ' + currFolio + '</h1>')
       .append(folioForm);
-    $('#add-folio').submit(this.transcribeFolio);
-    $('#add-folio').validate({ lineCount: { required: true, digits: true } })
+    $('#folio-lines input[type="text"]:first').focus();
+    $('#folio-lines').submit(this.transcribeFolio);
+    $('#folio-lines').validate({ rules: { lineCount: { required: true, digits: true }}});
   },
 
   transcribeFolio: function(e, theForm) {
     e.preventDefault();
-    var data = this.serializedArrayToMap($(this).serializeArray());
+    var data = Kalendar.serializedArrayToMap($(this).serializeArray());
     console.log(data);
-    var transcribeForm = $('<form id="transciption-folio">');
+    var transcribeForm = $('<form id="folio-transcription">');
+    transcribeForm.append('<table id="folioTable">')
+      .append('<tr><td>Hi!</td></tr>')
+      .append('</table>');
+
+      
+    var div_id= '#' + $(this).parent('div').attr('id');
+    $(div_id).empty().append(transcribeForm);
   },
 
   serializedArrayToMap: function(array) {
