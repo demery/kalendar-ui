@@ -44,7 +44,7 @@ var Kalendar = {
     if (null == Kalendar.currFolioIndex) Kalendar.currFolioIndex = 0;
     var currFolio = Kalendar.folios[Kalendar.currFolioIndex];
     var folioForm = $("<form id='folio-lines'>")
-      .append(Kalendar.textInput('Number of lines', 'lineCount'))
+      .append('<label>Number of lines</label> <input name="lineCount"/>')
       .append('<br/>')
       .append('<input type="hidden" name="folioIndex" value="' + Kalendar.currFolioIndex + '"/>')
       .append('<input type="submit" value="Submit"/>');
@@ -58,14 +58,24 @@ var Kalendar = {
 
   transcribeFolio: function(e, theForm) {
     e.preventDefault();
-    var data = Kalendar.serializedArrayToMap($(this).serializeArray());
-    console.log(data);
+    var data = $(this).serializeArray();
+    $.each(data, function(){ Kalendar[this.name] = this.value; });
     var transcribeForm = $('<form id="folio-transcription">');
-    transcribeForm.append('<table id="folioTable">')
-      .append('<tr><td>Hi!</td></tr>')
-      .append('</table>');
+    transcribeForm.append('<table id="folioTable">');
+    transcribeForm.find('#folioTable').append('<tr>');
+    transcribeForm.find('#folioTable tr:first').append(Kalendar.columnHeaders());
 
-      
+    for(line = 0; line < Kalendar.lineCount; line++) {
+      transcribeForm.find('#folioTable tbody').append('<tr>');
+      transcribeForm.find('#folioTable tr:last').append('<td style="text-align: right;">' + (line+1) + '</td>');
+      for(colIndex = 0; colIndex < Object.keys(Kalendar.columnTypes).length; colIndex++) {
+        var columnAttr = 'column' + (colIndex+1);
+        var columnKey = Kalendar[columnAttr];     
+        if (columnKey) {
+          transcribeForm.find('#folioTable tr:last').append('<td><input type="text" name="line' + line + '_' + columnKey + '"/></td>');
+        }
+      }
+    }
     var div_id= '#' + $(this).parent('div').attr('id');
     $(div_id).empty().append(transcribeForm);
   },
@@ -123,6 +133,21 @@ var Kalendar = {
     s = '';
     for (i=1; i <= count; i++) {
       s += this.columnSelect(i);
+    }
+    return s;
+  },
+
+  columnHeaders: function() {
+    s = '';
+    s = '<th>Line no.</th>'
+    for(i = 0; i < Object.keys(Kalendar.columnTypes).length; i++) {
+      var columnAttr = 'column' + (i+1);
+      var columnKey = Kalendar[columnAttr];
+      if (columnKey) {
+        s += '<th>';
+        s += Kalendar.columnTypes[columnKey];
+        s += "</th>";
+      }
     }
     return s;
   },
