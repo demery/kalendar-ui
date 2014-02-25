@@ -25,7 +25,9 @@ var Kalendar = {
       .append("<label>Last calendar folio (e.g., 10v)</label> <input type='text' name='endFolio'/><br/>")
       .append(Kalendar.columnSelects(Object.keys(this.columnTypes).length))
       .append("<input type='submit' value='Submit'/><br/>");
-    $(div_id).append(msForm);
+    $(div_id)
+      .append('<h1>Add a manuscript</h1>')
+      .append(msForm);
     $(div_id + ' input[type="text"]:first').focus();
     $('#create-ms').submit(this.readCreateMs);
     $('#create-ms').validate({
