@@ -11,9 +11,7 @@ var Kalendar = {
   readCreateMs: function(e, theForm) {
     e.preventDefault();
     var data = $(this).serializeArray();
-    $.each(data, function(){
-      Kalendar[this.name] = this.value;
-    });
+    _.each(data, function(pair){Kalendar[pair.name] = pair.value; });
     Kalendar.createFolios(Kalendar.startFolio, Kalendar.endFolio);
     var id = $(this).parent('div').attr('id');
     Kalendar.nextFolio($(this).parent('div').attr('id'));
@@ -51,9 +49,9 @@ var Kalendar = {
     $('#' + div_id).empty()
       .append("<h1>" + Kalendar['shelfmark'] + ' fol. ' + currFolio + '</h1>')
       .append(folioForm);
-    $('#folio-lines input[type="text"]:first').focus();
     $('#folio-lines').submit(this.transcribeFolio);
     $('#folio-lines').validate({ rules: { lineCount: { required: true, digits: true }}});
+    $('#folio-lines input[type="text"]:first').focus();
   },
 
   transcribeFolio: function(e, theForm) {
@@ -61,33 +59,12 @@ var Kalendar = {
     var data = $(this).serializeArray();
     $.each(data, function(){ Kalendar[this.name] = this.value; });
     var div_id= '#' + $(this).parent('div').attr('id');
-    var columnKeys = Object.keys(Kalendar.columnTypes).length
-    $(div_id).empty().append(Kalendar.columnHeaders());
-    // transcribeForm.find('#folioTable').append('<tr>');
-    // transcribeForm.find('#folioTable tr:first').append(Kalendar.columnHeaders());
+    var columnKeys = Kalendar.calendarColumns();
+    $(div_id).empty().append(Kalendar.columnHeaders(columnKeys, 75))
+      .append('<br/>');
 
-    // for(line = 0; line < Kalendar.lineCount; line++) {
-    //   transcribeForm.find('#folioTable tbody').append('<tr>');
-    //   // add the line number column
-    //   transcribeForm.find('#folioTable tr:last').append('<span style="width: 50px; text-align: right;">' + (line+1) + '</td>');
-    //   for(colIndex = 0; colIndex < Object.keys(Kalendar.columnTypes).length; colIndex++) {
-    //     var columnAttr = 'column' + (colIndex+1);
-    //     var columnKey = Kalendar[columnAttr];     
-    //     if (columnKey) {
-    //       transcribeForm.find('#folioTable tr:last').append('<td><input type="text" name="' + columnKey + '"/></td>');
-    //     }
-    //   }
-    // }
-    // var div_id= '#' + $(this).parent('div').attr('id');
-    // $(div_id).empty().append(transcribeForm);
-  },
-
-  serializedArrayToMap: function(array) {
-    map = {};
-    $.each(array, function() {
-      map[this.name] = this.value;
-    }); 
-    return map;
+    var lines = Kalendar.lineInputs(Kalendar['lineCount'], columnKeys, 75);
+    $(div_id).append(lines);
   },
 
   folioLessThan: function(first, second) {
@@ -139,23 +116,48 @@ var Kalendar = {
     return s;
   },
 
-  columnHeaders: function(width) {
-    var width = 75;
-    var top   = 5;
-    var left  = 5;
-
-    var s = '';
-    s = '<span style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;width: ' + width + 'px;">Line no.</span>'
-    for(i = 0; i < Object.keys(Kalendar.columnTypes).length; i++) {
-      var columnAttr = 'column' + (i+1);
-      var columnKey = Kalendar[columnAttr];
-      if (columnKey) {
-        left += (width + 1)
-         var columnName = Kalendar.columnTypes[columnKey]
-        s += '<span style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;width: ' + width + 'px;">' + columnName + '</span>'
-      }
+  lineInputs: function(numLines,columnKeys,width,top) {
+    var width  = typeof width !== 'undefined' ? width : 75;
+    var top    = typeof top !== 'undefined' ? top : 22;
+    var height = 16;
+    var left   = 5;
+    var s      = '';
+    for(lineIndex = 0; lineIndex < numLines; lineIndex++) {
+      s+= '<form name="line' + lineIndex + '"><span style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">' + (lineIndex + 1) + '</span>'
+      _.each(columnKeys, function() {
+        left += (width + 1);
+        s += '<input type="text" style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;"/>'
+      });
+      s+= '</form><br/>';
+      left = 5;
+      top = (top + height + 1);
     }
     return s;
+  },
+
+  columnHeaders: function(columnKeys,width,top) {
+    var width  = typeof width !== 'undefined' ? width : 75;
+    var top    = typeof top !== 'undefined' ? top : 5;
+    var height = 16;
+    var left   = 5;
+    var s      = '';
+    s = '<span style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">Line no.</span>'
+    _.each(columnKeys, function(key) {
+        left += (width + 1)
+         var columnName = Kalendar.columnTypes[key]
+        s += '<span style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">' + columnName + '</span>'
+    });
+    return s;
+  },
+
+  calendarColumns: function() {
+    var cols = [];
+    _.each(_.range(_.size(Kalendar.columnTypes)), function(index) {
+      var attr = 'column' + String(index+1);
+      var key  = Kalendar[attr];
+      if (key) {cols.push(key); }
+    });
+    return cols;
   },
 
   columnSelect: function(columnNumber) {
