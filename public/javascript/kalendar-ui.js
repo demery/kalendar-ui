@@ -60,24 +60,26 @@ var Kalendar = {
     e.preventDefault();
     var data = $(this).serializeArray();
     $.each(data, function(){ Kalendar[this.name] = this.value; });
-    var transcribeForm = $('<form id="folio-transcription">');
-    transcribeForm.append('<table id="folioTable">');
-    transcribeForm.find('#folioTable').append('<tr>');
-    transcribeForm.find('#folioTable tr:first').append(Kalendar.columnHeaders());
-
-    for(line = 0; line < Kalendar.lineCount; line++) {
-      transcribeForm.find('#folioTable tbody').append('<tr>');
-      transcribeForm.find('#folioTable tr:last').append('<td style="text-align: right;">' + (line+1) + '</td>');
-      for(colIndex = 0; colIndex < Object.keys(Kalendar.columnTypes).length; colIndex++) {
-        var columnAttr = 'column' + (colIndex+1);
-        var columnKey = Kalendar[columnAttr];     
-        if (columnKey) {
-          transcribeForm.find('#folioTable tr:last').append('<td><input type="text" name="line' + line + '_' + columnKey + '"/></td>');
-        }
-      }
-    }
     var div_id= '#' + $(this).parent('div').attr('id');
-    $(div_id).empty().append(transcribeForm);
+    var columnKeys = Object.keys(Kalendar.columnTypes).length
+    $(div_id).empty().append(Kalendar.columnHeaders());
+    // transcribeForm.find('#folioTable').append('<tr>');
+    // transcribeForm.find('#folioTable tr:first').append(Kalendar.columnHeaders());
+
+    // for(line = 0; line < Kalendar.lineCount; line++) {
+    //   transcribeForm.find('#folioTable tbody').append('<tr>');
+    //   // add the line number column
+    //   transcribeForm.find('#folioTable tr:last').append('<span style="width: 50px; text-align: right;">' + (line+1) + '</td>');
+    //   for(colIndex = 0; colIndex < Object.keys(Kalendar.columnTypes).length; colIndex++) {
+    //     var columnAttr = 'column' + (colIndex+1);
+    //     var columnKey = Kalendar[columnAttr];     
+    //     if (columnKey) {
+    //       transcribeForm.find('#folioTable tr:last').append('<td><input type="text" name="' + columnKey + '"/></td>');
+    //     }
+    //   }
+    // }
+    // var div_id= '#' + $(this).parent('div').attr('id');
+    // $(div_id).empty().append(transcribeForm);
   },
 
   serializedArrayToMap: function(array) {
@@ -137,16 +139,20 @@ var Kalendar = {
     return s;
   },
 
-  columnHeaders: function() {
-    s = '';
-    s = '<th>Line no.</th>'
+  columnHeaders: function(width) {
+    var width = 75;
+    var top   = 5;
+    var left  = 5;
+
+    var s = '';
+    s = '<span style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;width: ' + width + 'px;">Line no.</span>'
     for(i = 0; i < Object.keys(Kalendar.columnTypes).length; i++) {
       var columnAttr = 'column' + (i+1);
       var columnKey = Kalendar[columnAttr];
       if (columnKey) {
-        s += '<th>';
-        s += Kalendar.columnTypes[columnKey];
-        s += "</th>";
+        left += (width + 1)
+         var columnName = Kalendar.columnTypes[columnKey]
+        s += '<span style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;width: ' + width + 'px;">' + columnName + '</span>'
       }
     }
     return s;
