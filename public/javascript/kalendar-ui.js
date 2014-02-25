@@ -6,7 +6,7 @@ var Kalendar = {
   folios: null,
   currFolioIndex: null,
   columnTypes: { month: "Month", day: "Day", goldenNumber: "Golden number", 
-    dominicalLetter: "Domminical letter", gregorianDate: "Gregorian date", item: "Item" },
+    dominicalLetter: "Dominical letter", gregorianDate: "Gregorian date", item: "Item" },
 
   readCreateMs: function(e, theForm) {
     e.preventDefault();
@@ -118,19 +118,19 @@ var Kalendar = {
 
   lineInputs: function(numLines,columnKeys,width,top) {
     var width  = typeof width !== 'undefined' ? width : 75;
-    var top    = typeof top !== 'undefined' ? top : 22;
+    var top    = typeof top !== 'undefined' ? top : 31;
     var height = 16;
     var left   = 5;
     var s      = '';
     for(lineIndex = 0; lineIndex < numLines; lineIndex++) {
-      s+= '<form name="line' + lineIndex + '"><span style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">' + (lineIndex + 1) + '</span>'
+      s+= '<form name="line' + lineIndex + '"><span style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;text-align:right">' + (lineIndex + 1) + '</span>'
       _.each(columnKeys, function() {
-        left += (width + 1);
+        left += (width + 10);
         s += '<input type="text" style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;"/>'
       });
       s+= '</form><br/>';
       left = 5;
-      top = (top + height + 1);
+      top = (top + height + 10);
     }
     return s;
   },
@@ -143,9 +143,9 @@ var Kalendar = {
     var s      = '';
     s = '<span style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">Line no.</span>'
     _.each(columnKeys, function(key) {
-        left += (width + 1)
+        left += (width + 10)
          var columnName = Kalendar.columnTypes[key]
-        s += '<span style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">' + columnName + '</span>'
+        s += '<span style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + columnName + '</span>'
     });
     return s;
   },
