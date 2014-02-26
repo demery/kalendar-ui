@@ -18,13 +18,13 @@ var Kalendar = {
   },
 
   start: function(div_id) {
-    msForm = $('<form id="create-ms">')
-      .append("<label>Shelfmark</label> <input type='text' name='shelfmark'/><br/>")
-      .append("<label>Title</label> <input type='text' name='title'/><br/>")
-      .append("<label>First calendar folio (e.g., 4r)</label> <input type='text' name='startFolio'/><br/>")
-      .append("<label>Last calendar folio (e.g., 10v)</label> <input type='text' name='endFolio'/><br/>")
+    msForm = $('<form id="create-ms" role="form" class="form-horizontal">')
+      .append(Kalendar.textInput('Shelfmark', 'shelfmark'))
+      .append(Kalendar.textInput('Title', 'title'))
+      .append(Kalendar.textInput('First folio (e.g., 4r)', 'startFolio'))
+      .append(Kalendar.textInput('Last folio (e.g., 10v)', 'endFolio'))
       .append(Kalendar.columnSelects(Object.keys(this.columnTypes).length))
-      .append("<input type='submit' value='Submit'/><br/>");
+      .append('<input type="submit" class="btn btn-default" value="Submit"/><br/>');
     $(div_id)
       .append('<h1>Add a manuscript</h1>')
       .append(msForm);
@@ -85,7 +85,13 @@ var Kalendar = {
   },
 
   textInput: function(title,name) {
-    return '<label>' + title + '</label><input name="' + name + '"/>'
+    s = ''
+    s += '<div class="form-group">'
+    s += '<label for="name" class="col-sm-2 control-label">' + title + '</label>'
+    s += '<div class="col-sm-10">'
+    s += '<input class="form-control" name="' + name + '"/>'
+    s += '</div>'
+    return s
   },
 
   createFolios: function(startFolio, endFolio) {
@@ -163,14 +169,14 @@ var Kalendar = {
   },
 
   columnSelect: function(columnNumber) {
-    s = "<label>Column "
-    s += columnNumber
-    s += "</label> "
-    s += "<select name='column";
-    s += String(columnNumber);
-    s += "'>";
+    s = '<div class="form-group">';
+    s += '<label class="col-sm-2 control-label for="column' + columnNumber +'">Column ' + columnNumber + '</label> ';
+    s += '<div class="col-sm-10">'
+    s += '<select name="column' + String(columnNumber) + '" class="form-control">';
     s += this.columnOptions();
     s += "</select>";
+    s += '</div>'
+    s += '</div>'
     s += "<br/>";
     return s;
   },
