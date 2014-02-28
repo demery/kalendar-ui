@@ -28,7 +28,6 @@ var Kalendar = {
     $(div_id)
       .append('<h1>Add a manuscript</h1>')
       .append(msForm);
-    $(div_id + ' input[type="text"]:first').focus();
     $('#create-ms').submit(this.readCreateMs);
     $('#create-ms').validate({
       rules: {
@@ -38,13 +37,14 @@ var Kalendar = {
         endFolio: "required"
       }
     });
+    $(div_id + ' input[type=text]:first').focus();
   },
 
   nextFolio: function(div_id) {
     if (null == Kalendar.currFolioIndex) Kalendar.currFolioIndex = 0;
     var currFolio = Kalendar.folios[Kalendar.currFolioIndex];
     var folioForm = $("<form id='folio-lines'>")
-      .append('<label>Number of lines</label> <input name="lineCount"/>')
+      .append(Kalendar.textInput('Number of lines', 'lineCount'))
       .append('<br/>')
       .append('<input type="hidden" name="folioIndex" value="' + Kalendar.currFolioIndex + '"/>')
       .append('<input type="submit" value="Submit"/>');
@@ -53,7 +53,7 @@ var Kalendar = {
       .append(folioForm);
     $('#folio-lines').submit(this.transcribeFolio);
     $('#folio-lines').validate({ rules: { lineCount: { required: true, digits: true }}});
-    $('#folio-lines input[type="text"]:first').focus();
+    $('#folio-lines input[type=text]:first').focus();
   },
 
   transcribeFolio: function(e, theForm) {
@@ -67,6 +67,7 @@ var Kalendar = {
 
     var lines = Kalendar.lineInputs(Kalendar['lineCount'], columnKeys, 75);
     $(div_id).append(lines);
+    $(div_id + ' input[type=text]:first').focus();
   },
 
   folioLessThan: function(first, second) {
@@ -89,7 +90,7 @@ var Kalendar = {
     s += '<div class="form-group">'
     s += '<label for="name" class="col-sm-2 control-label">' + title + '</label>'
     s += '<div class="col-sm-10">'
-    s += '<input class="form-control" name="' + name + '"/>'
+    s += '<input type="text" class="form-control" name="' + name + '"/>'
     s += '</div>'
     return s
   },
