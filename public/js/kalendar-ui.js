@@ -1,21 +1,12 @@
 var Kalendar = {
-  shelfmark:null,
-  title:null,
-  startFolio:null,
-  endFolio:null,
-  folios: null,
+  shelfmark:      null,
+  title:          null,
+  startFolio:     null,
+  endFolio:       null,
+  folios:         null,
   currFolioIndex: null,
-  columnTypes: { month: "Month", day: "Day", goldenNumber: "Golden number", 
+  columnTypes:    { month: "Month", day: "Day", goldenNumber: "Golden number", 
     dominicalLetter: "Dominical letter", gregorianDate: "Gregorian date", item: "Item" },
-
-  readCreateMs: function(e, theForm) {
-    e.preventDefault();
-    var data = $(this).serializeArray();
-    _.each(data, function(pair){Kalendar[pair.name] = pair.value; });
-    Kalendar.createFolios(Kalendar.startFolio, Kalendar.endFolio);
-    var id = $(this).parent('div').attr('id');
-    Kalendar.nextFolio($(this).parent('div').attr('id'));
-  },
 
   start: function(div_id) {
     msForm = $('<form id="create-ms" role="form" class="form-horizontal">')
@@ -38,6 +29,15 @@ var Kalendar = {
       }
     });
     $(div_id + ' input[type=text]:first').focus();
+  },
+
+  readCreateMs: function(e, theForm) {
+    e.preventDefault();
+    var data = $(this).serializeArray();
+    _.each(data, function(pair){Kalendar[pair.name] = pair.value; });
+    Kalendar.createFolios(Kalendar.startFolio, Kalendar.endFolio);
+    Kalendar.saveManifest();
+    Kalendar.nextFolio($(this).parent('div').attr('id'));
   },
 
   nextFolio: function(div_id) {
@@ -68,6 +68,58 @@ var Kalendar = {
     var lines = Kalendar.lineInputs(Kalendar['lineCount'], columnKeys, 75);
     $(div_id).append(lines);
     $(div_id + ' input[type=text]:first').focus();
+  },
+
+  saveManifest: function() {
+    var shelfmarkId = Kalendar.shelfmark.toLowerCase().replace(/\s/g,'');
+    // canvases = 
+    var manifest = {
+      // Metadata about this Manifest file
+      "@context":"http://www.shared-canvas.org/ns/context.json",
+      "@id":"http://library.upenn.edu/iiif/" + shelfmarkId + "/manifest.json",
+      "@type":"sc:Manifest",
+
+      // Metadata about the physical object/intellectual work
+      "label":Kalendar.shelfmark,
+      "metadata": [
+        {"label":"Title", "value":Kalendar.title},
+      ],
+
+      // Rights Metadata
+      "license":"http://www.example.org/license.html", // provide a real license
+
+      "sequences":[{
+        "@id": "http://www.upenn.edu/iiif/" + shelfmarkId + "/kalendar.json",
+        "@type": "sc:Sequence",
+        "label": "Calendar Page Order",
+
+        // some nice information about the sequence
+        "viewingDirection":"left-to-right",
+        "viewingHint":"paged",
+
+      }],
+    
+    };
+
+    manifest.sequences[0].canvases =  _.map(Kalendar.folios, function(fol) {
+     return { "@id": ("http://www.upenn.edu/iiif/" + shelfmarkId + "/canvas/f" + fol.toLowerCase().replace(/\W/g,'') + ".json"),
+        "@type": "sc:Canvas",
+        "label": "fol. " +  fol, };
+    });
+
+    var jstr = JSON.stringify(manifest);
+    console.log(jstr);
+
+    jQuery.ajax({
+      type:"POST", 
+      url:"http://www.shared-canvas.org/services/anno/calendars/manifest",
+      data:jstr, 
+      dataType:"json",
+      // contentType: "application/json",
+      success: function(data, status, xhr) {
+        alert("Boo ya!")
+      }
+    });
   },
 
   folioLessThan: function(first, second) {
