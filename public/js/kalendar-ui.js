@@ -76,7 +76,7 @@ var Kalendar = {
     var manifest = {
       // Metadata about this Manifest file
       "@context":"http://www.shared-canvas.org/ns/context.json",
-      "@id":"http://library.upenn.edu/iiif/" + shelfmarkId + "/manifest.json",
+      // "@id":"http://library.upenn.edu/iiif/" + shelfmarkId + "/manifest.json",
       "@type":"sc:Manifest",
 
       // Metadata about the physical object/intellectual work
@@ -108,14 +108,14 @@ var Kalendar = {
     });
 
     var jstr = JSON.stringify(manifest);
-    console.log(jstr);
+    // console.log(jstr);
 
     jQuery.ajax({
       type:"POST", 
       url:"http://www.shared-canvas.org/services/anno/calendars/manifest",
       data:jstr, 
       dataType:"json",
-      // contentType: "application/json",
+      contentType: "application/json",
       success: function(data, status, xhr) {
         alert("Boo ya!")
       }
