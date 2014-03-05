@@ -5,10 +5,39 @@ var Kalendar = {
   endFolio:       null,
   folios:         null,
   currFolioIndex: null,
-  columnTypes:    { month: "Month", day: "Day", goldenNumber: "Golden number", 
+  columnTypes:    { month: "Month", day: "Day", goldenNumber: "Golden number",
     dominicalLetter: "Dominical letter", gregorianDate: "Gregorian date", item: "Item" },
-
-  start: function(div_id) {
+  startPage: function(div_id) {
+    $(div_id).append('<h1>Transcribe a manuscript calendar</h1>')
+      .append($('<div/>', {id: 'ms-list'}));
+    this.listManuscripts('#ms-list');
+    $(div_id).append($('<div/>', { id: 'new-manuscript' }));
+    $('#new-manuscript')
+      .append('<h1>... or ... </h1>')
+      .append($('<a/>', {
+        class: 'btn btn-primary btn-lg',
+        id: 'new-manuscript-link',
+        href: '#',
+        text: 'Add a calendar',
+        click: function() {
+          Kalendar.newManuscript(div_id);
+          return false;
+        }}));
+    },
+  listManuscripts: function(div_id) {
+    var url = "http://www.shared-canvas.org/services/anno/calendars/manifest";
+    var msJson;
+    div = $(div_id)
+    $.getJSON(url, function(data) {
+      var items = [];
+      _.each(data.resources, function(r) {
+        items.push ('<li class="list-group-item"><a class="ms-manifest" id="' + r['@id'] + '">' + r['label'] + '</li>');
+      });
+      $("<ul/>", { class: 'list-group', html: items.join("")}).appendTo("div" + div_id);
+    });
+  },
+class: 'btn btn-primary btn-lg',
+  newManuscript: function(div_id) {
     msForm = $('<form id="create-ms" role="form" class="form-horizontal">')
       .append(Kalendar.textInput('Shelfmark', 'shelfmark'))
       .append(Kalendar.textInput('Title', 'title'))
@@ -17,6 +46,7 @@ var Kalendar = {
       .append(Kalendar.columnSelects(Object.keys(this.columnTypes).length))
       .append('<input type="submit" class="btn btn-default" value="Submit"/><br/>');
     $(div_id)
+      .empty()
       .append('<h1>Add a manuscript</h1>')
       .append(msForm);
     $('#create-ms').submit(this.readCreateMs);
@@ -30,7 +60,6 @@ var Kalendar = {
     });
     $(div_id + ' input[type=text]:first').focus();
   },
-
   readCreateMs: function(e, theForm) {
     e.preventDefault();
     var data = $(this).serializeArray();
@@ -39,7 +68,6 @@ var Kalendar = {
     Kalendar.saveManifest();
     Kalendar.nextFolio($(this).parent('div').attr('id'));
   },
-
   nextFolio: function(div_id) {
     if (null == Kalendar.currFolioIndex) Kalendar.currFolioIndex = 0;
     var currFolio = Kalendar.folios[Kalendar.currFolioIndex];
@@ -55,7 +83,6 @@ var Kalendar = {
     $('#folio-lines').validate({ rules: { lineCount: { required: true, digits: true }}});
     $('#folio-lines input[type=text]:first').focus();
   },
-
   transcribeFolio: function(e, theForm) {
     e.preventDefault();
     var data = $(this).serializeArray();
@@ -64,19 +91,15 @@ var Kalendar = {
     var columnKeys = Kalendar.calendarColumns();
     $(div_id).empty().append(Kalendar.columnHeaders(columnKeys, 75))
       .append('<br/>');
-
     var lines = Kalendar.lineInputs(Kalendar['lineCount'], columnKeys, 75);
     $(div_id).append(lines);
     $(div_id + ' input[type=text]:first').focus();
   },
-
   saveManifest: function() {
     var shelfmarkId = Kalendar.shelfmark.toLowerCase().replace(/\s/g,'');
-    // canvases = 
     var manifest = {
       // Metadata about this Manifest file
       "@context":"http://www.shared-canvas.org/ns/context.json",
-      // "@id":"http://library.upenn.edu/iiif/" + shelfmarkId + "/manifest.json",
       "@type":"sc:Manifest",
 
       // Metadata about the physical object/intellectual work
@@ -84,44 +107,49 @@ var Kalendar = {
       "metadata": [
         {"label":"Title", "value":Kalendar.title},
       ],
-
       // Rights Metadata
       "license":"http://www.example.org/license.html", // provide a real license
-
       "sequences":[{
-        "@id": "http://www.upenn.edu/iiif/" + shelfmarkId + "/kalendar.json",
         "@type": "sc:Sequence",
-        "label": "Calendar Page Order",
-
+        "label": "Normal Page Order",
         // some nice information about the sequence
         "viewingDirection":"left-to-right",
         "viewingHint":"paged",
-
       }],
-    
     };
-
     manifest.sequences[0].canvases =  _.map(Kalendar.folios, function(fol) {
-     return { "@id": ("http://www.upenn.edu/iiif/" + shelfmarkId + "/canvas/f" + fol.toLowerCase().replace(/\W/g,'') + ".json"),
+     return {
+        "@id": ("http://www.shared-canvas.org/services/anno/calendars/canvas/" + Kalendar.genUUID() + ".json"),
         "@type": "sc:Canvas",
-        "label": "fol. " +  fol, };
+        "label": "fol. " +  fol,
+        "height":1000,
+        "width":700, };
     });
-
     var jstr = JSON.stringify(manifest);
-    // console.log(jstr);
-
+    console.log("hi!");
+    console.log(jstr);
     jQuery.ajax({
-      type:"POST", 
+      type:"POST",
       url:"http://www.shared-canvas.org/services/anno/calendars/manifest",
-      data:jstr, 
+      data:jstr,
       dataType:"json",
       contentType: "application/json",
       success: function(data, status, xhr) {
-        alert("Boo ya!")
+        console.log(data);
+        console.log(status);
+        console.log(xhr);
       }
     });
   },
-
+  // genUuid swiped from Mirador, if incorporated into Mirador; need to remove this
+  genUUID: function() {
+    var t = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(t) {
+      var e = 0 | 16 * Math.random(), n = "x" == t ? e: 8 | 3 & e;
+      return n.toString(16)
+    });
+    // return "uuid-" + t
+    return t;
+  },
   folioLessThan: function(first, second) {
     var firstLower = first.toLowerCase();
     var secondLower = second.toLowerCase();
@@ -136,7 +164,6 @@ var Kalendar = {
       return firstNum < secondNum
     }
   },
-
   textInput: function(title,name) {
     s = ''
     s += '<div class="form-group">'
@@ -146,7 +173,6 @@ var Kalendar = {
     s += '</div>'
     return s
   },
-
   createFolios: function(startFolio, endFolio) {
     startLower = $.trim(startFolio).toLowerCase();
     endLower = $.trim(endFolio).toLowerCase();
@@ -168,7 +194,6 @@ var Kalendar = {
     }
     Kalendar.folios = folios
   },
-
   columnSelects: function(count) {
     s = '';
     for (i=1; i <= count; i++) {
@@ -176,7 +201,6 @@ var Kalendar = {
     }
     return s;
   },
-
   lineInputs: function(numLines,columnKeys,width,top) {
     var width  = typeof width !== 'undefined' ? width : 75;
     var top    = typeof top !== 'undefined' ? top : 31;
@@ -195,7 +219,6 @@ var Kalendar = {
     }
     return s;
   },
-
   columnHeaders: function(columnKeys,width,top) {
     var width  = typeof width !== 'undefined' ? width : 75;
     var top    = typeof top !== 'undefined' ? top : 5;
@@ -210,7 +233,6 @@ var Kalendar = {
     });
     return s;
   },
-
   calendarColumns: function() {
     var cols = [];
     _.each(_.range(_.size(Kalendar.columnTypes)), function(index) {
@@ -220,7 +242,6 @@ var Kalendar = {
     });
     return cols;
   },
-
   columnSelect: function(columnNumber) {
     s = '<div class="form-group">';
     s += '<label class="col-sm-2 control-label for="column' + columnNumber +'">Column ' + columnNumber + '</label> ';
@@ -233,7 +254,6 @@ var Kalendar = {
     s += "<br/>";
     return s;
   },
-
   columnOptions: function() {
     opts = [];
     opts.push("<option/>")
