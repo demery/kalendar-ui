@@ -7,6 +7,7 @@ var Kalendar = {
   currFolioIndex: null,
   columnTypes:    { month: "Month", day: "Day", goldenNumber: "Golden number",
     dominicalLetter: "Dominical letter", gregorianDate: "Gregorian date", item: "Item" },
+
   startPage: function(div_id) {
     $(div_id).append('<h1>Transcribe a manuscript calendar</h1>')
       .append($('<div/>', {id: 'ms-list'}));
@@ -23,7 +24,8 @@ var Kalendar = {
           Kalendar.newManuscript(div_id);
           return false;
         }}));
-    },
+  },
+
   listManuscripts: function(div_id) {
     var url = "http://www.shared-canvas.org/services/anno/calendars/manifest";
     var msJson;
@@ -36,7 +38,9 @@ var Kalendar = {
       $("<ul/>", { class: 'list-group', html: items.join("")}).appendTo("div" + div_id);
     });
   },
-class: 'btn btn-primary btn-lg',
+
+  class: 'btn btn-primary btn-lg',
+
   newManuscript: function(div_id) {
     msForm = $('<form id="create-ms" role="form" class="form-horizontal">')
       .append(Kalendar.textInput('Shelfmark', 'shelfmark'))
@@ -60,6 +64,7 @@ class: 'btn btn-primary btn-lg',
     });
     $(div_id + ' input[type=text]:first').focus();
   },
+
   readCreateMs: function(e, theForm) {
     e.preventDefault();
     var data = $(this).serializeArray();
@@ -68,6 +73,7 @@ class: 'btn btn-primary btn-lg',
     Kalendar.saveManifest();
     Kalendar.nextFolio($(this).parent('div').attr('id'));
   },
+
   nextFolio: function(div_id) {
     if (null == Kalendar.currFolioIndex) Kalendar.currFolioIndex = 0;
     var currFolio = Kalendar.folios[Kalendar.currFolioIndex];
@@ -83,6 +89,7 @@ class: 'btn btn-primary btn-lg',
     $('#folio-lines').validate({ rules: { lineCount: { required: true, digits: true }}});
     $('#folio-lines input[type=text]:first').focus();
   },
+
   transcribeFolio: function(e, theForm) {
     e.preventDefault();
     var data = $(this).serializeArray();
@@ -95,6 +102,7 @@ class: 'btn btn-primary btn-lg',
     $(div_id).append(lines);
     $(div_id + ' input[type=text]:first').focus();
   },
+
   saveManifest: function() {
     var shelfmarkId = Kalendar.shelfmark.toLowerCase().replace(/\s/g,'');
     var manifest = {
@@ -141,6 +149,7 @@ class: 'btn btn-primary btn-lg',
       }
     });
   },
+
   // genUuid swiped from Mirador, if incorporated into Mirador; need to remove this
   genUUID: function() {
     var t = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(t) {
@@ -150,6 +159,7 @@ class: 'btn btn-primary btn-lg',
     // return "uuid-" + t
     return t;
   },
+
   folioLessThan: function(first, second) {
     var firstLower = first.toLowerCase();
     var secondLower = second.toLowerCase();
@@ -164,6 +174,7 @@ class: 'btn btn-primary btn-lg',
       return firstNum < secondNum
     }
   },
+
   textInput: function(title,name) {
     s = ''
     s += '<div class="form-group">'
@@ -173,6 +184,7 @@ class: 'btn btn-primary btn-lg',
     s += '</div>'
     return s
   },
+
   createFolios: function(startFolio, endFolio) {
     startLower = $.trim(startFolio).toLowerCase();
     endLower = $.trim(endFolio).toLowerCase();
@@ -194,6 +206,7 @@ class: 'btn btn-primary btn-lg',
     }
     Kalendar.folios = folios
   },
+
   columnSelects: function(count) {
     s = '';
     for (i=1; i <= count; i++) {
@@ -201,6 +214,7 @@ class: 'btn btn-primary btn-lg',
     }
     return s;
   },
+
   lineInputs: function(numLines,columnKeys,width,top) {
     var width  = typeof width !== 'undefined' ? width : 75;
     var top    = typeof top !== 'undefined' ? top : 31;
@@ -219,6 +233,7 @@ class: 'btn btn-primary btn-lg',
     }
     return s;
   },
+
   columnHeaders: function(columnKeys,width,top) {
     var width  = typeof width !== 'undefined' ? width : 75;
     var top    = typeof top !== 'undefined' ? top : 5;
@@ -233,6 +248,7 @@ class: 'btn btn-primary btn-lg',
     });
     return s;
   },
+
   calendarColumns: function() {
     var cols = [];
     _.each(_.range(_.size(Kalendar.columnTypes)), function(index) {
@@ -242,6 +258,7 @@ class: 'btn btn-primary btn-lg',
     });
     return cols;
   },
+
   columnSelect: function(columnNumber) {
     s = '<div class="form-group">';
     s += '<label class="col-sm-2 control-label for="column' + columnNumber +'">Column ' + columnNumber + '</label> ';
@@ -254,6 +271,7 @@ class: 'btn btn-primary btn-lg',
     s += "<br/>";
     return s;
   },
+
   columnOptions: function() {
     opts = [];
     opts.push("<option/>")
