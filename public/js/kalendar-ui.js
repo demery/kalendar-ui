@@ -5,6 +5,7 @@ var Kalendar = {
   endFolio:       null,
   folios:         null,
   currFolioIndex: null,
+  currManifestURL: null,
   columnTypes:    { month: "Month", day: "Day", goldenNumber: "Golden number",
     dominicalLetter: "Dominical letter", gregorianDate: "Gregorian date", item: "Item" },
 
