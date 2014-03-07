@@ -1,12 +1,12 @@
 var Kalendar = {
-  shelfmark:      null,
-  title:          null,
-  startFolio:     null,
-  endFolio:       null,
-  folios:         null,
-  currFolioIndex: null,
+  shelfmark:       null,
+  title:           null,
+  startFolio:      null,
+  endFolio:        null,
+  folios:          null,
+  currFolioIndex:  null,
   currManifestURL: null,
-  columnTypes:    { month: "Month", day: "Day", goldenNumber: "Golden number",
+  columnTypes:     { month: "Month", day: "Day", goldenNumber: "Golden number",
     dominicalLetter: "Dominical letter", gregorianDate: "Gregorian date", item: "Item" },
 
   startPage: function(div_id) {
