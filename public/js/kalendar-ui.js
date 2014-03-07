@@ -39,8 +39,6 @@ var Kalendar = {
     });
   },
 
-  class: 'btn btn-primary btn-lg',
-
   newManuscript: function(div_id) {
     msForm = $('<form id="create-ms" role="form" class="form-horizontal">')
       .append(Kalendar.textInput('Shelfmark', 'shelfmark'))
