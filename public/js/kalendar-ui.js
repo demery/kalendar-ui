@@ -34,9 +34,16 @@ var Kalendar = {
     $.getJSON(url, function(data) {
       var items = [];
       _.each(data.resources, function(r) {
-        items.push ('<li class="list-group-item"><a class="ms-manifest" id="' + r['@id'] + '">' + r['label'] + '</li>');
+        items.push ('<li class="list-group-item"><a class="ms-manifest" id="' + r['@id'] + '">' + r['label'] + ' <a class="delete-ms" id="' + r['@id'] + '">Delete</a></li>');
       });
       $("<ul/>", { class: 'list-group', html: items.join("")}).appendTo("div" + div_id);
+      $('.delete-ms').click(function() {
+        $(this).parent('li').hide();
+        $.ajax({
+          url: $(this).attr('id'),
+          type: 'DELETE',
+        });
+      });
     });
   },
 
