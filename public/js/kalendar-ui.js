@@ -140,20 +140,15 @@ var Kalendar = {
         "width":700, };
     });
     var jstr = JSON.stringify(manifest);
-    console.log("hi!");
-    console.log(jstr);
-    jQuery.ajax({
+
+    return jQuery.ajax({
       type:"POST",
       url:"http://www.shared-canvas.org/services/anno/calendars/manifest",
       data:jstr,
       dataType:"json",
       contentType: "application/json",
-      success: function(data, status, xhr) {
-        console.log(data);
-        console.log(status);
-        console.log(xhr);
-      }
     });
+
   },
 
   // genUuid swiped from Mirador, if incorporated into Mirador; need to remove this
