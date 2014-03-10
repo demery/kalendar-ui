@@ -136,6 +136,7 @@ var Kalendar = {
         "@id": ("http://www.shared-canvas.org/services/anno/calendars/canvas/" + Kalendar.genUUID() + ".json"),
         "@type": "sc:Canvas",
         "label": "fol. " +  fol,
+        "_columns": Kalendar.calendarColumns(),
         "height":1000,
         "width":700, };
     });
