@@ -6,8 +6,9 @@ var Kalendar = {
   folios:          null,
   currFolioIndex:  null,
   currManifestURL: null,
-  columnTypes:     { month: "Month", day: "Day", goldenNumber: "Golden number",
-    dominicalLetter: "Dominical letter", gregorianDate: "Gregorian date", item: "Item" },
+  columnTypes:     { month: "Month", day: "Day", number: "Golden number",
+    letter: "Dominical letter", date: "Gregorian date", text: "Text" },
+  months: [ 'Ianuarius', 'Februarius', 'Martius', 'Aprilis', 'Maius', 'Iunius', 'Iulius', 'Augustus', 'September', 'October', 'November', 'December' ],
 
   startPage: function(div_id) {
     $(div_id).append('<h1>Transcribe a manuscript calendar</h1>')
@@ -34,7 +35,11 @@ var Kalendar = {
     $.getJSON(url, function(data) {
       var items = [];
       _.each(data.resources, function(r) {
-        items.push ('<li class="list-group-item"><a class="ms-manifest" id="' + r['@id'] + '">' + r['label'] + '</a> <a class="delete-ms" id="' + r['@id'] + '">[delete]</a></li>');
+        items.push (
+          '<li class="list-group-item"><a class="ms-manifest" id="' +
+          r['@id'] + '">' + r['label'] + '</a> <a href="' + r['@id'] +
+          '">[see]</a> <a class="delete-ms" id="' + r['@id'] +
+          '">[delete]</a></li>');
       });
       $("<ul/>", { class: 'list-group', html: items.join("")}).appendTo("div" + div_id);
       $('.delete-ms').click(function() {
@@ -74,39 +79,135 @@ var Kalendar = {
   readCreateMs: function(e, theForm) {
     e.preventDefault();
     var data = $(this).serializeArray();
+    var div_id = $(this).parent('div').attr('id');
     _.each(data, function(pair){Kalendar[pair.name] = pair.value; });
     Kalendar.createFolios(Kalendar.startFolio, Kalendar.endFolio);
-    Kalendar.saveManifest();
-    Kalendar.nextFolio($(this).parent('div').attr('id'));
+    Kalendar.saveManifest().done(function(data){
+      Kalendar.nextFolio(0, data, div_id);
+    });
   },
 
-  nextFolio: function(div_id) {
-    if (null == Kalendar.currFolioIndex) Kalendar.currFolioIndex = 0;
-    var currFolio = Kalendar.folios[Kalendar.currFolioIndex];
+  nextFolio: function(index, data, div_id) {
+    var canvas = data.sequences[0].canvases[index];
+    var currFolio = canvas.label;
+    var url = data['@id'];
     var folioForm = $("<form id='folio-lines'>")
       .append(Kalendar.textInput('Number of lines', 'lineCount'))
       .append('<br/>')
-      .append('<input type="hidden" name="folioIndex" value="' + Kalendar.currFolioIndex + '"/>')
+      .append('<input type="hidden" name="folioIndex" value="' + index + '"/>')
+      .append('<input type="hidden" name="manifestId" value="' + url + '"/>')
       .append('<input type="submit" value="Submit"/>');
     $('#' + div_id).empty()
-      .append("<h1>" + Kalendar['shelfmark'] + ' fol. ' + currFolio + '</h1>')
+      .append("<h1>" + Kalendar['shelfmark'] + ' ' + currFolio + '</h1>')
       .append(folioForm);
-    $('#folio-lines').submit(this.transcribeFolio);
+    $('#folio-lines').submit(function(e,theForm) {
+      e.preventDefault();
+      var lineCount = _.find($(this).serializeArray(), function(pair) {
+        return pair.name == 'lineCount';
+      }).value;
+      data.sequences[0].canvases[index]['_lineCount'] = parseInt(lineCount);
+      Kalendar.updateManifest(url, data).done(Kalendar.transcribeFolio(data, index, div_id));
+     });
     $('#folio-lines').validate({ rules: { lineCount: { required: true, digits: true }}});
     $('#folio-lines input[type=text]:first').focus();
   },
 
-  transcribeFolio: function(e, theForm) {
+  updateManifest: function(manifestId, data) {
+    var jstr = JSON.stringify(data);
+
+    return jQuery.ajax({
+      type:"PUT",
+      url:manifestId,
+      data:jstr,
+      dataType:"json",
+      contentType: "application/json",
+    });
+
+  },
+
+  transcribeFolio: function(manifest, index, div_id) {
+    var canvas = manifest.sequences[0].canvases[index];
+    $('#' + div_id).empty().append(Kalendar.columnHeaders(canvas._columns, 75));
+    var lines = Kalendar.lineInputs(manifest, index, 75);
+    $('#' + div_id).append(lines);
+    // the first time a month is selected, change all subsequent months on the page
+    // to the same value;
+    // Possible TODO: may want to limit this to the first month select on the page
+    $('#' + div_id).find('select[name=month]').one('change', function(){
+      var e = $(this)
+      e.closest('div.line-input').nextAll('div.line-input').find('select[name=month]').val(e.val());
+    });
+    $('#' + div_id + ' .line-form').submit(Kalendar.transcribeLine);
+    $('#' + div_id + ' input[type!=hidden][type!=submit]:first').focus();
+  },
+
+  transcribeLine: function(e,theForm) {
     e.preventDefault();
-    var data = $(this).serializeArray();
-    $.each(data, function(){ Kalendar[this.name] = this.value; });
-    var div_id= '#' + $(this).parent('div').attr('id');
-    var columnKeys = Kalendar.calendarColumns();
-    $(div_id).empty().append(Kalendar.columnHeaders(columnKeys, 75))
-      .append('<br/>');
-    var lines = Kalendar.lineInputs(Kalendar['lineCount'], columnKeys, 75);
-    $(div_id).append(lines);
-    $(div_id + ' input[type=text]:first').focus();
+    // {
+    //   "@id": "http://www.shared-canvas.org/services/anno/calendars/annotation/ad9a52804-530b-4243-81d0-b06f41a25377.json",
+    //   "@type": "oa:Annotation",
+    //   "motivation": "sc:painting",
+    //   "resource": {
+    //     "@type": [
+    //       "cnt:ContentAsText",
+    //       "dctypes:Text"
+    //     ],
+    //     "format": "text/html",
+    //     "chars": "<div data-month=\"1\" data-day=\"1 style=\"width:100%\">
+    //                                <span data-type=\"number\" style=\"display:inline-block;color:rgb(255, 0, 0);width:11%\">iii</span>
+    //                                <span data-type=\"letter\" style=\"display:inline-block;color:rgb(255, 0, 0);width:7%\">A</span>
+    //                                <span data-type=\"other\" style=\"display:inline-block;color:rgb(0, 0, 255);width:10%\">X</span>
+    //                                <span data-type=\"text\" style=\"display:inline-block;color:rgb(0, 0, 0);width:69%\">Cicumcisio domini ??? jhu xpt</span></div>"
+    //   },
+    //   "on": "http://www.shared-canvas.org/cals/canvas/c4.json#xywh=414,660,1270,68",
+    //   "creator": {
+    //     "@id": "mailto:azaroth42@gmail.com"
+    //   }
+    // }
+    var form       = $(this);
+    var monthNum   = form.find('select[name=month]').val();
+    var monthName  = form.find('select[name=month] option:selected').text();
+    var day        = form.find('input[name=day]').val();
+    var xywh       = form.find('input[name=xywh]').val();
+
+    var annotation = {};
+    annotation['@type']      = 'oa:Annotation';
+    annotation['motivation'] = 'sc:painting';
+    annotation['resource']   = {
+      '@type': [ 'cnt:ContentAsText', 'dctypes:Text' ],
+      'format': 'text/html',
+    };
+    annotation['on']         = form.find('input[name=canvasId]').val() + '#xywh=' + xywh;
+    annotation['creator']    = { '@id': 'mailto:emeryr@upenn.edu' }
+
+    var spans = [];
+
+    var colInputs = form.find('input[type!=hidden][type!=submit]');
+    var colWidth = Math.round(100/_.size(colInputs));
+
+    spans.push('<span data-type="month" style="width:' + colWidth + '%;">' + monthName + '</span>')
+    _.each(colInputs, function(el){
+        spans.push('<span data-type="' + $(el).attr('name') + '" style="width:' + colWidth + '%;">' + $(el).val() + '</span>');
+    });
+
+    annotation['resource']['chars'] = '<div data-month="' + monthNum + '" data-day="' + day + '" style="width:100%">' + spans.join(' ') + '</div>'
+
+    var jstr = JSON.stringify(annotation);
+    console.log(jstr);
+
+    var repText = [];
+    repText.push('<span data-type="month" style="' + form.find('select[name=month]').attr('style') + '%;">' + monthName + '</span>');
+    _.each(colInputs, function(e){
+      var je = $(e);
+      repText.push('<span data-type="' + je.attr('name') + '" style="' + je.attr('style') + '%;">' + je.val() + '</span>')
+    });
+    form.closest('div').empty().append(repText.join());
+
+    return false;
+  },
+
+  getManifest: function(url) {
+    return $.getJSON(url);
   },
 
   saveManifest: function() {
@@ -217,29 +318,59 @@ var Kalendar = {
     return s;
   },
 
-  lineInputs: function(numLines,columnKeys,width,top) {
-    var width  = typeof width !== 'undefined' ? width : 75;
-    var top    = typeof top !== 'undefined' ? top : 31;
-    var height = 16;
-    var left   = 5;
-    var s      = '';
+  lineInputs: function(manifest,index,width,top) {
+    var width        = typeof width !== 'undefined' ? width : 75;
+    var top          = typeof top !== 'undefined' ? top : 31;
+    var height       = 20;
+    var left         = 5;
+    var canvas       = manifest.sequences[0].canvases[index];
+    var numLines     = canvas._lineCount;
+    var h            = Math.round(canvas.height / canvas._lineCount);
+    var w            = canvas.width;
+
+    var s = '';
     for(lineIndex = 0; lineIndex < numLines; lineIndex++) {
-      s+= '<form name="line' + lineIndex + '"><span style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;text-align:right">' + (lineIndex + 1) + '</span>'
-      _.each(columnKeys, function() {
+      var x            = 0;
+      var y            = h * lineIndex;
+      var xywh         = [ x, y, w, h ].join(',');
+      var line = 'line' + lineIndex;
+      s += '<div id="' + line + '" class="line-input">'
+      s += '<form class="line-form" name="' + line + '">' + '<span style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;text-align:right">' + (lineIndex + 1) + '</span>'
+      s += '<input type="hidden" name="xywh" value="' + xywh + '" />'
+      s += '<input type="hidden" name="canvasId" value="' + canvas['@id'] + '" />'
+      _.each(canvas._columns, function(col) {
         left += (width + 10);
-        s += '<input type="text" style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;"/>'
+        // s += '<input type="text" name="' + col + '" style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;"/>'
+        if (col == 'month')
+          s += Kalendar.monthSelect(top, left, height, width);
+        else
+          s += '<input type="text" name="' + col + '" style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;"/>'
       });
-      s+= '</form><br/>';
+      // Add a submit button that's styled right off the screen, so we get submit on enter
+      s += '<input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>'
+      s += '</form>'
+      s += '</div><br/>';
       left = 5;
       top = (top + height + 10);
     }
     return s;
   },
 
+  monthSelect: function(top, left, height, width) {
+    var s = '';
+    s += '<select name="month" style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">';
+    s += '<option/>'
+    _.each(Kalendar.months, function(month, index){
+      s += '<option value="' + (index + 1) + '">' + month + '</option>'
+    });
+    s += '</select>'
+    return s;
+  },
+
   columnHeaders: function(columnKeys,width,top) {
     var width  = typeof width !== 'undefined' ? width : 75;
     var top    = typeof top !== 'undefined' ? top : 5;
-    var height = 16;
+    var height = 20;
     var left   = 5;
     var s      = '';
     s = '<span style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">Line no.</span>'
@@ -270,16 +401,17 @@ var Kalendar = {
     s += "</select>";
     s += '</div>'
     s += '</div>'
-    s += "<br/>";
+    s += '<br/>';
     return s;
   },
 
   columnOptions: function() {
     opts = [];
-    opts.push("<option/>")
+    opts.push('<option/>')
     $.each(Kalendar.columnTypes, function(k,v) {
       opts.push("<option value='" + k + "'>" + v + "</option>");
     });
     return opts.join();
-  }
+  },
+
 }
