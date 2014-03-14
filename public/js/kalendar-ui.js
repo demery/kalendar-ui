@@ -373,7 +373,7 @@ var Kalendar = {
       var line = 'line' + lineIndex;
       s += '<div id="' + line + '" class="line-input">'
       s += '<form class="line-form" name="' + line + '">'
-      s += '<span class="line-number" style="font-weight:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;text-align:right">' + (lineIndex + 1) + '</span>'
+      s += '<span class="line-number" style="position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;text-align:right">' + (lineIndex + 1) + '</span>'
       s += '<input type="hidden" name="xywh" value="' + xywh + '" />'
       s += '<input type="hidden" name="canvasId" value="' + canvas['@id'] + '" />'
       _.each(canvas._columns, function(col) {
@@ -381,7 +381,7 @@ var Kalendar = {
         if (col == 'month')
           s += Kalendar.monthSelect(top, left, height, width);
         else
-          s += '<input type="text" name="' + col + '" style="font-weight:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;"/>'
+          s += '<input type="text" name="' + col + '" style="position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;"/>'
       });
       // Add a submit button that's styled right off the screen, so we get submit on enter
       s += '<input type="submit" style="position: absolute; left: -9999px; width: 1px; height: 1px;"/>'
@@ -395,7 +395,7 @@ var Kalendar = {
 
   monthSelect: function(top, left, height, width) {
     var s = '';
-    s += '<select name="month" style="font-weight:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">';
+    s += '<select name="month" style="position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">';
     s += '<option/>'
     _.each(Kalendar.months, function(month, index){
       s += '<option value="' + (index + 1) + '">' + month + '</option>'
