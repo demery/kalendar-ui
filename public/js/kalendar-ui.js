@@ -83,33 +83,37 @@ var Kalendar = {
     _.each(data, function(pair){Kalendar[pair.name] = pair.value; });
     Kalendar.createFolios(Kalendar.startFolio, Kalendar.endFolio);
     Kalendar.saveManifest().done(function(data){
-      Kalendar.nextFolio(0, data, div_id);
+      var manifestId = data['@id'];
+      Kalendar.nextFolio(0, manifestId, div_id);
     });
   },
 
-  nextFolio: function(index, data, div_id) {
-    var canvas = data.sequences[0].canvases[index];
-    var currFolio = canvas.label;
-    var url = data['@id'];
-    var folioForm = $("<form id='folio-lines'>")
+  nextFolio: function(index, manifestId, div_id) {
+    $.getJSON(manifestId, function(data) {
+      var canvas = data.sequences[0].canvases[index];
+      var currFolio = canvas.label;
+      var url = data['@id'];
+      var folioForm = $("<form id='folio-lines'>")
       .append(Kalendar.textInput('Number of lines', 'lineCount'))
       .append('<br/>')
       .append('<input type="hidden" name="folioIndex" value="' + index + '"/>')
       .append('<input type="hidden" name="manifestId" value="' + url + '"/>')
       .append('<input type="submit" value="Submit"/>');
-    $('#' + div_id).empty()
+      $('#' + div_id).empty()
       .append("<h1>" + Kalendar['shelfmark'] + ' ' + currFolio + '</h1>')
       .append(folioForm);
-    $('#folio-lines').submit(function(e,theForm) {
-      e.preventDefault();
-      var lineCount = _.find($(this).serializeArray(), function(pair) {
-        return pair.name == 'lineCount';
-      }).value;
-      data.sequences[0].canvases[index]['_lineCount'] = parseInt(lineCount);
-      Kalendar.updateManifest(url, data).done(Kalendar.transcribeFolio(data, index, div_id));
-     });
-    $('#folio-lines').validate({ rules: { lineCount: { required: true, digits: true }}});
-    $('#folio-lines input[type=text]:first').focus();
+      $('#folio-lines').submit(function(e,theForm) {
+        e.preventDefault();
+        var lineCount = _.find($(this).serializeArray(), function(pair) {
+          return pair.name == 'lineCount';
+        }).value;
+        data.sequences[0].canvases[index]['_lineCount'] = parseInt(lineCount);
+        Kalendar.updateManifest(url, data).done(Kalendar.transcribeFolio(data, index, div_id));
+      });
+      $('#folio-lines').validate({ rules: { lineCount: { required: true, digits: true }}});
+      $('#folio-lines input[type=text]:first').focus();
+    });
+    return false;
   },
 
   updateManifest: function(manifestId, data) {
@@ -122,23 +126,50 @@ var Kalendar = {
       dataType:"json",
       contentType: "application/json",
     });
-
   },
 
   transcribeFolio: function(manifest, index, div_id) {
+    var shelfmark = manifest.label;
     var canvas = manifest.sequences[0].canvases[index];
-    $('#' + div_id).empty().append(Kalendar.columnHeaders(canvas._columns, 75));
-    var lines = Kalendar.lineInputs(manifest, index, 75);
-    $('#' + div_id).append(lines);
+    var folio = canvas.label;
+    var div = $('#' + div_id)
+
+    div.empty().append('<h1>' + shelfmark + ', ' + folio + '</h1>');
+    var yoff = div.find('h1:first').offset().top;
+    yoff += (div.find('h1:first').height() + 3);
+    div.append(Kalendar.columnHeaders(canvas._columns, 75, yoff));
+    yoff = (div.find('span:last').offset().top + div.find('span:last').height() + 3);
+    var lines = Kalendar.lineInputs(manifest, index, 75, yoff);
+    div.append(lines);
+    var lt = div.find('form:last [name=month]:first').offset().top;
+    var ll = div.find('form:last [name=month]:first').offset().left;
+    var lh = div.find('form:last [name=month]:first').height();
+    var lw = div.find('form:last [name=month]:first').width();
+    var top = lt + lh + 5;
+
+    var f = $('<div/>');
+    f.append('<form id="next-folio"/>');
+    f.find('form').append('<input type="submit" value"Next folio"/>');
+    f.find('input').css('position', 'absolute').css('top', top).css('left', ll);
+
+    div.append(f);
+
     // the first time a month is selected, change all subsequent months on the page
     // to the same value;
     // Possible TODO: may want to limit this to the first month select on the page
-    $('#' + div_id).find('select[name=month]').one('change', function(){
+    div.find('select[name=month]').one('change', function(){
       var e = $(this)
       e.closest('div.line-input').nextAll('div.line-input').find('select[name=month]').val(e.val());
     });
-    $('#' + div_id + ' .line-form').submit(Kalendar.transcribeLine);
-    $('#' + div_id + ' input[type!=hidden][type!=submit]:first').focus();
+    div.find('.line-form').submit(Kalendar.transcribeLine);
+    var manifestId = manifest['@id'];
+    var nextIndex = index + 1;
+    $('#next-folio').submit(function() {
+      Kalendar.nextFolio(nextIndex,manifestId,div_id);
+      return false;
+    });
+    div.find('input[type!=hidden][type!=submit]:first').focus();
+    return false;
   },
 
   transcribeLine: function(e,theForm) {
@@ -193,7 +224,13 @@ var Kalendar = {
     annotation['resource']['chars'] = '<div data-month="' + monthNum + '" data-day="' + day + '" style="width:100%">' + spans.join(' ') + '</div>'
 
     var jstr = JSON.stringify(annotation);
-    console.log(jstr);
+    jQuery.ajax({
+      type:"POST",
+      url:"http://www.shared-canvas.org/services/anno/calendars/annotation",
+      data:jstr,
+      dataType:"json",
+      contentType: "application/json",
+    });
 
     var repText = [];
     repText.push('<span data-type="month" style="' + form.find('select[name=month]').attr('style') + '%;">' + monthName + '</span>');
@@ -201,13 +238,11 @@ var Kalendar = {
       var je = $(e);
       repText.push('<span data-type="' + je.attr('name') + '" style="' + je.attr('style') + '%;">' + je.val() + '</span>')
     });
-    form.closest('div').empty().append(repText.join(''));
+    var div = form.closest('div');
+    div.empty().append(repText.join(''));
+    div.nextAll('div').first().find('input[type=text]:first').focus();
 
     return false;
-  },
-
-  getManifest: function(url) {
-    return $.getJSON(url);
   },
 
   saveManifest: function() {
@@ -340,7 +375,6 @@ var Kalendar = {
       s += '<input type="hidden" name="canvasId" value="' + canvas['@id'] + '" />'
       _.each(canvas._columns, function(col) {
         left += (width + 10);
-        // s += '<input type="text" name="' + col + '" style="font-weigth:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;"/>'
         if (col == 'month')
           s += Kalendar.monthSelect(top, left, height, width);
         else
