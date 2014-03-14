@@ -233,6 +233,8 @@ var Kalendar = {
     });
 
     var repText = [];
+    // man, this is waaaaaay more convoluted than it should be
+    repText.push(form.find('span.line-number')[0].outerHTML);
     repText.push('<span data-type="month" style="' + form.find('select[name=month]').attr('style') + '%;">' + monthName + '</span>');
     _.each(colInputs, function(e){
       var je = $(e);
