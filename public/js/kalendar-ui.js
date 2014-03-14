@@ -201,7 +201,7 @@ var Kalendar = {
       var je = $(e);
       repText.push('<span data-type="' + je.attr('name') + '" style="' + je.attr('style') + '%;">' + je.val() + '</span>')
     });
-    form.closest('div').empty().append(repText.join());
+    form.closest('div').empty().append(repText.join(''));
 
     return false;
   },
