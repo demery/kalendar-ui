@@ -6,17 +6,15 @@ var Kalendar = {
   folios:          null,
   currFolioIndex:  null,
   currManifestURL: null,
-  columnTypes:     { month: "Month", day: "Day", number: "Golden number",
-    letter: "Dominical letter", date: "Gregorian date", text: "Text" },
-  months: [ 'Ianuarius', 'Februarius', 'Martius', 'Aprilis', 'Maius', 'Iunius', 'Iulius', 'Augustus', 'September', 'October', 'November', 'December' ],
+  columnTypes:     { number: "Golden number", letter: "Dominical letter", day: "Roman day", kni: "Kalends, Nones, Ides", text: "Text" },
+  months:          [ 'Ianuarius', 'Februarius', 'Martius', 'Aprilis', 'Maius', 'Iunius', 'Iulius', 'Augustus', 'September', 'October', 'November', 'December' ],
 
   startPage: function(div_id) {
-    $(div_id).append('<h1>Transcribe a manuscript calendar</h1>')
+    $(div_id).append('<h1>Manuscript calendars</h1>')
       .append($('<div/>', {id: 'ms-list'}));
     this.listManuscripts('#ms-list');
     $(div_id).append($('<div/>', { id: 'new-manuscript' }));
     $('#new-manuscript')
-      .append('<h1>... or ... </h1>')
       .append($('<a/>', {
         class: 'btn btn-primary btn-lg',
         id: 'new-manuscript-link',
@@ -36,9 +34,8 @@ var Kalendar = {
       var items = [];
       _.each(data.resources, function(r) {
         items.push (
-          '<li class="list-group-item"><a class="ms-manifest" id="' +
-          r['@id'] + '">' + r['label'] + '</a> <a href="' + r['@id'] +
-          '">[see]</a> <a class="delete-ms" id="' + r['@id'] +
+          '<li class="list-group-item">' + r['label'] + ' <a href="' + r['@id'] +
+          '">[view]</a> <a class="delete-ms" id="' + r['@id'] +
           '">[delete]</a></li>');
       });
       $("<ul/>", { class: 'list-group', html: items.join("")}).appendTo("div" + div_id);
@@ -59,7 +56,7 @@ var Kalendar = {
       .append(Kalendar.textInput('First folio (e.g., 4r)', 'startFolio'))
       .append(Kalendar.textInput('Last folio (e.g., 10v)', 'endFolio'))
       .append(Kalendar.columnSelects(Object.keys(this.columnTypes).length))
-      .append('<input type="submit" class="btn btn-default" value="Submit"/><br/>');
+      .append('<input type="submit" class="btn btn-default" value="Save"/><br/>');
     $(div_id)
       .empty()
       .append('<h1>Add a manuscript</h1>')
@@ -98,7 +95,7 @@ var Kalendar = {
       .append('<br/>')
       .append('<input type="hidden" name="folioIndex" value="' + index + '"/>')
       .append('<input type="hidden" name="manifestId" value="' + url + '"/>')
-      .append('<input type="submit" value="Submit"/>');
+      .append('<input type="submit" class="btn btn-default" value="Continue"/>');
       $('#' + div_id).empty()
       .append("<h1>" + Kalendar['shelfmark'] + ' ' + currFolio + '</h1>')
       .append(folioForm);
@@ -137,9 +134,9 @@ var Kalendar = {
     div.empty().append('<h1>' + shelfmark + ', ' + folio + '</h1>');
     var yoff = div.find('h1:first').offset().top;
     yoff += (div.find('h1:first').height() + 3);
-    div.append(Kalendar.columnHeaders(canvas._columns, 75, yoff));
+    div.append(Kalendar.columnHeaders(canvas._columns, 100, yoff));
     yoff = (div.find('span:last').offset().top + div.find('span:last').height() + 3);
-    var lines = Kalendar.lineInputs(manifest, index, 75, yoff);
+    var lines = Kalendar.lineInputs(manifest, index, 100, yoff);
     div.append(lines);
     var lt = div.find('form:last [name=month]:first').offset().top;
     var ll = div.find('form:last [name=month]:first').offset().left;
@@ -149,7 +146,7 @@ var Kalendar = {
 
     var f = $('<div/>');
     f.append('<form id="next-folio"/>');
-    f.find('form').append('<input type="submit" value"Next folio"/>');
+    f.find('form').append('<input type="submit" class="btn btn-default"  value="Next folio"/>');
     f.find('input').css('position', 'absolute').css('top', top).css('left', ll);
 
     div.append(f);
@@ -168,7 +165,7 @@ var Kalendar = {
       Kalendar.nextFolio(nextIndex,manifestId,div_id);
       return false;
     });
-    div.find('input[type!=hidden][type!=submit]:first').focus();
+    div.find('select:first').focus();
     return false;
   },
 
@@ -213,11 +210,15 @@ var Kalendar = {
 
     var spans = [];
 
-    var colInputs = form.find('input[type!=hidden][type!=submit]');
+    var colInputs = form.find('select, input[type!=hidden][type!=submit]');
     var colWidth = Math.round(100/_.size(colInputs));
 
-    spans.push('<span data-type="month" style="width:' + colWidth + '%;">' + monthName + '</span>')
+    // spans.push('<span data-type="month" style="width:' + colWidth + '%;">' + monthName + '</span>')
     _.each(colInputs, function(el){
+      var fieldType = el.nodeName.toLowerCase();
+      if (fieldType == 'select')
+        spans.push('<span data-type="' + $(el).attr('name') + '" style="width:' + colWidth + '%;">' + $(el).find('option:selected').text() + '</span>');
+      else
         spans.push('<span data-type="' + $(el).attr('name') + '" style="width:' + colWidth + '%;">' + $(el).val() + '</span>');
     });
 
@@ -235,14 +236,18 @@ var Kalendar = {
     var repText = [];
     // man, this is waaaaaay more convoluted than it should be
     repText.push(form.find('span.line-number')[0].outerHTML);
-    repText.push('<span data-type="month" style="' + form.find('select[name=month]').attr('style') + '%;">' + monthName + '</span>');
+    // repText.push('<span data-type="month" style="' + form.find('select[name=month]').attr('style') + '%;">' + monthName + '</span>');
     _.each(colInputs, function(e){
       var je = $(e);
-      repText.push('<span data-type="' + je.attr('name') + '" style="' + je.attr('style') + '%;">' + je.val() + '</span>')
+      var fieldType = e.nodeName.toLowerCase();
+      if (fieldType == 'select')
+        repText.push('<span data-type="' + je.attr('name') + '" style="' + je.attr('style') + '%;">' + je.find('option:selected').text() + '</span>');
+      else
+        repText.push('<span data-type="' + je.attr('name') + '" style="' + je.attr('style') + '%;">' + je.val() + '</span>');
     });
     var div = form.closest('div');
     div.empty().append(repText.join(''));
-    div.nextAll('div').first().find('input[type=text]:first').focus();
+    div.nextAll('div').first().find('select:first').focus();
 
     return false;
   },
@@ -376,10 +381,16 @@ var Kalendar = {
       s += '<span class="line-number" style="position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;text-align:right">' + (lineIndex + 1) + '</span>'
       s += '<input type="hidden" name="xywh" value="' + xywh + '" />'
       s += '<input type="hidden" name="canvasId" value="' + canvas['@id'] + '" />'
+      left += (width + 10);
+      s += Kalendar.monthSelect(top, left, height, width);
+      left += (width + 10);
+      s += Kalendar.dateSelect(top, left, height, width);
       _.each(canvas._columns, function(col) {
         left += (width + 10);
-        if (col == 'month')
-          s += Kalendar.monthSelect(top, left, height, width);
+        if (col == 'kni')
+          s += Kalendar.kniSelect(top, left, height, width);
+        else if (col == 'letter')
+          s += Kalendar.letterSelect(top, left, height, width);
         else
           s += '<input type="text" name="' + col + '" style="position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;"/>'
       });
@@ -392,6 +403,42 @@ var Kalendar = {
     }
     return s;
   },
+
+  letterSelect: function(top, left, height, width) {
+    var s = '';
+    s += '<select name="letter" style="position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">';
+    s += '<option/>'
+    for(var i = 0; i < 7; i++) {
+      var c = String.fromCharCode(97 + i);
+      s += '<option value="' + c + '">' + c + '</option>'
+    };
+    s += '</select>'
+    return s;
+  },
+
+
+  kniSelect: function(top, left, height, width) {
+    var s = '';
+    s += '<select name="kni" style="position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">';
+    s += '<option/>'
+    _.each(['Kalends', 'Nones', 'Ides' ], function(kni){
+      s += '<option value="' + kni + '">' + kni.charAt(0) + '</option>'
+    });
+    s += '</select>'
+    return s;
+  },
+
+  dateSelect: function(top, left, height, width) {
+    var s = '';
+    s += '<select name="date" style="position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">';
+    s += '<option/>'
+    _.each(_.range(31), function(date){
+      s += '<option value="' + (date + 1) + '">' + (date + 1) + '</option>'
+    });
+    s += '</select>'
+    return s;
+  },
+
 
   monthSelect: function(top, left, height, width) {
     var s = '';
@@ -411,6 +458,10 @@ var Kalendar = {
     var left   = 5;
     var s      = '';
     s = '<span style="font-weight:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">Line no.</span>'
+    left += (width + 10)
+    s += '<span style="font-weight:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">Month</span>'
+    left += (width + 10)
+    s += '<span style="font-weight:bold;position:absolute;top:' + top + 'px;left:' + left + 'px;height:' + height + 'px;width: ' + width + 'px;">Day</span>'
     _.each(columnKeys, function(key) {
         left += (width + 10)
          var columnName = Kalendar.columnTypes[key]
