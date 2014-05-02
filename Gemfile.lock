@@ -4,6 +4,7 @@ GEM
     daemons (1.1.9)
     eventmachine (1.0.3)
     rack (1.5.2)
+    roman-numerals (0.3.0)
     thin (1.6.1)
       daemons (>= 1.0.9)
       eventmachine (>= 1.0.0)
@@ -14,4 +15,5 @@ PLATFORMS
 
 DEPENDENCIES
   rack
+  roman-numerals
   thin

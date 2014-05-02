@@ -1,0 +1,3136 @@
+[
+  {
+    "day": "01",
+    "month": "01",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "iii",
+      "arabic": 3
+    },
+    "kni": "kalends"
+  },
+  {
+    "day": "02",
+    "month": "01",
+    "dominicalLetter": "b",
+    "kni": "4 nones"
+  },
+  {
+    "day": "03",
+    "month": "01",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "xi",
+      "arabic": 11
+    },
+    "kni": "3 nones"
+  },
+  {
+    "day": "04",
+    "month": "01",
+    "dominicalLetter": "d",
+    "kni": "2 nones"
+  },
+  {
+    "day": "05",
+    "month": "01",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xix",
+      "arabic": 19
+    },
+    "kni": "nones"
+  },
+  {
+    "day": "06",
+    "month": "01",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "viii",
+      "arabic": 8
+    },
+    "kni": "8 ides"
+  },
+  {
+    "day": "07",
+    "month": "01",
+    "dominicalLetter": "g",
+    "kni": "7 ides"
+  },
+  {
+    "day": "08",
+    "month": "01",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xvi",
+      "arabic": 16
+    },
+    "kni": "6 ides"
+  },
+  {
+    "day": "09",
+    "month": "01",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "v",
+      "arabic": 5
+    },
+    "kni": "5 ides"
+  },
+  {
+    "day": "10",
+    "month": "01",
+    "dominicalLetter": "c",
+    "kni": "4 ides"
+  },
+  {
+    "day": "11",
+    "month": "01",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xiii",
+      "arabic": 13
+    },
+    "kni": "3 ides"
+  },
+  {
+    "day": "12",
+    "month": "01",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "ii",
+      "arabic": 2
+    },
+    "kni": "2 ides"
+  },
+  {
+    "day": "13",
+    "month": "01",
+    "dominicalLetter": "f",
+    "kni": "ides"
+  },
+  {
+    "day": "14",
+    "month": "01",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "x",
+      "arabic": 10
+    },
+    "kni": "18 kalends"
+  },
+  {
+    "day": "15",
+    "month": "01",
+    "dominicalLetter": "A",
+    "kni": "17 kalends"
+  },
+  {
+    "day": "16",
+    "month": "01",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "xviii",
+      "arabic": 18
+    },
+    "kni": "16 kalends"
+  },
+  {
+    "day": "17",
+    "month": "01",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "vii",
+      "arabic": 7
+    },
+    "kni": "15 kalends"
+  },
+  {
+    "day": "18",
+    "month": "01",
+    "dominicalLetter": "d",
+    "kni": "14 kalends"
+  },
+  {
+    "day": "19",
+    "month": "01",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xv",
+      "arabic": 15
+    },
+    "kni": "13 kalends"
+  },
+  {
+    "day": "20",
+    "month": "01",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "iiii",
+      "arabic": 4
+    },
+    "kni": "12 kalends"
+  },
+  {
+    "day": "21",
+    "month": "01",
+    "dominicalLetter": "g",
+    "kni": "11 kalends"
+  },
+  {
+    "day": "22",
+    "month": "01",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xii",
+      "arabic": 12
+    },
+    "kni": "10 kalends"
+  },
+  {
+    "day": "23",
+    "month": "01",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "i",
+      "arabic": 1
+    },
+    "kni": "9 kalends"
+  },
+  {
+    "day": "24",
+    "month": "01",
+    "dominicalLetter": "c",
+    "kni": "8 kalends"
+  },
+  {
+    "day": "25",
+    "month": "01",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "ix",
+      "arabic": 9
+    },
+    "kni": "7 kalends"
+  },
+  {
+    "day": "26",
+    "month": "01",
+    "dominicalLetter": "e",
+    "kni": "6 kalends"
+  },
+  {
+    "day": "27",
+    "month": "01",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "xvii",
+      "arabic": 17
+    },
+    "kni": "5 kalends"
+  },
+  {
+    "day": "28",
+    "month": "01",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "vi",
+      "arabic": 6
+    },
+    "kni": "4 kalends"
+  },
+  {
+    "day": "29",
+    "month": "01",
+    "dominicalLetter": "A",
+    "kni": "3 kalends"
+  },
+  {
+    "day": "30",
+    "month": "01",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "xiiii",
+      "arabic": 14
+    },
+    "kni": "2 kalends"
+  },
+  {
+    "day": "31",
+    "month": "01",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "iii",
+      "arabic": 3
+    },
+    "kni": "1 kalends"
+  },
+  {
+    "day": "01",
+    "month": "02",
+    "dominicalLetter": "d",
+    "kni": "kalends"
+  },
+  {
+    "day": "02",
+    "month": "02",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xi",
+      "arabic": 11
+    },
+    "kni": "4 nones"
+  },
+  {
+    "day": "03",
+    "month": "02",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "xix",
+      "arabic": 19
+    },
+    "kni": "3 nones"
+  },
+  {
+    "day": "04",
+    "month": "02",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "viii",
+      "arabic": 8
+    },
+    "kni": "2 nones"
+  },
+  {
+    "day": "05",
+    "month": "02",
+    "dominicalLetter": "A",
+    "kni": "nones"
+  },
+  {
+    "day": "06",
+    "month": "02",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "xvi",
+      "arabic": 16
+    },
+    "kni": "8 ides"
+  },
+  {
+    "day": "07",
+    "month": "02",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "v",
+      "arabic": 5
+    },
+    "kni": "7 ides"
+  },
+  {
+    "day": "08",
+    "month": "02",
+    "dominicalLetter": "d",
+    "kni": "6 ides"
+  },
+  {
+    "day": "09",
+    "month": "02",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xiii",
+      "arabic": 13
+    },
+    "kni": "5 ides"
+  },
+  {
+    "day": "10",
+    "month": "02",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "ii",
+      "arabic": 2
+    },
+    "kni": "4 ides"
+  },
+  {
+    "day": "11",
+    "month": "02",
+    "dominicalLetter": "g",
+    "kni": "3 ides"
+  },
+  {
+    "day": "12",
+    "month": "02",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "x",
+      "arabic": 10
+    },
+    "kni": "2 ides"
+  },
+  {
+    "day": "13",
+    "month": "02",
+    "dominicalLetter": "b",
+    "kni": "ides"
+  },
+  {
+    "day": "14",
+    "month": "02",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "xviii",
+      "arabic": 18
+    },
+    "kni": "15 kalends"
+  },
+  {
+    "day": "15",
+    "month": "02",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "vii",
+      "arabic": 7
+    },
+    "kni": "14 kalends"
+  },
+  {
+    "day": "16",
+    "month": "02",
+    "dominicalLetter": "e",
+    "kni": "13 kalends"
+  },
+  {
+    "day": "17",
+    "month": "02",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "xv",
+      "arabic": 15
+    },
+    "kni": "12 kalends"
+  },
+  {
+    "day": "18",
+    "month": "02",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "iiii",
+      "arabic": 4
+    },
+    "kni": "11 kalends"
+  },
+  {
+    "day": "19",
+    "month": "02",
+    "dominicalLetter": "A",
+    "kni": "10 kalends"
+  },
+  {
+    "day": "20",
+    "month": "02",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "xii",
+      "arabic": 12
+    },
+    "kni": "9 kalends"
+  },
+  {
+    "day": "21",
+    "month": "02",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "i",
+      "arabic": 1
+    },
+    "kni": "8 kalends"
+  },
+  {
+    "day": "22",
+    "month": "02",
+    "dominicalLetter": "d",
+    "kni": "7 kalends"
+  },
+  {
+    "day": "23",
+    "month": "02",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "ix",
+      "arabic": 9
+    },
+    "kni": "6 kalends"
+  },
+  {
+    "day": "24",
+    "month": "02",
+    "dominicalLetter": "f",
+    "kni": "5 kalends"
+  },
+  {
+    "day": "25",
+    "month": "02",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "xvii",
+      "arabic": 17
+    },
+    "kni": "4 kalends"
+  },
+  {
+    "day": "26",
+    "month": "02",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "vi",
+      "arabic": 6
+    },
+    "kni": "3 kalends"
+  },
+  {
+    "day": "27",
+    "month": "02",
+    "dominicalLetter": "b",
+    "kni": "2 kalends"
+  },
+  {
+    "day": "28",
+    "month": "02",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "xiiii",
+      "arabic": 14
+    },
+    "kni": "1 kalends"
+  },
+  {
+    "day": "01",
+    "month": "03",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "iii",
+      "arabic": 3
+    },
+    "kni": "kalends"
+  },
+  {
+    "day": "02",
+    "month": "03",
+    "dominicalLetter": "e",
+    "kni": "6 nones"
+  },
+  {
+    "day": "03",
+    "month": "03",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "xi",
+      "arabic": 11
+    },
+    "kni": "5 nones"
+  },
+  {
+    "day": "04",
+    "month": "03",
+    "dominicalLetter": "g",
+    "kni": "4 nones"
+  },
+  {
+    "day": "05",
+    "month": "03",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xix",
+      "arabic": 19
+    },
+    "kni": "3 nones"
+  },
+  {
+    "day": "06",
+    "month": "03",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "viii",
+      "arabic": 8
+    },
+    "kni": "2 nones"
+  },
+  {
+    "day": "07",
+    "month": "03",
+    "dominicalLetter": "c",
+    "kni": "nones"
+  },
+  {
+    "day": "08",
+    "month": "03",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xvi",
+      "arabic": 16
+    },
+    "kni": "8 ides"
+  },
+  {
+    "day": "09",
+    "month": "03",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "v",
+      "arabic": 5
+    },
+    "kni": "7 ides"
+  },
+  {
+    "day": "10",
+    "month": "03",
+    "dominicalLetter": "f",
+    "kni": "6 ides"
+  },
+  {
+    "day": "11",
+    "month": "03",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "xiii",
+      "arabic": 13
+    },
+    "kni": "5 ides"
+  },
+  {
+    "day": "12",
+    "month": "03",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "ii",
+      "arabic": 2
+    },
+    "kni": "4 ides"
+  },
+  {
+    "day": "13",
+    "month": "03",
+    "dominicalLetter": "b",
+    "kni": "3 ides"
+  },
+  {
+    "day": "14",
+    "month": "03",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "x",
+      "arabic": 10
+    },
+    "kni": "2 ides"
+  },
+  {
+    "day": "15",
+    "month": "03",
+    "dominicalLetter": "d",
+    "kni": "ides"
+  },
+  {
+    "day": "16",
+    "month": "03",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xviii",
+      "arabic": 18
+    },
+    "kni": "16 kalends"
+  },
+  {
+    "day": "17",
+    "month": "03",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "vii",
+      "arabic": 7
+    },
+    "kni": "15 kalends"
+  },
+  {
+    "day": "18",
+    "month": "03",
+    "dominicalLetter": "g",
+    "kni": "14 kalends"
+  },
+  {
+    "day": "19",
+    "month": "03",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xv",
+      "arabic": 15
+    },
+    "kni": "13 kalends"
+  },
+  {
+    "day": "20",
+    "month": "03",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "iiii",
+      "arabic": 4
+    },
+    "kni": "12 kalends"
+  },
+  {
+    "day": "21",
+    "month": "03",
+    "dominicalLetter": "c",
+    "kni": "11 kalends"
+  },
+  {
+    "day": "22",
+    "month": "03",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xii",
+      "arabic": 12
+    },
+    "kni": "10 kalends"
+  },
+  {
+    "day": "23",
+    "month": "03",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "i",
+      "arabic": 1
+    },
+    "kni": "9 kalends"
+  },
+  {
+    "day": "24",
+    "month": "03",
+    "dominicalLetter": "f",
+    "kni": "8 kalends"
+  },
+  {
+    "day": "25",
+    "month": "03",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "ix",
+      "arabic": 9
+    },
+    "kni": "7 kalends"
+  },
+  {
+    "day": "26",
+    "month": "03",
+    "dominicalLetter": "A",
+    "kni": "6 kalends"
+  },
+  {
+    "day": "27",
+    "month": "03",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "xvii",
+      "arabic": 17
+    },
+    "kni": "5 kalends"
+  },
+  {
+    "day": "28",
+    "month": "03",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "vi",
+      "arabic": 6
+    },
+    "kni": "4 kalends"
+  },
+  {
+    "day": "29",
+    "month": "03",
+    "dominicalLetter": "d",
+    "kni": "3 kalends"
+  },
+  {
+    "day": "30",
+    "month": "03",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xiiii",
+      "arabic": 14
+    },
+    "kni": "2 kalends"
+  },
+  {
+    "day": "31",
+    "month": "03",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "iii",
+      "arabic": 3
+    },
+    "kni": "1 kalends"
+  },
+  {
+    "day": "01",
+    "month": "04",
+    "dominicalLetter": "g",
+    "kni": "kalends"
+  },
+  {
+    "day": "02",
+    "month": "04",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xi",
+      "arabic": 11
+    },
+    "kni": "4 nones"
+  },
+  {
+    "day": "03",
+    "month": "04",
+    "dominicalLetter": "b",
+    "kni": "3 nones"
+  },
+  {
+    "day": "04",
+    "month": "04",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "xix",
+      "arabic": 19
+    },
+    "kni": "2 nones"
+  },
+  {
+    "day": "05",
+    "month": "04",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "viii",
+      "arabic": 8
+    },
+    "kni": "nones"
+  },
+  {
+    "day": "06",
+    "month": "04",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xvi",
+      "arabic": 16
+    },
+    "kni": "8 ides"
+  },
+  {
+    "day": "07",
+    "month": "04",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "v",
+      "arabic": 5
+    },
+    "kni": "7 ides"
+  },
+  {
+    "day": "08",
+    "month": "04",
+    "dominicalLetter": "g",
+    "kni": "6 ides"
+  },
+  {
+    "day": "09",
+    "month": "04",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xiii",
+      "arabic": 13
+    },
+    "kni": "5 ides"
+  },
+  {
+    "day": "10",
+    "month": "04",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "ii",
+      "arabic": 2
+    },
+    "kni": "4 ides"
+  },
+  {
+    "day": "11",
+    "month": "04",
+    "dominicalLetter": "c",
+    "kni": "3 ides"
+  },
+  {
+    "day": "12",
+    "month": "04",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "x",
+      "arabic": 10
+    },
+    "kni": "2 ides"
+  },
+  {
+    "day": "13",
+    "month": "04",
+    "dominicalLetter": "e",
+    "kni": "ides"
+  },
+  {
+    "day": "14",
+    "month": "04",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "xviii",
+      "arabic": 18
+    },
+    "kni": "17 kalends"
+  },
+  {
+    "day": "15",
+    "month": "04",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "vii",
+      "arabic": 7
+    },
+    "kni": "16 kalends"
+  },
+  {
+    "day": "16",
+    "month": "04",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "vii",
+      "arabic": 7
+    },
+    "kni": "15 kalends"
+  },
+  {
+    "day": "17",
+    "month": "04",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "xv",
+      "arabic": 15
+    },
+    "kni": "14 kalends"
+  },
+  {
+    "day": "18",
+    "month": "04",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "iiii",
+      "arabic": 4
+    },
+    "kni": "13 kalends"
+  },
+  {
+    "day": "19",
+    "month": "04",
+    "dominicalLetter": "d",
+    "kni": "12 kalends"
+  },
+  {
+    "day": "20",
+    "month": "04",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xii",
+      "arabic": 12
+    },
+    "kni": "11 kalends"
+  },
+  {
+    "day": "21",
+    "month": "04",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "i",
+      "arabic": 1
+    },
+    "kni": "10 kalends"
+  },
+  {
+    "day": "22",
+    "month": "04",
+    "dominicalLetter": "g",
+    "kni": "9 kalends"
+  },
+  {
+    "day": "23",
+    "month": "04",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "ix",
+      "arabic": 9
+    },
+    "kni": "8 kalends"
+  },
+  {
+    "day": "24",
+    "month": "04",
+    "dominicalLetter": "b",
+    "kni": "7 kalends"
+  },
+  {
+    "day": "25",
+    "month": "04",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "xvii",
+      "arabic": 17
+    },
+    "kni": "6 kalends"
+  },
+  {
+    "day": "26",
+    "month": "04",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "vi",
+      "arabic": 6
+    },
+    "kni": "5 kalends"
+  },
+  {
+    "day": "27",
+    "month": "04",
+    "dominicalLetter": "e",
+    "kni": "4 kalends"
+  },
+  {
+    "day": "28",
+    "month": "04",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "xiiii",
+      "arabic": 14
+    },
+    "kni": "3 kalends"
+  },
+  {
+    "day": "29",
+    "month": "04",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "iii",
+      "arabic": 3
+    },
+    "kni": "2 kalends"
+  },
+  {
+    "day": "30",
+    "month": "04",
+    "dominicalLetter": "A",
+    "kni": "1 kalends"
+  },
+  {
+    "day": "01",
+    "month": "05",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "xi",
+      "arabic": 11
+    },
+    "kni": "kalends"
+  },
+  {
+    "day": "02",
+    "month": "05",
+    "dominicalLetter": "c",
+    "kni": "6 nones"
+  },
+  {
+    "day": "03",
+    "month": "05",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xix",
+      "arabic": 19
+    },
+    "kni": "5 nones"
+  },
+  {
+    "day": "04",
+    "month": "05",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "viii",
+      "arabic": 8
+    },
+    "kni": "4 nones"
+  },
+  {
+    "day": "05",
+    "month": "05",
+    "dominicalLetter": "f",
+    "kni": "3 nones"
+  },
+  {
+    "day": "06",
+    "month": "05",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "xvi",
+      "arabic": 16
+    },
+    "kni": "2 nones"
+  },
+  {
+    "day": "07",
+    "month": "05",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "v",
+      "arabic": 5
+    },
+    "kni": "nones"
+  },
+  {
+    "day": "08",
+    "month": "05",
+    "dominicalLetter": "b",
+    "kni": "8 ides"
+  },
+  {
+    "day": "09",
+    "month": "05",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "xiii",
+      "arabic": 13
+    },
+    "kni": "7 ides"
+  },
+  {
+    "day": "10",
+    "month": "05",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "ii",
+      "arabic": 2
+    },
+    "kni": "6 ides"
+  },
+  {
+    "day": "11",
+    "month": "05",
+    "dominicalLetter": "e",
+    "kni": "5 ides"
+  },
+  {
+    "day": "12",
+    "month": "05",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "x",
+      "arabic": 10
+    },
+    "kni": "4 ides"
+  },
+  {
+    "day": "13",
+    "month": "05",
+    "dominicalLetter": "g",
+    "kni": "3 ides"
+  },
+  {
+    "day": "14",
+    "month": "05",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xviii",
+      "arabic": 18
+    },
+    "kni": "2 ides"
+  },
+  {
+    "day": "15",
+    "month": "05",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "vii",
+      "arabic": 7
+    },
+    "kni": "ides"
+  },
+  {
+    "day": "16",
+    "month": "05",
+    "dominicalLetter": "c",
+    "kni": "16 kalends"
+  },
+  {
+    "day": "17",
+    "month": "05",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xv",
+      "arabic": 15
+    },
+    "kni": "15 kalends"
+  },
+  {
+    "day": "18",
+    "month": "05",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "iiii",
+      "arabic": 4
+    },
+    "kni": "14 kalends"
+  },
+  {
+    "day": "19",
+    "month": "05",
+    "dominicalLetter": "f",
+    "kni": "13 kalends"
+  },
+  {
+    "day": "20",
+    "month": "05",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "xii",
+      "arabic": 12
+    },
+    "kni": "12 kalends"
+  },
+  {
+    "day": "21",
+    "month": "05",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "i",
+      "arabic": 1
+    },
+    "kni": "11 kalends"
+  },
+  {
+    "day": "22",
+    "month": "05",
+    "dominicalLetter": "b",
+    "kni": "10 kalends"
+  },
+  {
+    "day": "23",
+    "month": "05",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "ix",
+      "arabic": 9
+    },
+    "kni": "9 kalends"
+  },
+  {
+    "day": "24",
+    "month": "05",
+    "dominicalLetter": "d",
+    "kni": "8 kalends"
+  },
+  {
+    "day": "25",
+    "month": "05",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xvii",
+      "arabic": 17
+    },
+    "kni": "7 kalends"
+  },
+  {
+    "day": "26",
+    "month": "05",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "vi",
+      "arabic": 6
+    },
+    "kni": "6 kalends"
+  },
+  {
+    "day": "27",
+    "month": "05",
+    "dominicalLetter": "g",
+    "kni": "5 kalends"
+  },
+  {
+    "day": "28",
+    "month": "05",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xiiii",
+      "arabic": 14
+    },
+    "kni": "4 kalends"
+  },
+  {
+    "day": "29",
+    "month": "05",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "iii",
+      "arabic": 3
+    },
+    "kni": "3 kalends"
+  },
+  {
+    "day": "30",
+    "month": "05",
+    "dominicalLetter": "c",
+    "kni": "2 kalends"
+  },
+  {
+    "day": "31",
+    "month": "05",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xi",
+      "arabic": 11
+    },
+    "kni": "1 kalends"
+  },
+  {
+    "day": "01",
+    "month": "06",
+    "dominicalLetter": "e",
+    "kni": "kalends"
+  },
+  {
+    "day": "02",
+    "month": "06",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "xix",
+      "arabic": 19
+    },
+    "kni": "4 nones"
+  },
+  {
+    "day": "03",
+    "month": "06",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "viii",
+      "arabic": 8
+    },
+    "kni": "3 nones"
+  },
+  {
+    "day": "04",
+    "month": "06",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xvi",
+      "arabic": 16
+    },
+    "kni": "2 nones"
+  },
+  {
+    "day": "05",
+    "month": "06",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "v",
+      "arabic": 5
+    },
+    "kni": "nones"
+  },
+  {
+    "day": "06",
+    "month": "06",
+    "dominicalLetter": "c",
+    "kni": "8 ides"
+  },
+  {
+    "day": "07",
+    "month": "06",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xiii",
+      "arabic": 13
+    },
+    "kni": "7 ides"
+  },
+  {
+    "day": "08",
+    "month": "06",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "ii",
+      "arabic": 2
+    },
+    "kni": "6 ides"
+  },
+  {
+    "day": "09",
+    "month": "06",
+    "dominicalLetter": "f",
+    "kni": "5 ides"
+  },
+  {
+    "day": "10",
+    "month": "06",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "x",
+      "arabic": 10
+    },
+    "kni": "4 ides"
+  },
+  {
+    "day": "11",
+    "month": "06",
+    "dominicalLetter": "A",
+    "kni": "3 ides"
+  },
+  {
+    "day": "12",
+    "month": "06",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "xviii",
+      "arabic": 18
+    },
+    "kni": "2 ides"
+  },
+  {
+    "day": "13",
+    "month": "06",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "vii",
+      "arabic": 7
+    },
+    "kni": "ides"
+  },
+  {
+    "day": "14",
+    "month": "06",
+    "dominicalLetter": "d",
+    "kni": "17 kalends"
+  },
+  {
+    "day": "15",
+    "month": "06",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xv",
+      "arabic": 15
+    },
+    "kni": "16 kalends"
+  },
+  {
+    "day": "16",
+    "month": "06",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "iiii",
+      "arabic": 4
+    },
+    "kni": "15 kalends"
+  },
+  {
+    "day": "17",
+    "month": "06",
+    "dominicalLetter": "g",
+    "kni": "14 kalends"
+  },
+  {
+    "day": "18",
+    "month": "06",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xii",
+      "arabic": 12
+    },
+    "kni": "13 kalends"
+  },
+  {
+    "day": "19",
+    "month": "06",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "i",
+      "arabic": 1
+    },
+    "kni": "12 kalends"
+  },
+  {
+    "day": "20",
+    "month": "06",
+    "dominicalLetter": "c",
+    "kni": "11 kalends"
+  },
+  {
+    "day": "21",
+    "month": "06",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "ix",
+      "arabic": 9
+    },
+    "kni": "10 kalends"
+  },
+  {
+    "day": "22",
+    "month": "06",
+    "dominicalLetter": "e",
+    "kni": "9 kalends"
+  },
+  {
+    "day": "23",
+    "month": "06",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "xvii",
+      "arabic": 17
+    },
+    "kni": "8 kalends"
+  },
+  {
+    "day": "24",
+    "month": "06",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "vi",
+      "arabic": 6
+    },
+    "kni": "7 kalends"
+  },
+  {
+    "day": "25",
+    "month": "06",
+    "dominicalLetter": "A",
+    "kni": "6 kalends"
+  },
+  {
+    "day": "26",
+    "month": "06",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "xiiii",
+      "arabic": 14
+    },
+    "kni": "5 kalends"
+  },
+  {
+    "day": "27",
+    "month": "06",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "iii",
+      "arabic": 3
+    },
+    "kni": "4 kalends"
+  },
+  {
+    "day": "28",
+    "month": "06",
+    "dominicalLetter": "d",
+    "kni": "3 kalends"
+  },
+  {
+    "day": "29",
+    "month": "06",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xi",
+      "arabic": 11
+    },
+    "kni": "2 kalends"
+  },
+  {
+    "day": "30",
+    "month": "06",
+    "dominicalLetter": "f",
+    "kni": "1 kalends"
+  },
+  {
+    "day": "01",
+    "month": "07",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "xix",
+      "arabic": 19
+    },
+    "kni": "kalends"
+  },
+  {
+    "day": "02",
+    "month": "07",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "viii",
+      "arabic": 8
+    },
+    "kni": "6 nones"
+  },
+  {
+    "day": "03",
+    "month": "07",
+    "dominicalLetter": "b",
+    "kni": "5 nones"
+  },
+  {
+    "day": "04",
+    "month": "07",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "xvi",
+      "arabic": 16
+    },
+    "kni": "4 nones"
+  },
+  {
+    "day": "05",
+    "month": "07",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "v",
+      "arabic": 5
+    },
+    "kni": "3 nones"
+  },
+  {
+    "day": "06",
+    "month": "07",
+    "dominicalLetter": "e",
+    "kni": "2 nones"
+  },
+  {
+    "day": "07",
+    "month": "07",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "xiii",
+      "arabic": 13
+    },
+    "kni": "nones"
+  },
+  {
+    "day": "08",
+    "month": "07",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "ii",
+      "arabic": 2
+    },
+    "kni": "8 ides"
+  },
+  {
+    "day": "09",
+    "month": "07",
+    "dominicalLetter": "A",
+    "kni": "7 ides"
+  },
+  {
+    "day": "10",
+    "month": "07",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "x",
+      "arabic": 10
+    },
+    "kni": "6 ides"
+  },
+  {
+    "day": "11",
+    "month": "07",
+    "dominicalLetter": "c",
+    "kni": "5 ides"
+  },
+  {
+    "day": "12",
+    "month": "07",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xviii",
+      "arabic": 18
+    },
+    "kni": "4 ides"
+  },
+  {
+    "day": "13",
+    "month": "07",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "vii",
+      "arabic": 7
+    },
+    "kni": "3 ides"
+  },
+  {
+    "day": "14",
+    "month": "07",
+    "dominicalLetter": "f",
+    "kni": "2 ides"
+  },
+  {
+    "day": "15",
+    "month": "07",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "xv",
+      "arabic": 15
+    },
+    "kni": "ides"
+  },
+  {
+    "day": "16",
+    "month": "07",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "iiii",
+      "arabic": 4
+    },
+    "kni": "16 kalends"
+  },
+  {
+    "day": "17",
+    "month": "07",
+    "dominicalLetter": "b",
+    "kni": "15 kalends"
+  },
+  {
+    "day": "18",
+    "month": "07",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "xii",
+      "arabic": 12
+    },
+    "kni": "14 kalends"
+  },
+  {
+    "day": "19",
+    "month": "07",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "i",
+      "arabic": 1
+    },
+    "kni": "13 kalends"
+  },
+  {
+    "day": "20",
+    "month": "07",
+    "dominicalLetter": "e",
+    "kni": "12 kalends"
+  },
+  {
+    "day": "21",
+    "month": "07",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "ix",
+      "arabic": 9
+    },
+    "kni": "11 kalends"
+  },
+  {
+    "day": "22",
+    "month": "07",
+    "dominicalLetter": "g",
+    "kni": "10 kalends"
+  },
+  {
+    "day": "23",
+    "month": "07",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xvii",
+      "arabic": 17
+    },
+    "kni": "9 kalends"
+  },
+  {
+    "day": "24",
+    "month": "07",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "vi",
+      "arabic": 6
+    },
+    "kni": "8 kalends"
+  },
+  {
+    "day": "25",
+    "month": "07",
+    "dominicalLetter": "c",
+    "kni": "7 kalends"
+  },
+  {
+    "day": "26",
+    "month": "07",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xiiii",
+      "arabic": 14
+    },
+    "kni": "6 kalends"
+  },
+  {
+    "day": "27",
+    "month": "07",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "iii",
+      "arabic": 3
+    },
+    "kni": "5 kalends"
+  },
+  {
+    "day": "28",
+    "month": "07",
+    "dominicalLetter": "f",
+    "kni": "4 kalends"
+  },
+  {
+    "day": "29",
+    "month": "07",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "xi",
+      "arabic": 11
+    },
+    "kni": "3 kalends"
+  },
+  {
+    "day": "30",
+    "month": "07",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xix",
+      "arabic": 19
+    },
+    "kni": "2 kalends"
+  },
+  {
+    "day": "31",
+    "month": "07",
+    "dominicalLetter": "b",
+    "kni": "1 kalends"
+  },
+  {
+    "day": "01",
+    "month": "08",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "viii",
+      "arabic": 8
+    },
+    "kni": "kalends"
+  },
+  {
+    "day": "02",
+    "month": "08",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xvi",
+      "arabic": 16
+    },
+    "kni": "4 nones"
+  },
+  {
+    "day": "03",
+    "month": "08",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "v",
+      "arabic": 5
+    },
+    "kni": "3 nones"
+  },
+  {
+    "day": "04",
+    "month": "08",
+    "dominicalLetter": "f",
+    "kni": "2 nones"
+  },
+  {
+    "day": "05",
+    "month": "08",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "xiii",
+      "arabic": 13
+    },
+    "kni": "nones"
+  },
+  {
+    "day": "06",
+    "month": "08",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "ii",
+      "arabic": 2
+    },
+    "kni": "8 ides"
+  },
+  {
+    "day": "07",
+    "month": "08",
+    "dominicalLetter": "b",
+    "kni": "7 ides"
+  },
+  {
+    "day": "08",
+    "month": "08",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "x",
+      "arabic": 10
+    },
+    "kni": "6 ides"
+  },
+  {
+    "day": "09",
+    "month": "08",
+    "dominicalLetter": "d",
+    "kni": "5 ides"
+  },
+  {
+    "day": "10",
+    "month": "08",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xviii",
+      "arabic": 18
+    },
+    "kni": "4 ides"
+  },
+  {
+    "day": "11",
+    "month": "08",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "vii",
+      "arabic": 7
+    },
+    "kni": "3 ides"
+  },
+  {
+    "day": "12",
+    "month": "08",
+    "dominicalLetter": "g",
+    "kni": "2 ides"
+  },
+  {
+    "day": "13",
+    "month": "08",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xv",
+      "arabic": 15
+    },
+    "kni": "ides"
+  },
+  {
+    "day": "14",
+    "month": "08",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "iiii",
+      "arabic": 4
+    },
+    "kni": "18 kalends"
+  },
+  {
+    "day": "15",
+    "month": "08",
+    "dominicalLetter": "c",
+    "kni": "17 kalends"
+  },
+  {
+    "day": "16",
+    "month": "08",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xii",
+      "arabic": 12
+    },
+    "kni": "16 kalends"
+  },
+  {
+    "day": "17",
+    "month": "08",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "i",
+      "arabic": 1
+    },
+    "kni": "15 kalends"
+  },
+  {
+    "day": "18",
+    "month": "08",
+    "dominicalLetter": "f",
+    "kni": "14 kalends"
+  },
+  {
+    "day": "19",
+    "month": "08",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "ix",
+      "arabic": 9
+    },
+    "kni": "13 kalends"
+  },
+  {
+    "day": "20",
+    "month": "08",
+    "dominicalLetter": "A",
+    "kni": "12 kalends"
+  },
+  {
+    "day": "21",
+    "month": "08",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "xvii",
+      "arabic": 17
+    },
+    "kni": "11 kalends"
+  },
+  {
+    "day": "22",
+    "month": "08",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "vi",
+      "arabic": 6
+    },
+    "kni": "10 kalends"
+  },
+  {
+    "day": "23",
+    "month": "08",
+    "dominicalLetter": "d",
+    "kni": "9 kalends"
+  },
+  {
+    "day": "24",
+    "month": "08",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xiiii",
+      "arabic": 14
+    },
+    "kni": "8 kalends"
+  },
+  {
+    "day": "25",
+    "month": "08",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "iii",
+      "arabic": 3
+    },
+    "kni": "7 kalends"
+  },
+  {
+    "day": "26",
+    "month": "08",
+    "dominicalLetter": "g",
+    "kni": "6 kalends"
+  },
+  {
+    "day": "27",
+    "month": "08",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xi",
+      "arabic": 11
+    },
+    "kni": "5 kalends"
+  },
+  {
+    "day": "28",
+    "month": "08",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "xix",
+      "arabic": 19
+    },
+    "kni": "4 kalends"
+  },
+  {
+    "day": "29",
+    "month": "08",
+    "dominicalLetter": "c",
+    "kni": "3 kalends"
+  },
+  {
+    "day": "30",
+    "month": "08",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "viii",
+      "arabic": 8
+    },
+    "kni": "2 kalends"
+  },
+  {
+    "day": "31",
+    "month": "08",
+    "dominicalLetter": "e",
+    "kni": "1 kalends"
+  },
+  {
+    "day": "01",
+    "month": "09",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "xvi",
+      "arabic": 16
+    },
+    "kni": "kalends"
+  },
+  {
+    "day": "02",
+    "month": "09",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "v",
+      "arabic": 5
+    },
+    "kni": "4 nones"
+  },
+  {
+    "day": "03",
+    "month": "09",
+    "dominicalLetter": "A",
+    "kni": "3 nones"
+  },
+  {
+    "day": "04",
+    "month": "09",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "xiii",
+      "arabic": 13
+    },
+    "kni": "2 nones"
+  },
+  {
+    "day": "05",
+    "month": "09",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "ii",
+      "arabic": 2
+    },
+    "kni": "nones"
+  },
+  {
+    "day": "06",
+    "month": "09",
+    "dominicalLetter": "d",
+    "kni": "8 ides"
+  },
+  {
+    "day": "07",
+    "month": "09",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "x",
+      "arabic": 10
+    },
+    "kni": "7 ides"
+  },
+  {
+    "day": "08",
+    "month": "09",
+    "dominicalLetter": "f",
+    "kni": "6 ides"
+  },
+  {
+    "day": "09",
+    "month": "09",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "xviii",
+      "arabic": 18
+    },
+    "kni": "5 ides"
+  },
+  {
+    "day": "10",
+    "month": "09",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "vii",
+      "arabic": 7
+    },
+    "kni": "4 ides"
+  },
+  {
+    "day": "11",
+    "month": "09",
+    "dominicalLetter": "b",
+    "kni": "3 ides"
+  },
+  {
+    "day": "12",
+    "month": "09",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "xv",
+      "arabic": 15
+    },
+    "kni": "2 ides"
+  },
+  {
+    "day": "13",
+    "month": "09",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "iiii",
+      "arabic": 4
+    },
+    "kni": "ides"
+  },
+  {
+    "day": "14",
+    "month": "09",
+    "dominicalLetter": "e",
+    "kni": "17 kalends"
+  },
+  {
+    "day": "15",
+    "month": "09",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "xii",
+      "arabic": 12
+    },
+    "kni": "16 kalends"
+  },
+  {
+    "day": "16",
+    "month": "09",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "i",
+      "arabic": 1
+    },
+    "kni": "15 kalends"
+  },
+  {
+    "day": "17",
+    "month": "09",
+    "dominicalLetter": "A",
+    "kni": "14 kalends"
+  },
+  {
+    "day": "18",
+    "month": "09",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "ix",
+      "arabic": 9
+    },
+    "kni": "13 kalends"
+  },
+  {
+    "day": "19",
+    "month": "09",
+    "dominicalLetter": "c",
+    "kni": "12 kalends"
+  },
+  {
+    "day": "20",
+    "month": "09",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xvii",
+      "arabic": 17
+    },
+    "kni": "11 kalends"
+  },
+  {
+    "day": "21",
+    "month": "09",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "vi",
+      "arabic": 6
+    },
+    "kni": "10 kalends"
+  },
+  {
+    "day": "22",
+    "month": "09",
+    "dominicalLetter": "f",
+    "kni": "9 kalends"
+  },
+  {
+    "day": "23",
+    "month": "09",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "xiiii",
+      "arabic": 14
+    },
+    "kni": "8 kalends"
+  },
+  {
+    "day": "24",
+    "month": "09",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "iii",
+      "arabic": 3
+    },
+    "kni": "7 kalends"
+  },
+  {
+    "day": "25",
+    "month": "09",
+    "dominicalLetter": "b",
+    "kni": "6 kalends"
+  },
+  {
+    "day": "26",
+    "month": "09",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "xi",
+      "arabic": 11
+    },
+    "kni": "5 kalends"
+  },
+  {
+    "day": "27",
+    "month": "09",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xix",
+      "arabic": 19
+    },
+    "kni": "4 kalends"
+  },
+  {
+    "day": "28",
+    "month": "09",
+    "dominicalLetter": "e",
+    "kni": "3 kalends"
+  },
+  {
+    "day": "29",
+    "month": "09",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "viii",
+      "arabic": 8
+    },
+    "kni": "2 kalends"
+  },
+  {
+    "day": "30",
+    "month": "09",
+    "dominicalLetter": "g",
+    "kni": "1 kalends"
+  },
+  {
+    "day": "01",
+    "month": "10",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xvi",
+      "arabic": 16
+    },
+    "kni": "kalends"
+  },
+  {
+    "day": "02",
+    "month": "10",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "v",
+      "arabic": 5
+    },
+    "kni": "6 nones"
+  },
+  {
+    "day": "03",
+    "month": "10",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "xiii",
+      "arabic": 13
+    },
+    "kni": "5 nones"
+  },
+  {
+    "day": "04",
+    "month": "10",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "ii",
+      "arabic": 2
+    },
+    "kni": "4 nones"
+  },
+  {
+    "day": "05",
+    "month": "10",
+    "dominicalLetter": "e",
+    "kni": "3 nones"
+  },
+  {
+    "day": "06",
+    "month": "10",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "x",
+      "arabic": 10
+    },
+    "kni": "2 nones"
+  },
+  {
+    "day": "07",
+    "month": "10",
+    "dominicalLetter": "g",
+    "kni": "nones"
+  },
+  {
+    "day": "08",
+    "month": "10",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xviii",
+      "arabic": 18
+    },
+    "kni": "8 ides"
+  },
+  {
+    "day": "09",
+    "month": "10",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "vii",
+      "arabic": 7
+    },
+    "kni": "7 ides"
+  },
+  {
+    "day": "10",
+    "month": "10",
+    "dominicalLetter": "c",
+    "kni": "6 ides"
+  },
+  {
+    "day": "11",
+    "month": "10",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xv",
+      "arabic": 15
+    },
+    "kni": "5 ides"
+  },
+  {
+    "day": "12",
+    "month": "10",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "iiii",
+      "arabic": 4
+    },
+    "kni": "4 ides"
+  },
+  {
+    "day": "13",
+    "month": "10",
+    "dominicalLetter": "f",
+    "kni": "3 ides"
+  },
+  {
+    "day": "14",
+    "month": "10",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "xii",
+      "arabic": 12
+    },
+    "kni": "2 ides"
+  },
+  {
+    "day": "15",
+    "month": "10",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "i",
+      "arabic": 1
+    },
+    "kni": "ides"
+  },
+  {
+    "day": "16",
+    "month": "10",
+    "dominicalLetter": "b",
+    "kni": "16 kalends"
+  },
+  {
+    "day": "17",
+    "month": "10",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "ix",
+      "arabic": 9
+    },
+    "kni": "15 kalends"
+  },
+  {
+    "day": "18",
+    "month": "10",
+    "dominicalLetter": "d",
+    "kni": "14 kalends"
+  },
+  {
+    "day": "19",
+    "month": "10",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xvii",
+      "arabic": 17
+    },
+    "kni": "13 kalends"
+  },
+  {
+    "day": "20",
+    "month": "10",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "vi",
+      "arabic": 6
+    },
+    "kni": "12 kalends"
+  },
+  {
+    "day": "21",
+    "month": "10",
+    "dominicalLetter": "g",
+    "kni": "11 kalends"
+  },
+  {
+    "day": "22",
+    "month": "10",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xiiii",
+      "arabic": 14
+    },
+    "kni": "10 kalends"
+  },
+  {
+    "day": "23",
+    "month": "10",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "iii",
+      "arabic": 3
+    },
+    "kni": "9 kalends"
+  },
+  {
+    "day": "24",
+    "month": "10",
+    "dominicalLetter": "c",
+    "kni": "8 kalends"
+  },
+  {
+    "day": "25",
+    "month": "10",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xi",
+      "arabic": 11
+    },
+    "kni": "7 kalends"
+  },
+  {
+    "day": "26",
+    "month": "10",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xix",
+      "arabic": 19
+    },
+    "kni": "6 kalends"
+  },
+  {
+    "day": "27",
+    "month": "10",
+    "dominicalLetter": "f",
+    "kni": "5 kalends"
+  },
+  {
+    "day": "28",
+    "month": "10",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "viii",
+      "arabic": 8
+    },
+    "kni": "4 kalends"
+  },
+  {
+    "day": "29",
+    "month": "10",
+    "dominicalLetter": "A",
+    "kni": "3 kalends"
+  },
+  {
+    "day": "30",
+    "month": "10",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "xvi",
+      "arabic": 16
+    },
+    "kni": "2 kalends"
+  },
+  {
+    "day": "31",
+    "month": "10",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "v",
+      "arabic": 5
+    },
+    "kni": "1 kalends"
+  },
+  {
+    "day": "01",
+    "month": "11",
+    "dominicalLetter": "d",
+    "kni": "kalends"
+  },
+  {
+    "day": "02",
+    "month": "11",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xiii",
+      "arabic": 13
+    },
+    "kni": "4 nones"
+  },
+  {
+    "day": "03",
+    "month": "11",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "ii",
+      "arabic": 2
+    },
+    "kni": "3 nones"
+  },
+  {
+    "day": "04",
+    "month": "11",
+    "dominicalLetter": "g",
+    "kni": "2 nones"
+  },
+  {
+    "day": "05",
+    "month": "11",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "x",
+      "arabic": 10
+    },
+    "kni": "nones"
+  },
+  {
+    "day": "06",
+    "month": "11",
+    "dominicalLetter": "b",
+    "kni": "8 ides"
+  },
+  {
+    "day": "07",
+    "month": "11",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "xviii",
+      "arabic": 18
+    },
+    "kni": "7 ides"
+  },
+  {
+    "day": "08",
+    "month": "11",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "vii",
+      "arabic": 7
+    },
+    "kni": "6 ides"
+  },
+  {
+    "day": "09",
+    "month": "11",
+    "dominicalLetter": "e",
+    "kni": "5 ides"
+  },
+  {
+    "day": "10",
+    "month": "11",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "xv",
+      "arabic": 15
+    },
+    "kni": "4 ides"
+  },
+  {
+    "day": "11",
+    "month": "11",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "iiii",
+      "arabic": 4
+    },
+    "kni": "3 ides"
+  },
+  {
+    "day": "12",
+    "month": "11",
+    "dominicalLetter": "A",
+    "kni": "2 ides"
+  },
+  {
+    "day": "13",
+    "month": "11",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "xii",
+      "arabic": 12
+    },
+    "kni": "ides"
+  },
+  {
+    "day": "14",
+    "month": "11",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "i",
+      "arabic": 1
+    },
+    "kni": "17 kalends"
+  },
+  {
+    "day": "15",
+    "month": "11",
+    "dominicalLetter": "d",
+    "kni": "16 kalends"
+  },
+  {
+    "day": "16",
+    "month": "11",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "ix",
+      "arabic": 9
+    },
+    "kni": "15 kalends"
+  },
+  {
+    "day": "17",
+    "month": "11",
+    "dominicalLetter": "f",
+    "kni": "14 kalends"
+  },
+  {
+    "day": "18",
+    "month": "11",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "xvii",
+      "arabic": 17
+    },
+    "kni": "13 kalends"
+  },
+  {
+    "day": "19",
+    "month": "11",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "vi",
+      "arabic": 6
+    },
+    "kni": "12 kalends"
+  },
+  {
+    "day": "20",
+    "month": "11",
+    "dominicalLetter": "b",
+    "kni": "11 kalends"
+  },
+  {
+    "day": "21",
+    "month": "11",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "xiiii",
+      "arabic": 14
+    },
+    "kni": "10 kalends"
+  },
+  {
+    "day": "22",
+    "month": "11",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "iii",
+      "arabic": 3
+    },
+    "kni": "9 kalends"
+  },
+  {
+    "day": "23",
+    "month": "11",
+    "dominicalLetter": "e",
+    "kni": "8 kalends"
+  },
+  {
+    "day": "24",
+    "month": "11",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "xi",
+      "arabic": 11
+    },
+    "kni": "7 kalends"
+  },
+  {
+    "day": "25",
+    "month": "11",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "xix",
+      "arabic": 19
+    },
+    "kni": "6 kalends"
+  },
+  {
+    "day": "26",
+    "month": "11",
+    "dominicalLetter": "A",
+    "kni": "5 kalends"
+  },
+  {
+    "day": "27",
+    "month": "11",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "viii",
+      "arabic": 8
+    },
+    "kni": "4 kalends"
+  },
+  {
+    "day": "28",
+    "month": "11",
+    "dominicalLetter": "c",
+    "kni": "3 kalends"
+  },
+  {
+    "day": "29",
+    "month": "11",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xvi",
+      "arabic": 16
+    },
+    "kni": "2 kalends"
+  },
+  {
+    "day": "30",
+    "month": "11",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "v",
+      "arabic": 5
+    },
+    "kni": "1 kalends"
+  },
+  {
+    "day": "01",
+    "month": "12",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "xiii",
+      "arabic": 13
+    },
+    "kni": "kalends"
+  },
+  {
+    "day": "02",
+    "month": "12",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "ii",
+      "arabic": 2
+    },
+    "kni": "4 nones"
+  },
+  {
+    "day": "03",
+    "month": "12",
+    "dominicalLetter": "A",
+    "kni": "3 nones"
+  },
+  {
+    "day": "04",
+    "month": "12",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "x",
+      "arabic": 10
+    },
+    "kni": "2 nones"
+  },
+  {
+    "day": "05",
+    "month": "12",
+    "dominicalLetter": "c",
+    "kni": "nones"
+  },
+  {
+    "day": "06",
+    "month": "12",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xviii",
+      "arabic": 18
+    },
+    "kni": "8 ides"
+  },
+  {
+    "day": "07",
+    "month": "12",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "vii",
+      "arabic": 7
+    },
+    "kni": "7 ides"
+  },
+  {
+    "day": "08",
+    "month": "12",
+    "dominicalLetter": "f",
+    "kni": "6 ides"
+  },
+  {
+    "day": "09",
+    "month": "12",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "xv",
+      "arabic": 15
+    },
+    "kni": "5 ides"
+  },
+  {
+    "day": "10",
+    "month": "12",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "iiii",
+      "arabic": 4
+    },
+    "kni": "4 ides"
+  },
+  {
+    "day": "11",
+    "month": "12",
+    "dominicalLetter": "b",
+    "kni": "3 ides"
+  },
+  {
+    "day": "12",
+    "month": "12",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "xii",
+      "arabic": 12
+    },
+    "kni": "2 ides"
+  },
+  {
+    "day": "13",
+    "month": "12",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "i",
+      "arabic": 1
+    },
+    "kni": "ides"
+  },
+  {
+    "day": "14",
+    "month": "12",
+    "dominicalLetter": "e",
+    "kni": "18 kalends"
+  },
+  {
+    "day": "15",
+    "month": "12",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "ix",
+      "arabic": 9
+    },
+    "kni": "17 kalends"
+  },
+  {
+    "day": "16",
+    "month": "12",
+    "dominicalLetter": "g",
+    "kni": "16 kalends"
+  },
+  {
+    "day": "17",
+    "month": "12",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xvii",
+      "arabic": 17
+    },
+    "kni": "15 kalends"
+  },
+  {
+    "day": "18",
+    "month": "12",
+    "dominicalLetter": "b",
+    "goldenNumber": {
+      "roman": "vi",
+      "arabic": 6
+    },
+    "kni": "14 kalends"
+  },
+  {
+    "day": "19",
+    "month": "12",
+    "dominicalLetter": "c",
+    "kni": "13 kalends"
+  },
+  {
+    "day": "20",
+    "month": "12",
+    "dominicalLetter": "d",
+    "goldenNumber": {
+      "roman": "xiiii",
+      "arabic": 14
+    },
+    "kni": "12 kalends"
+  },
+  {
+    "day": "21",
+    "month": "12",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "iii",
+      "arabic": 3
+    },
+    "kni": "11 kalends"
+  },
+  {
+    "day": "22",
+    "month": "12",
+    "dominicalLetter": "f",
+    "kni": "10 kalends"
+  },
+  {
+    "day": "23",
+    "month": "12",
+    "dominicalLetter": "g",
+    "goldenNumber": {
+      "roman": "xi",
+      "arabic": 11
+    },
+    "kni": "9 kalends"
+  },
+  {
+    "day": "24",
+    "month": "12",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xix",
+      "arabic": 19
+    },
+    "kni": "8 kalends"
+  },
+  {
+    "day": "25",
+    "month": "12",
+    "dominicalLetter": "b",
+    "kni": "7 kalends"
+  },
+  {
+    "day": "26",
+    "month": "12",
+    "dominicalLetter": "c",
+    "goldenNumber": {
+      "roman": "viii",
+      "arabic": 8
+    },
+    "kni": "6 kalends"
+  },
+  {
+    "day": "27",
+    "month": "12",
+    "dominicalLetter": "d",
+    "kni": "5 kalends"
+  },
+  {
+    "day": "28",
+    "month": "12",
+    "dominicalLetter": "e",
+    "goldenNumber": {
+      "roman": "xvi",
+      "arabic": 16
+    },
+    "kni": "4 kalends"
+  },
+  {
+    "day": "29",
+    "month": "12",
+    "dominicalLetter": "f",
+    "goldenNumber": {
+      "roman": "v",
+      "arabic": 5
+    },
+    "kni": "3 kalends"
+  },
+  {
+    "day": "30",
+    "month": "12",
+    "dominicalLetter": "g",
+    "kni": "2 kalends"
+  },
+  {
+    "day": "31",
+    "month": "12",
+    "dominicalLetter": "A",
+    "goldenNumber": {
+      "roman": "xiii",
+      "arabic": 13
+    },
+    "kni": "1 kalends"
+  }
+]

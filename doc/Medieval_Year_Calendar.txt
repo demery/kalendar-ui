@@ -1,0 +1,375 @@
+01.01.	A	iii
+02.01.	b	
+03.01.	c	xi
+04.01.	d	
+05.01.	e	xix
+06.01.	f	viii
+07.01.	g	
+08.01.	A	xvi
+09.01.	b	v
+10.01.	c	
+11.01.	d	xiii
+12.01.	e	ii
+13.01.	f	
+14.01.	g	x
+15.01.	A	
+16.01.	b	xviii
+17.01.	c	vii
+18.01.	d	
+19.01.	e	xv
+20.01.	f	iiii
+21.01.	g	
+22.01.	A	xii
+23.01.	b	i
+24.01.	c	
+25.01.	d	ix
+26.01.	e	
+27.01.	f	xvii
+28.01.	g	vi
+29.01.	A	
+30.01.	b	xiiii
+31.01.	c	iii
+01.02.	d	
+02.02.	e	xi
+03.02.	f	xix
+04.02.	g	viii
+05.02.	A	
+06.02.	b	xvi
+07.02.	c	v
+08.02.	d	
+09.02.	e	xiii
+10.02.	f	ii
+11.02.	g	
+12.02.	A	x
+13.02.	b	
+14.02.	c	xviii
+15.02.	d	vii
+16.02.	e	
+17.02.	f	xv
+18.02.	g	iiii
+19.02.	A	
+20.02.	b	xii
+21.02.	c	i
+22.02.	d	
+23.02.	e	ix
+24.02.	f	
+25.02.	g	xvii
+26.02.	A	vi
+27.02.	b	
+28.02.	c	xiiii
+KL	MARTIUS	
+01.03.	d	iii
+02.03.	e	
+03.03.	f	xi
+04.03.	g	
+05.03.	A	xix
+06.03.	b	viii
+07.03.	c	
+08.03.	d	xvi
+09.03.	e	v
+10.03.	f	
+11.03.	g	xiii
+12.03.	A	ii
+13.03.	b	
+14.03.	c	x
+15.03.	d	
+16.03.	e	xviii
+17.03.	f	vii
+18.03.	g	
+19.03.	A	xv
+20.03.	b	iiii
+21.03.	c	
+22.03.	d	xii
+23.03.	e	i
+24.03.	f	
+25.03.	g	ix
+26.03.	A	
+27.03.	b	xvii
+28.03.	c	vi
+29.03.	d	
+30.03.	e	xiiii
+31.03.	f	iii
+KL	APRILIS	
+01.04.	g	
+02.04.	A	xi
+03.04.	b	
+04.04.	c	xix
+05.04.	d	viii
+06.04.	e	xvi
+07.04.	f	v
+08.04.	g	
+09.04.	A	xiii
+10.04.	b	ii
+11.04.	c	
+12.04.	d	x
+13.04.	e	
+14.04.	f	xviii
+15.04.	g	vii
+16.04.	A	vii
+17.04.	b	xv
+18.04.	c	iiii
+19.04.	d	
+20.04.	e	xii
+21.04.	f	i
+22.04.	g	
+23.04.	A	ix
+24.04.	b	
+25.04.	c	xvii
+26.04.	d	vi
+27.04.	e	
+28.04.	f	xiiii
+29.04.	g	iii
+30.04.	A	
+KL	MAIUS	
+01.05.	b	xi
+02.05.	c	
+03.05.	d	xix
+04.05.	e	viii
+05.05.	f	
+06.05.	g	xvi
+07.05.	A	v
+08.05.	b	
+09.05.	c	xiii
+10.05.	d	ii
+11.05.	e	
+12.05.	f	x
+13.05.	g	
+14.05.	A	xviii
+15.05.	b	vii
+16.05.	c	
+17.05.	d	xv
+18.05.	e	iiii
+19.05.	f	
+20.05.	g	xii
+21.05.	A	i
+22.05.	b	
+23.05.	c	ix
+24.05.	d	
+25.05.	e	xvii
+26.05.	f	vi
+27.05.	g	
+28.05.	A	xiiii
+29.05.	b	iii
+30.05.	c	
+31.05.	d	xi
+KL	JUNIUS	
+01.06.	e	
+02.06.	f	xix
+03.06.	g	viii
+04.06.	A	xvi
+05.06.	b	v
+06.06.	c	
+07.06.	d	xiii
+08.06.	e	ii
+09.06.	f	
+10.06.	g	x
+11.06.	A	
+12.06.	b	xviii
+13.06.	c	vii
+14.06.	d	
+15.06.	e	xv
+16.06.	f	iiii
+17.06.	g	
+18.06.	A	xii
+19.06.	b	i
+20.06.	c	
+21.06.	d	ix
+22.06.	e	
+23.06.	f	xvii
+24.06.	g	vi
+25.06.	A	
+26.06.	b	xiiii
+27.06.	c	iii
+28.06.	d	
+29.06.	e	xi
+30.06.	f	
+KL	JULIUS	
+01.07.	g	xix
+02.07.	A	viii
+03.07.	b	
+04.07.	c	xvi
+05.07.	d	v
+06.07.	e	
+07.07.	f	xiii
+08.07.	g	ii
+09.07.	A	
+10.07.	b	x
+11.07.	c	
+12.07.	d	xviii
+13.07.	e	vii
+14.07.	f	
+15.07.	g	xv
+16.07.	A	iiii
+17.07.	b	
+18.07.	c	xii
+19.07.	d	i
+20.07.	e	
+21.07.	f	ix
+22.07.	g	
+23.07.	A	xvii
+24.07.	b	vi
+25.07.	c	
+26.07.	d	xiiii
+27.07.	e	iii
+28.07.	f	
+29.07.	g	xi
+30.07.	A	xix
+31.07.	b	
+KL	AUGUSTUS	
+01.08.	c	viii
+02.08.	d	xvi
+03.08.	e	v
+04.08.	f	
+05.08.	g	xiii
+06.08.	A	ii
+07.08.	b	
+08.08.	c	x
+09.08.	d	
+10.08.	e	xviii
+11.08.	f	vii
+12.08.	g	
+13.08.	A	xv
+14.08.	b	iiii
+15.08.	c	
+16.08.	d	xii
+17.08.	e	i
+18.08.	f	
+19.08.	g	ix
+20.08.	A	
+21.08.	b	xvii
+22.08.	c	vi
+23.08.	d	
+24.08.	e	xiiii
+25.08.	f	iii
+26.08.	g	
+27.08.	A	xi
+28.08.	b	xix
+29.08.	c	
+30.08.	d	viii
+31.08.	e	
+KL	SEPTEMBER	
+01.09.	f	xvi
+02.09.	g	v
+03.09.	A	
+04.09.	b	xiii
+05.09.	c	ii
+06.09.	d	
+07.09.	e	x
+08.09.	f	
+09.09.	g	xviii
+10.09.	A	vii
+11.09.	b	
+12.09.	c	xv
+13.09.	d	iiii
+14.09.	e	
+15.09.	f	xii
+16.09.	g	i
+17.09.	A	
+18.09.	b	ix
+19.09.	c	
+20.09.	d	xvii
+21.09.	e	vi
+22.09.	f	
+23.09.	g	xiiii
+24.09.	A	iii
+25.09.	b	
+26.09.	c	xi
+27.09.	d	xix
+28.09.	e	
+29.09.	f	viii
+30.09.	g	
+KL	OCTOBER	
+01.10.	A	xvi
+02.10.	b	v
+03.10.	c	xiii
+04.10.	d	ii
+05.10.	e	
+06.10.	f	x
+07.10.	g	
+08.10.	A	xviii
+09.10.	b	vii
+10.10.	c	
+11.10.	d	xv
+12.10.	e	iiii
+13.10.	f	
+14.10.	g	xii
+15.10.	A	i
+16.10.	b	
+17.10.	c	ix
+18.10.	d	
+19.10.	e	xvii
+20.10.	f	vi
+21.10.	g	
+22.10.	A	xiiii
+23.10.	b	iii
+24.10.	c	
+25.10.	d	xi
+26.10.	e	xix
+27.10.	f	
+28.10.	g	viii
+29.10.	A	
+30.10.	b	xvi
+31.10.	c	v
+KL	NOVEMBER	
+01.11.	d	
+02.11.	e	xiii
+03.11.	f	ii
+04.11.	g	
+05.11.	A	x
+06.11.	b	
+07.11.	c	xviii
+08.11.	d	vii
+09.11.	e	
+10.11.	f	xv
+11.11.	g	iiii
+12.11.	A	
+13.11.	b	xii
+14.11.	c	i
+15.11.	d	
+16.11.	e	ix
+17.11.	f	
+18.11.	g	xvii
+19.11.	A	vi
+20.11.	b	
+21.11.	c	xiiii
+22.11.	d	iii
+23.11.	e	
+24.11.	f	xi
+25.11.	g	xix
+26.11.	A	
+27.11.	b	viii
+28.11.	c	
+29.11.	d	xvi
+30.11.	e	v
+KL	DECEMBER	
+01.12.	f	xiii
+02.12.	g	ii
+03.12.	A	
+04.12.	b	x
+05.12.	c	
+06.12.	d	xviii
+07.12.	e	vii
+08.12.	f	
+09.12.	g	xv
+10.12.	A	iiii
+11.12.	b	
+12.12.	c	xii
+13.12.	d	i
+14.12.	e	
+15.12.	f	ix
+16.12.	g	
+17.12.	A	xvii
+18.12.	b	vi
+19.12.	c	
+20.12.	d	xiiii
+21.12.	e	iii
+22.12.	f	
+23.12.	g	xi
+24.12.	A	xix
+25.12.	b	
+26.12.	c	viii
+27.12.	d	
+28.12.	e	xvi
+29.12.	f	v
+30.12.	g	
+31.12.	A	xiii
