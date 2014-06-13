@@ -84,7 +84,7 @@ months.each do |month,days|
 
   # next month's kalends
   days[ides..-1].each do |day|
-    day << sprintf("%d kalends", (kalends) - day.first.to_i)
+    day << sprintf("%d kalends", (kalends + 1) - day.first.to_i)
   end
 end
 
