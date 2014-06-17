@@ -103,7 +103,23 @@ months.each do |month,days|
         arabic: RomanNumerals.to_decimal(gnum.dup)
       }
     end
-    hash[:kni]             = day.shift
+
+    kni                    = day.shift
+    romanDay = if kni =~ /\d+/
+      num = $&.to_i
+      { roman: RomanNumerals.to_roman(num).downcase, arabic: num }
+    else
+      {}
+    end
+
+    hash[:romanDay] = case kni
+    when /kalends/i
+      { kni: 'kalends' }.merge(romanDay)
+    when /nones/i
+      { kni: 'nones' }.merge(romanDay)
+    when /ides/i
+      { kni: 'ides' }.merge(romanDay)
+    end
     year << hash
   end
 end
