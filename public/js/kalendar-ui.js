@@ -12,11 +12,6 @@ var Kalendar = {
   startPage: function(div_id) {
     $(div_id).append('<h1>Manuscript calendars</h1>')
       .append($('<div/>', {id: 'ms-list'}));
-    $(div_id).append($('<pre/>', { id: 'saints' }));
-    $.getJSON('http://sheltered-cliffs-9470.herokuapp.com/api?q={"date":"2/Januar"}',
-      function(data) {
-        $('#saints').append(JSON.stringify(data));
-      });
     this.listManuscripts('#ms-list');
     $(div_id).append($('<div/>', { id: 'new-manuscript' }));
     $('#new-manuscript')
