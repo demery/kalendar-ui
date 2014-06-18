@@ -107,7 +107,7 @@ months.each do |month,days|
     kni                    = day.shift
     romanDay = if kni =~ /\d+/
       num = $&.to_i
-      { roman: RomanNumerals.to_roman(num).downcase, arabic: num }
+      { roman: RomanNumerals.to_medieval(num).downcase, arabic: num }
     else
       {}
     end
