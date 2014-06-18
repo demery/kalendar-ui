@@ -1,10 +1,15 @@
+GIT
+  remote: https://github.com/demery/roman-numerals.git
+  revision: 32054db7626ecea382e135d78ecaebe5927a5008
+  specs:
+    roman-numerals (0.3.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
     daemons (1.1.9)
     eventmachine (1.0.3)
     rack (1.5.2)
-    roman-numerals (0.3.0)
     thin (1.6.1)
       daemons (>= 1.0.9)
       eventmachine (>= 1.0.0)
@@ -15,5 +20,5 @@ PLATFORMS
 
 DEPENDENCIES
   rack
-  roman-numerals
+  roman-numerals!
   thin
