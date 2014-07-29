@@ -290,6 +290,7 @@ var Kalendar = {
       url:"http://www.shared-canvas.org/services/anno/calendars/manifest",
       data:jstr,
       dataType:"json",
+      crossDomain: true,
       contentType: "application/json",
     });
 

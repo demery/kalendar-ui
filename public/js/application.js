@@ -1,5 +1,5 @@
 jQuery(function() {
-    
-  Kalendar.startPage("#kalendar");
+
+  // Kalendar.startPage("#kalendar");
 
 })
