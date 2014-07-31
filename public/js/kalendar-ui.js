@@ -252,6 +252,10 @@ var Kalendar = {
     return false;
   },
 
+  createManifest: function(ms_id) {
+
+  },
+
   saveManifest: function() {
     var shelfmarkId = Kalendar.shelfmark.toLowerCase().replace(/\s/g,'');
     var manifest = {
