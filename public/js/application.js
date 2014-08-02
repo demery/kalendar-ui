@@ -1,7 +1,5 @@
 $(document).ready(function() {
 
-  var kalendar = new KalendarView();
-
   $startForm = $('<div style="visibility:hidden; padding-bottom:15px;"><form id="kal-start-form" role="form"><input type="button" id="kal-start" class="btn btn-default" value="Create calendar"/></form></div>');
 
   $('#kmw-fields').before($startForm);
@@ -12,7 +10,7 @@ $(document).ready(function() {
     kmwDataUpdate();
     $('#kmw-container').hide();
     var mid = $('#kmw-val-mid').val();
-    kalendar.startKalendar(mid);
+    kuiStartKalendar(mid);
   });
 
   $('#kmw-container').show();
