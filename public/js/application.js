@@ -1,8 +1,8 @@
 $(document).ready(function() {
 
-  $startForm = $('<div style="visibility:hidden; padding-bottom:15px;"><form id="kal-start-form" role="form"><input type="button" id="kal-start" class="btn btn-default" value="Create calendar"/></form></div>');
+  $startForm = $('<form id="kal-start-form" role="form"><input type="button" id="kal-start" class="btn btn-default" value="Create calendar"/></form>');
 
-  $('#kmw-fields').before($startForm);
+  $('#kalendar').append($startForm);
 
   $('#kal-start').on('click', function(event){
     // alert("Clicked!")
@@ -10,6 +10,7 @@ $(document).ready(function() {
     kmwDataUpdate();
     $('#kmw-container').hide();
     var mid = $('#kmw-val-mid').val();
+    $('#kal-start-form').remove();
     kuiStartKalendar(mid);
   });
 
