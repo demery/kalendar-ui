@@ -5,6 +5,7 @@ $(document).ready(function(){
   };
 
   var kuiManuscriptsUrl = 'http://localhost:5000';
+  var kuiSaintsUrl = 'http://kalendar-saints.herokuapp.com'
   var kuiManifestsUrl = 'http://www.shared-canvas.org/services/anno/calendars/manifest';
   var kuiAnnotationsUrl = 'http://www.shared-canvas.org/services/anno/calendars/annotation';
   var kuiRv = [ null, 'r', 'v' ];
@@ -155,10 +156,10 @@ $(document).ready(function(){
         var elementOptions = '';
 
         _.each(ele.options, function(val, key) {
-          elementOptions +='<option value= ' + key + '>' + val + '</option>'
-        })
+          elementOptions +='<option value= ' + key + '>' + val + '</option>';
+        });
 
-        $elementContainer.find('select').append(elementOptions)
+        $elementContainer.find('select').append(elementOptions);
 
       // Groups handle more complex types, including dates, grading, and dimensions
       };
@@ -189,14 +190,27 @@ $(document).ready(function(){
 
     $('#nextFol-edit-btn').on('click', function() {
       kuiUpdateCurrFolio();
+      kuiEditFolioForm();
     });
 
     $('#kalendar').show();
   };
 
   window.kuiEditFolioForm = function() {
-
-    $.ajax()
+    // build the request for calendar data
+    currFolio = $.kui.calendar.currFolio;
+    url = kuiSaintsUrl + '/api/dates/' + currFolio['month'] + '/' + currFolio['startDay'] + '/count/' + currFolio['numOfDays'];
+    $.ajax({
+      url: url,
+      dataType: 'json',
+      crossDomain: true,
+      success: function(data) {
+        console.log('dates', JSON.stringify(data));
+      },
+      error: function(data) {
+        console.log('problem', data);
+      }
+    });
   };
 
   window.kuiUpdateCurrFolio = function() {
@@ -204,7 +218,7 @@ $(document).ready(function(){
       var name = $(ele).attr('id').substr(12);
       var val = $(ele).val();
       _.each($.kui.calendar.currFolio, function(v,k) {
-        if (k === name) {$.kui.calendar.currFolio[k] = val; }
+        if (k === name) { $.kui.calendar.currFolio[k] = val; }
       });
     });
   };
