@@ -1,13 +1,9 @@
 $(document).ready(function(){
 
-  $.kui = {
-    'manuscript': {},
-  };
-
-  var kuiManuscriptsUrl = 'http://localhost:5000';
+  var kuiManuscriptsUrl = 'http://kalendarium-manuscripts.herokuapp.com';
   var kuiSaintsUrl = 'http://kalendar-saints.herokuapp.com'
-  var kuiManifestsUrl = 'http://www.shared-canvas.org/services/anno/calendars/manifest';
-  var kuiAnnotationsUrl = 'http://www.shared-canvas.org/services/anno/calendars/annotation';
+  var kuiManifestsUrl = 'http://165.123.34.221/services/anno/calendars/manifest';
+  var kuiAnnotationsUrl = 'http://165.123.34.221/services/anno/calendars/annotation';
   var kuiRv = [ null, 'r', 'v' ];
 
 
@@ -28,6 +24,7 @@ $(document).ready(function(){
       dataType: 'json',
       crossDomain: true,
       success: function(data) {
+        alert('kuiLookUpManuscript: ' + JSON.stringify(data));
         $.kui.manuscript = data
 
         // create all the folios as separate elements
@@ -96,6 +93,8 @@ $(document).ready(function(){
         "width":700, };
       });
     var jstr = JSON.stringify(manifest);
+
+    alert(kuiManifestsUrl);
 
     return jQuery.ajax({
       type:'POST',
@@ -190,13 +189,13 @@ $(document).ready(function(){
 
     $('#nextFol-edit-btn').on('click', function() {
       kuiUpdateCurrFolio();
-      kuiEditFolioForm();
+      kuiStartFolio();
     });
 
     $('#kalendar').show();
   };
 
-  window.kuiEditFolioForm = function() {
+  window.kuiStartFolio = function() {
     // build the request for calendar data
     currFolio = $.kui.calendar.currFolio;
     url = kuiSaintsUrl + '/api/dates/' + currFolio['month'] + '/' + currFolio['startDay'] + '/count/' + currFolio['numOfDays'];
@@ -205,12 +204,17 @@ $(document).ready(function(){
       dataType: 'json',
       crossDomain: true,
       success: function(data) {
-        console.log('dates', JSON.stringify(data));
+        $.kui.calendar.currFolio['dates'] = data['dates'];
+        kuiEditFolioForm();
       },
       error: function(data) {
         console.log('problem', data);
       }
     });
+  };
+
+  window.kuiEditFolioForm = function() {
+
   };
 
   window.kuiUpdateCurrFolio = function() {
@@ -225,7 +229,7 @@ $(document).ready(function(){
 
   window.kuiStartKalendar = function(ms_id) {
     var lookup = kuiLookUpManuscript(ms_id);
-    var mf = lookup.then(kuiCreateManifest);
+    var mf = lookup.done(kuiCreateManifest);
 
     // Set up the form
     $form = $('<form id="kui" role="form"><div id="kui-messages" class="alert"></div><div id="kui-fields"></div></form>');
@@ -250,6 +254,7 @@ $(document).ready(function(){
         'month': null,
         'startDay': null,
         'numOfDays': null,
+        'dates': null,
       },
       'nextFolioElements': [
         { 'element':'index', 'label':'Folio', 'v':'', 'fieldtype':'list', 'options':{} },
