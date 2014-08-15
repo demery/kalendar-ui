@@ -23,59 +23,54 @@ $(document).ready(function(){
     return (m && m === 'r' ? 1 : 2) || 0;
   };
 
-  window.kuiLookUpManuscript = function(ms_id) {
-    theUrl = kuiManuscriptsUrl + '/api/manuscript/' + ms_id;
-    return $.ajax({
-      url: theUrl,
-      dataType: 'json',
-      crossDomain: true,
-      success: function(data) {
-        $.kui.manuscript = data
+  window.kuiCreateFolios = function() {
+    // create all the folios as separate elements
+    // this will make iteration and finding easier later
+    // Folio data comes in this this way:
+    //
+    // { ..., "folio_end_num": "16", "folio_end_side": "1",
+    //    "folio_start_num": "4", "folio_start_side": "2", ...}
+    //
+    // Convert to:
+    // startFolio => [ 4, 2 ]
+    // endFolio   => [ 16, 1 ]
+    //
+    // For this start and end, result will be
+    //
+    //       [ [4,2], [5,1], [5,2], [6,1], [6,2], ..., [16,1] ]
+    //
+    var folio_sides      = _.findWhere($.kmw, { 'element': 'folio_sides'})['group']
+    var folio_start_num  = _.findWhere(folio_sides, { 'element': 'folio_start_num'})['v'];
+    var folio_start_side = _.findWhere(folio_sides, { 'element': 'folio_start_side'})['v'];
+    var folio_end_num    = _.findWhere(folio_sides, { 'element': 'folio_end_num'})['v'];
+    var folio_end_side   = _.findWhere(folio_sides, { 'element': 'folio_end_side'})['v'];
+    var startFolio       = [ Number(folio_start_num), kuiSideToNum(folio_start_side) ];
+    var endFolio         = [ Number(folio_end_num), kuiSideToNum(folio_end_side) ];
+    var folios           = [ startFolio ];
 
-        // create all the folios as separate elements
-        // this will make iteration and finding easier later
-        // Folio data comes in this this way:
-        //
-        // { ..., "folio_end_num": "16", "folio_end_side": "1",
-        //    "folio_start_num": "4", "folio_start_side": "2", ...}
-        //
-        // Convert to:
-        // startFolio => [ 4, 2 ]
-        // endFolio   => [ 16, 1 ]
-        //
-        // For this start and end, result will be
-        //
-        //       [ [4,2], [5,1], [5,2], [6,1], [6,2], ..., [16,1] ]
-        //
-        var startFolio = [ Number(data['folio_start_num']), kuiSideToNum(data['folio_start_side']) ]
-        var endFolio   = [ Number(data['folio_end_num']), kuiSideToNum(data['folio_end_side']) ]
-        folios = [ startFolio ];
-        // compare [4,2] and [16,1] as 42 < 161, [5,1] and [16,1] as 51 < 161, etc.
-        while (Number(_.last(folios).join('')) < Number(endFolio.join(''))) {
-          var last = _.last(folios), num = last[0], side = last[1];
-          // if side is 2 return [num++, 1]; if side is 1 return [num, 2]
-          var next = (side == 2) ? ([num + 1, 1]) : ([num, 2]);
-          folios.push(next);
-        };
-        $.kui.calendar.folios = folios;
-      },
-      error: function(data) {
-        console.log('problem', data)
-      }
-    });
+    // compare [4,2] and [16,1] as 42 < 161, [5,1] and [16,1] as 51 < 161, etc.
+    while (Number(_.last(folios).join('')) < Number(endFolio.join(''))) {
+      var last = _.last(folios), num = last[0], side = last[1];
+      // if side is 2 return [num++, 1]; if side is 1 return [num, 2]
+      var next = (side == 2) ? ([num + 1, 1]) : ([num, 2]);
+      folios.push(next);
+    }
+    $.kui.calendar.folios = folios;
   };
 
   window.kuiCreateManifest = function() {
-    var shelfmarkId = $.kui.manuscript.shelfmark.toLowerCase().replace(/\s/g,'');
+    var shelfmark = _.findWhere($.kmw, { 'element': 'shelfmark' })['v'] || 'No shelfmark';
+    var ms_name = _.findWhere($.kmw, { 'element': 'name'})['v'] || 'No name';
+    var ms_id = _.findWhere($.kmw, {'element': 'mid' })['v'];
     var manifest = {
       // Metadata about this Manifest file
       "@context":"http://www.shared-canvas.org/ns/context.json",
       "@type":"sc:Manifest",
 
       // Metadata about the physical object/intellectual work
-      "label": $.kui.manuscript.shelfmark,
+      "label": shelfmark,
       "metadata": [
-      { "label":"Title", "value": $.kui.manuscript.name },
+      { "label":"Title", "value": ms_name },
       ],
       // Rights Metadata
       "license":"http://www.example.org/license.html", // provide a real license
@@ -107,7 +102,13 @@ $(document).ready(function(){
       crossDomain: true,
       contentType: 'application/json',
       success: function(data) {
-        console.log('success', data);
+        var id = data['@id'];
+        // add the manifest ID to the kmw manuscript data and push to
+        // manuscripts service
+        _.findWhere($.kmw, {'element': 'sc_cal_manifest_id'}).v = id;
+        kmwFormUpdate();
+        kmwSubmitEdit(ms_id);
+        // console.log('success', data);
       },
       error: function(data) {
         console.log('problem', data);
@@ -231,16 +232,14 @@ $(document).ready(function(){
   };
 
   window.kuiStartKalendar = function(ms_id) {
-    var lookup = kuiLookUpManuscript(ms_id);
-    var mf = lookup.done(kuiCreateManifest);
+    kuiCreateFolios();
+    var mf = kuiCreateManifest();
 
     // Set up the form
     $form = $('<form id="kui" role="form"><div id="kui-messages" class="alert"></div><div id="kui-fields"></div></form>');
     $('#kalendar').append($form);
 
     mf.done(function(data) {
-      var id = data['@id'];
-      _.findWhere($.kmw, {'element': 'sc_cal_manifest_id'}).v = id;
       // make sure we update $.kmw and submit to the manuscript service
       kmwFormUpdate();
       kmwSubmitEdit(ms_id);
@@ -249,7 +248,6 @@ $(document).ready(function(){
   };
 
   $.kui = {
-    'manuscript': {},
     'calendar': {
       'folios': [],
       'currFolio': {
