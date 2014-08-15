@@ -24,7 +24,6 @@ $(document).ready(function(){
       dataType: 'json',
       crossDomain: true,
       success: function(data) {
-        alert('kuiLookUpManuscript: ' + JSON.stringify(data));
         $.kui.manuscript = data
 
         // create all the folios as separate elements
@@ -93,8 +92,6 @@ $(document).ready(function(){
         "width":700, };
       });
     var jstr = JSON.stringify(manifest);
-
-    alert(kuiManifestsUrl);
 
     return jQuery.ajax({
       type:'POST',
