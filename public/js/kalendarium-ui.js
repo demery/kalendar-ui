@@ -17,6 +17,12 @@ $(document).ready(function(){
     return t;
   };
 
+  window.kuiSideToNum = function(val) {
+    // return 'r', 'v' or undefined
+    var m = (val ? (String(val).toLowerCase().match(/r|v/) || []) : [])[0];
+    return (m && m === 'r' ? 1 : 2) || 0;
+  };
+
   window.kuiLookUpManuscript = function(ms_id) {
     theUrl = kuiManuscriptsUrl + '/api/manuscript/' + ms_id;
     return $.ajax({
@@ -41,8 +47,8 @@ $(document).ready(function(){
         //
         //       [ [4,2], [5,1], [5,2], [6,1], [6,2], ..., [16,1] ]
         //
-        var startFolio = _.map([ data['folio_start_num'], data['folio_start_side'] ], Number);
-        var endFolio   = _.map([ data['folio_end_num'], data['folio_end_side'] ], Number);
+        var startFolio = [ Number(data['folio_start_num']), kuiSideToNum(data['folio_start_side']) ]
+        var endFolio   = [ Number(data['folio_end_num']), kuiSideToNum(data['folio_end_side']) ]
         folios = [ startFolio ];
         // compare [4,2] and [16,1] as 42 < 161, [5,1] and [16,1] as 51 < 161, etc.
         while (Number(_.last(folios).join('')) < Number(endFolio.join(''))) {
