@@ -1,2 +1,3 @@
 *.bak
 .ruby-version
+venv
