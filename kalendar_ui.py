@@ -19,4 +19,4 @@ def static_proxy(path):
     return app.send_static_file(os.path.join('js', path))
 
 if __name__ == "__main__":
-  app.run(debug=True)
+  app.run(debug=True, port=3000)
