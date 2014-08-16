@@ -7,6 +7,8 @@ $(document).ready(function(){
   var kuiRv = [ null, 'r', 'v' ];
 
 
+
+
   // genUuid swiped from Mirador, if incorporated into Mirador; need to remove this
   window.kuiGenUUID = function() {
     var t = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(t) {
@@ -56,6 +58,34 @@ $(document).ready(function(){
       folios.push(next);
     }
     $.kui.calendar.folios = folios;
+  };
+
+  window.kuiPrepManifest = function () {
+    var sc_cal_manifest_id = _.findWhere($.kmw, { 'element': 'sc_cal_manifest_id'})['v'];
+
+    if (sc_cal_manifest_id) {
+      console.log('Retrieving manifest:', sc_cal_manifest_id);
+      return kuiGetManifest(sc_cal_manifest_id);
+    } else {
+      console.log('Creating manifest');
+      return kuiCreateManifest();
+    }
+  };
+
+  window.kuiGetManifest = function(manifest_id) {
+    return $.ajax({
+      type: 'GET',
+      url: manifest_id,
+      dataType: 'json',
+      crossDomain: true,
+      contentType: 'application/json',
+      success: function(data) {
+        $.kui.manifest = data;
+      },
+      error: function(data) {
+        console.log('error', data);
+      }
+    });
   };
 
   window.kuiCreateManifest = function() {
@@ -108,6 +138,7 @@ $(document).ready(function(){
         _.findWhere($.kmw, {'element': 'sc_cal_manifest_id'}).v = id;
         kmwFormUpdate();
         kmwSubmitEdit(ms_id);
+        kuiGetManifest(id);
         // console.log('success', data);
       },
       error: function(data) {
@@ -218,7 +249,37 @@ $(document).ready(function(){
   };
 
   window.kuiEditFolioForm = function() {
+    // $.kui.calendar.currFolio.dates[0] =>
+    // {
+    // "@id": "http://kalendar-saints.herokuapp.com/api/date/1/16",
+    // "@type": "Date",
+    // "day": 16,
+    // "dominicalLetter": "b",
+    // "goldenNumber": {
+    //   "arabic": 18,
+    //   "roman": "xviii"
+    // },
+    // "month": 1,
+    // ...
+    //   "romanDay": {
+    //   "arabic": 17,
+    //   "kni": "kalends",
+    //   "roman": "xvii"
+    // },
+    //
+    // $.kmw { 'elment': 'columns', 'group': [ { 'elment':'cal_col_1', ... 'options': { ... }} ]}
+    // 'number', 'letter', 'kni', 'day', 'text'
+    var columns = [];
+    var selected = _.findWhere($.kmw, { 'element':'columns' })['group']
 
+    _.each(selected, function(ele, index) {
+      if (ele.v) { columns.push(ele.v); }
+    });
+
+    console.log('columns', JSON.stringify(columns));
+    _.each($.kui.calendar.currFolio.dates, function(date, index) {
+      console.log(String(date.month), '/', String(date.day));
+    });
   };
 
   window.kuiUpdateCurrFolio = function() {
@@ -233,7 +294,7 @@ $(document).ready(function(){
 
   window.kuiStartKalendar = function(ms_id) {
     kuiCreateFolios();
-    var mf = kuiCreateManifest();
+    var mf = kuiPrepManifest();
 
     // Set up the form
     $form = $('<form id="kui" role="form"><div id="kui-messages" class="alert"></div><div id="kui-fields"></div></form>');
@@ -268,6 +329,13 @@ $(document).ready(function(){
         { 'element':'numOfDays', 'label':'Number of days', 'v':'', 'fieldtype':'text', 'options':{} },
 
       ],
+      'columnElements': [
+        { 'element':'number', 'label':'Golden Number', 'fieldtype':'fixed', 'options':{} },
+        { 'element':'letter', 'label':'Dominical Letter', 'fieldtype':'fixed', 'options':{} },
+        { 'element':'kni', 'label':'Kalends, Nones, Ides', 'fieldtype':'fixed', 'options':{} },
+        { 'element':'day', 'label':'Roman Day', 'fieldtype':'fixed', 'options':{} },
+        { 'element':'text', 'label':'Text', 'fieldtype':'list', 'options':{} },
+      ]
     },
   }
 
