@@ -1,13 +1,46 @@
 $(document).ready(function(){
 
   var kuiManuscriptsUrl = 'http://kalendarium-manuscripts.herokuapp.com';
-  var kuiSaintsUrl = 'http://kalendar-saints.herokuapp.com'
-  var kuiManifestsUrl = 'http://165.123.34.221/services/anno/calendars/manifest';
+  var kuiSaintsUrl      = 'http://kalendar-saints.herokuapp.com'
+  var kuiManifestsUrl   = 'http://165.123.34.221/services/anno/calendars/manifest';
   var kuiAnnotationsUrl = 'http://165.123.34.221/services/anno/calendars/annotation';
-  var kuiRv = [ null, 'r', 'v' ];
+  var kuiRv             = [ null, 'r', 'v' ];
 
 
+  window.kuiPad = function (str, max) {
+    str = str.toString();
+    return str.length < max ? kuiPad("0" + str, max) : str;
+  };
 
+  window.kuiTruncWords = function (str, posn) {
+    // Truncate this string but leave whole words
+    posn = posn || 50;
+    if (str.trim().length < posn) { return str.trim(); }
+
+    var s = str.trim().substring(0,posn);
+    var ws = /\s+/
+    if (ws.exec(str[posn])) {
+      return s.trim() + '...';
+    } else {
+      return s.split(/\s+/).slice(0, -1).join(' ') + '...';
+    }
+  };
+
+  window.kuiGetDateElement
+  window.kuiGetProp = function(obj, prop) {
+    prop = prop.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
+    prop = prop.replace(/^\./, '');           // strip a leading dot
+    var a = prop.split('.');
+    while (a.length) {
+        var n = a.shift();
+        if (n in obj) {
+            obj = obj[n];
+        } else {
+            return;
+        }
+    }
+    return obj;
+  };
 
   // genUuid swiped from Mirador, if incorporated into Mirador; need to remove this
   window.kuiGenUUID = function() {
@@ -90,9 +123,10 @@ $(document).ready(function(){
 
   window.kuiCreateManifest = function() {
     var shelfmark = _.findWhere($.kmw, { 'element': 'shelfmark' })['v'] || 'No shelfmark';
-    var ms_name = _.findWhere($.kmw, { 'element': 'name'})['v'] || 'No name';
-    var ms_id = _.findWhere($.kmw, {'element': 'mid' })['v'];
-    var manifest = {
+    var ms_name   = _.findWhere($.kmw, { 'element': 'name'})['v'] || 'No name';
+    var ms_id     = _.findWhere($.kmw, {'element': 'mid' })['v'];
+    var rv        = [ null, 'r', 'v' ];
+    var manifest  = {
       // Metadata about this Manifest file
       "@context":"http://www.shared-canvas.org/ns/context.json",
       "@type":"sc:Manifest",
@@ -112,7 +146,6 @@ $(document).ready(function(){
         "viewingHint":"paged",
       }],
     };
-    var rv = [ null, 'r', 'v' ];
     manifest.sequences[0].canvases = _.map($.kui.calendar.folios, function(fol) {
       var folNum = String(fol[0]) + rv[fol[1]];
       return {
@@ -161,7 +194,7 @@ $(document).ready(function(){
 
   window.kuiNextFolioForm = function(folioIndex) {
     // create a human friendly list of folios
-    var rv = [ null, 'r', 'v' ];
+    var rv        = [ null, 'r', 'v' ];
     var folioNums = _.map($.kui.calendar.folios, function(fol) {
       return String(fol[0]) + rv[fol[1]];
     });
@@ -226,14 +259,13 @@ $(document).ready(function(){
       kuiUpdateCurrFolio();
       kuiStartFolio();
     });
-
     $('#kalendar').show();
   };
 
   window.kuiStartFolio = function() {
     // build the request for calendar data
-    currFolio = $.kui.calendar.currFolio;
-    url = kuiSaintsUrl + '/api/dates/' + currFolio['month'] + '/' + currFolio['startDay'] + '/count/' + currFolio['numOfDays'];
+    var currFolio = $.kui.calendar.currFolio;
+    var url       = kuiSaintsUrl + '/api/dates/' + currFolio['month'] + '/' + currFolio['startDay'] + '/count/' + currFolio['numOfDays'];
     $.ajax({
       url: url,
       dataType: 'json',
@@ -249,37 +281,73 @@ $(document).ready(function(){
   };
 
   window.kuiEditFolioForm = function() {
-    // $.kui.calendar.currFolio.dates[0] =>
-    // {
-    // "@id": "http://kalendar-saints.herokuapp.com/api/date/1/16",
-    // "@type": "Date",
-    // "day": 16,
-    // "dominicalLetter": "b",
-    // "goldenNumber": {
-    //   "arabic": 18,
-    //   "roman": "xviii"
-    // },
-    // "month": 1,
-    // ...
-    //   "romanDay": {
-    //   "arabic": 17,
-    //   "kni": "kalends",
-    //   "roman": "xvii"
-    // },
-    //
-    // $.kmw { 'elment': 'columns', 'group': [ { 'elment':'cal_col_1', ... 'options': { ... }} ]}
-    // 'number', 'letter', 'kni', 'day', 'text'
-    var columns = [];
-    var selected = _.findWhere($.kmw, { 'element':'columns' })['group']
-
-    _.each(selected, function(ele, index) {
+    // get the user selected columns
+    var columns     = [];
+    var colElements = _.findWhere($.kmw, { 'element':'columns' })['group'];
+    _.each(colElements, function(ele, index) {
       if (ele.v) { columns.push(ele.v); }
     });
 
-    console.log('columns', JSON.stringify(columns));
-    _.each($.kui.calendar.currFolio.dates, function(date, index) {
-      console.log(String(date.month), '/', String(date.day));
+    var $rows = $('<div id="kal_rows"></div>');
+
+    var $header = $('<div id="kal_header" class="row"></div>');
+    $header.append('<div class="col-md-1">Date</div>');
+    _.each(columns, function(col) {
+      var heading = _.findWhere($.kui.calendar.columnElements, { 'element':col })['head'];
+      console.log('col', col);
+      if (col === 'text') {
+        $header.append('<div class="col-md-2"><strong>' + heading + '</strong></div>');
+      } else {
+        $header.append('<div class="col-md-1"><strong>' + heading + '</strong></div>');
+      }
     });
+    $rows.append($header);
+
+    for(var i = 0; i < $.kui.calendar.currFolio.dates.length; i++) {
+      var date         = $.kui.calendar.currFolio.dates[i];
+      var month        = String(date['month']);
+      var day          = String(date['day']);
+      var monthDay     = kuiPad(day, 2) + kuiPad(month, 2);
+      var displayMonth = _.findWhere($.kui.calendar.nextFolioElements, { 'element':'month'})['options'][month];
+      var displayDate  = day + '/' + displayMonth;
+      var fieldsId     = 'kui-fields-' + monthDay;
+      var $row         = $('<div id="row_' + monthDay + '" class="row show-grid"></div>');
+      var $form        = $('<form id="' + monthDay + '"></form>');
+      $row.append($form);
+
+      // this column has the Gregorian day and date
+      var $cell = $('<div class="form-group col-md-1">' + displayDate + '</div>');
+      $cell.append('<input type="hidden" id="cal-val-' + monthDay + '-day" value="' + day + '">');
+      $cell.append('<input type="hidden" id="cal-val-' + monthDay + '-month" value="' + month + '">');
+      $form.append($cell);
+
+      for(var j = 0; j < columns.length; j++) {
+        var column = columns[j];
+        var element = _.findWhere($.kui.calendar.columnElements, { 'element': column });
+        if (element.element === 'text') {
+          $cell = $('<div class="form-group col-md-2"><select style="width: 250px;" class="form-contrl" id="cal-val-' + monthDay + '-' + column + '"></select></div>');
+          var selectOptions = '<option value="0"></option>';
+          _.each(date.primary_saints, function(saint) {
+            selectOptions += '<option value="' + saint['@id'] + '">' + saint['name'] + '</option>';
+          });
+          $cell.find('select').append(selectOptions);
+        } else if(element.fieldtype === 'fixed') {
+          var val = '';
+          if (element.date_attr) {
+            val = kuiGetProp(date, element.date_attr) || '';
+          }
+          // create a cell for this column and a hidden field with the value
+          $cell = $('<div class="form-group col-md-1">' + val + '</div>');
+          $cell.append('<input type="hidden" id="cal-val-' + monthDay + '-' + column + '" value="' + val + '"></input>');
+        }
+        $form.append($cell);
+      }
+      $rows.append($row);
+    }
+
+    $('#kui').hide();
+    $('#kalendar').removeClass('col-sm-3')
+    $('#kalendar').append($rows);
   };
 
   window.kuiUpdateCurrFolio = function() {
@@ -321,7 +389,7 @@ $(document).ready(function(){
       'nextFolioElements': [
         { 'element':'index', 'label':'Folio', 'v':'', 'fieldtype':'list', 'options':{} },
         { 'element':'month', 'label':'Month', 'v':'', 'fieldtype':'list', 'options':{
-          '0':'', '1':'Jan', '2':'Feb', '3':'Mar', '4':'Apr', '5':'May', '6':'Jun', '7':'Jul', '8':'Aug', '9':'Sep', '10':'Oct', '11':'Nov', '12':'Dec'
+          '0':'', '1':'I', '2':'II', '3':'III', '4':'IIII', '5':'V', '6':'VI', '7':'VII', '8':'VIII', '9':'IX', '10':'X', '11':'XI', '12':'XII'
         }},
         { 'element':'startDay', 'label':'Starting on', 'v':'', 'fieldtype':'list', 'options':{
           '0':'', '1':'1', '2':'2', '3':'3', '4':'4', '5':'5', '6':'6', '7':'7', '8':'8', '9':'9', '10':'10', '11':'11', '12':'12', '13':'13', '14':'14', '15':'15', '16':'16', '17':'17', '18':'18', '19':'19', '20':'20', '21':'21', '22':'22', '23':'23', '24':'24', '25':'25', '26':'26', '27':'27', '28':'28', '29':'29', '30':'30', '31':'31'
@@ -330,11 +398,11 @@ $(document).ready(function(){
 
       ],
       'columnElements': [
-        { 'element':'number', 'label':'Golden Number', 'fieldtype':'fixed', 'options':{} },
-        { 'element':'letter', 'label':'Dominical Letter', 'fieldtype':'fixed', 'options':{} },
-        { 'element':'kni', 'label':'Kalends, Nones, Ides', 'fieldtype':'fixed', 'options':{} },
-        { 'element':'day', 'label':'Roman Day', 'fieldtype':'fixed', 'options':{} },
-        { 'element':'text', 'label':'Text', 'fieldtype':'list', 'options':{} },
+        { 'element':'number', 'date_attr':'goldenNumber.roman', 'label':'Golden Number', 'fieldtype':'fixed', 'head': 'Number', 'options':{} },
+        { 'element':'letter', 'date_attr':'dominicalLetter', 'label':'Dominical Letter', 'fieldtype':'fixed', 'head':'Letter', 'options':{} },
+        { 'element':'kni', 'date_attr':'romanDay.kni', 'label':'Kalends, Nones, Ides', 'fieldtype':'fixed', 'head':'KNI', 'options':{} },
+        { 'element':'day', 'date_attr':'romanDay.roman', 'label':'Roman Day', 'fieldtype':'fixed', 'head':'Day', 'options':{} },
+        { 'element':'text', 'date_attr':'', 'label':'Text', 'fieldtype':'list', 'head':'Feast', 'options':{} },
       ]
     },
   }
