@@ -281,6 +281,14 @@ $(document).ready(function(){
   };
 
   window.kuiEditFolioForm = function() {
+    // get contextual information
+    var shelfmark  = _.findWhere($.kmw, { 'element': 'shelfmark' })['v'] || 'No shelfmark';
+    var folioParts = $.kui.calendar.folios[$.kui.calendar.currFolio.folioIndex];
+    var folio      = 'fol. ' + String(folioParts[0]) + kuiRv[folioParts[1]];
+    var folioMonth = _.findWhere($.kui.calendar.nextFolioElements, { 'element': 'month'})['options'][$.kui.calendar.currFolio.month];
+    var startDay   = $.kui.calendar.currFolio.startDay + '.' + folioMonth;
+    var endDay     = $.kui.calendar.currFolio.endDay + '.' + folioMonth;
+    var h1         = '<h1>' + shelfmark + ', ' + folio + ', days ' + startDay + ' - ' + endDay + '</h1>'
     // get the user selected columns
     var columns     = [];
     var colElements = _.findWhere($.kmw, { 'element':'columns' })['group'];
@@ -329,7 +337,7 @@ $(document).ready(function(){
         // create the cell with the Feasts/Saints
         if (element.element === 'text') {
 
-          $form.append('<select style="width: 250px;" class="form-contrl" id="cal-val-' + monthDay + '-' + column + '"></select>')
+          $form.append('<select style="width: 250px;" class="form-control" id="cal-val-' + monthDay + '-' + column + '"></select>')
           $cell = $('<td></td>');
           // append the form to the Feasts cell
           $cell.append($form);
@@ -358,7 +366,8 @@ $(document).ready(function(){
     }
 
     $('#kui').hide();
-    $('#kalendar').removeClass('col-sm-3')
+    $('#kalendar').removeClass('col-sm-3');
+    $('#kalendar').append(h1);
     $('#kalendar').append($rows);
   };
 
