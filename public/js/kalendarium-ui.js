@@ -182,7 +182,7 @@ $(document).ready(function(){
 
   window.kuiNextFolio = function() {
     // get current folio index
-    var folioIndex = $.kui.calendar.currFolio['index'];
+    var folioIndex = $.kui.calendar.currFolio['folioIndex'];
     // get the next index
     folioIndex = folioIndex === null ? 0 : folioIndex + 1;
     if (folioIndex < $.kui.calendar.folios.length) {
@@ -241,16 +241,16 @@ $(document).ready(function(){
     });
 
     // select the correct folio
-    $('#nextFol-val-index').append(folioOptions);
-    $('#nextFol-val-index').find('option[value="' + folioIndex + '"]').attr('selected', 'selected');
+    $('#nextFol-val-folioIndex').append(folioOptions);
+    $('#nextFol-val-folioIndex').find('option[value="' + folioIndex + '"]').attr('selected', 'selected');
 
     // add a button
     $('#kui-fields').append('<input type="button" id="nextFol-edit-btn" class="btn btn-default" value="Edit"/>')
     // set the button value to the selected folio
-    $('#nextFol-val-index').find('option[value="' + folioIndex + '"]').attr('selected', 'selected');
-    $('#nextFol-edit-btn').val('Edit ' + $('#nextFol-val-index option[selected]').text());
+    $('#nextFol-val-folioIndex').find('option[value="' + folioIndex + '"]').attr('selected', 'selected');
+    $('#nextFol-edit-btn').val('Edit ' + $('#nextFol-val-folioIndex option[selected]').text());
     // update the edit button to the currently selected folio
-    $('#nextFol-val-index').change(function() {
+    $('#nextFol-val-folioIndex').change(function() {
       // console.log(this);
       $('#nextFol-edit-btn').val('Edit ' + $(this).find('option:selected').text());
     });
@@ -392,14 +392,14 @@ $(document).ready(function(){
     'calendar': {
       'folios': [],
       'currFolio': {
-        'index': null,
+        'folioIndex': null,
         'month': null,
         'startDay': null,
         'endDay': null,
         'dates': null,
       },
       'nextFolioElements': [
-        { 'element':'index', 'label':'Folio', 'v':'', 'fieldtype':'list', 'options':{} },
+        { 'element':'folioIndex', 'label':'Folio', 'v':'', 'fieldtype':'list', 'options':{} },
         { 'element':'month', 'label':'Month', 'v':'', 'fieldtype':'list', 'options':{
           '0':'', '1':'i', '2':'ii', '3':'iii', '4':'iiii', '5':'v', '6':'vi', '7':'vii', '8':'viii', '9':'ix', '10':'x', '11':'xi', '12':'xii'
           }
