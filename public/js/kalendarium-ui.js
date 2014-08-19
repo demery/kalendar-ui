@@ -288,26 +288,32 @@ $(document).ready(function(){
       if (ele.v) { columns.push(ele.v); }
     });
 
+    // KALENDAR TABLE
     var $rows = $('<table id="kal_rows" class="table"><tbody></tbody></table>');
 
+    // TABLE HEADER
     var $header = $('<tr id="kal_header"></tr>');
-    $header.append('<th>Date</th>');
+    $header.append('<th>Date</th>'); // Gregorian date header
+    // create a header for each column
     _.each(columns, function(col) {
       var heading = _.findWhere($.kui.calendar.columnElements, { 'element':col })['head'];
       $header.append('<th>' + heading + '</th>');
     });
     $rows.append($header);
 
+    // TABLE ROW & FORM for each date
     for(var i = 0; i < $.kui.calendar.currFolio.dates.length; i++) {
       var date         = $.kui.calendar.currFolio.dates[i];
       var month        = String(date['month']);
       var day          = String(date['day']);
+      // monthDay has format like 0101, 1225
       var monthDay     = kuiPad(day, 2) + kuiPad(month, 2);
       var displayMonth = _.findWhere($.kui.calendar.nextFolioElements, { 'element':'month'})['options'][month];
+      // displayDate has format like 1.i, 25.xii
       var displayDate  = day + '.' + displayMonth;
-      var fieldsId     = 'kui-fields-' + monthDay;
-      var $form        = $('<form id="' + monthDay + '"></form>');
+      // each date has a table row and a form
       var $row         = $('<tr id="row_' + monthDay + '"></tr>');
+      var $form        = $('<form id="' + monthDay + '"></form>');
 
       // this column has the Gregorian day and date
       var $cell = $('<td>' + displayDate + '</td>');
@@ -315,19 +321,28 @@ $(document).ready(function(){
       $form.append('<input type="hidden" id="cal-val-' + monthDay + '-day" value="' + day + '">');
       $form.append('<input type="hidden" id="cal-val-' + monthDay + '-month" value="' + month + '">');
 
+      // create a cell and form input for each column
       for(var j = 0; j < columns.length; j++) {
         var column = columns[j];
         var element = _.findWhere($.kui.calendar.columnElements, { 'element': column });
+
+        // create the cell with the Feasts/Saints
         if (element.element === 'text') {
+
           $form.append('<select style="width: 250px;" class="form-contrl" id="cal-val-' + monthDay + '-' + column + '"></select>')
           $cell = $('<td></td>');
+          // append the form to the Feasts cell
           $cell.append($form);
+
           var selectOptions = '<option value="0"></option>';
           _.each(date.primary_saints, function(saint) {
             selectOptions += '<option value="' + saint['@id'] + '">' + saint['name'] + '</option>';
           });
           $cell.find('select').append(selectOptions);
+
           $row.append($cell);
+
+        // Create all the other cells
         } else if(element.fieldtype === 'fixed') {
           var val = '';
           if (element.date_attr) {
