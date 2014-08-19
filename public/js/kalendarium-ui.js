@@ -265,7 +265,7 @@ $(document).ready(function(){
   window.kuiStartFolio = function() {
     // build the request for calendar data
     var currFolio = $.kui.calendar.currFolio;
-    var url       = kuiSaintsUrl + '/api/dates/' + currFolio['month'] + '/' + currFolio['startDay'] + '/count/' + currFolio['numOfDays'];
+    var url       = kuiSaintsUrl + '/api/from/' + currFolio['month'] + '/' + currFolio['startDay'] + '/to/' + currFolio['month'] + '/' + currFolio['endDay'];
     $.ajax({
       url: url,
       dataType: 'json',
@@ -395,19 +395,23 @@ $(document).ready(function(){
         'index': null,
         'month': null,
         'startDay': null,
-        'numOfDays': null,
+        'endDay': null,
         'dates': null,
       },
       'nextFolioElements': [
         { 'element':'index', 'label':'Folio', 'v':'', 'fieldtype':'list', 'options':{} },
         { 'element':'month', 'label':'Month', 'v':'', 'fieldtype':'list', 'options':{
           '0':'', '1':'i', '2':'ii', '3':'iii', '4':'iiii', '5':'v', '6':'vi', '7':'vii', '8':'viii', '9':'ix', '10':'x', '11':'xi', '12':'xii'
-        }},
+          }
+        },
         { 'element':'startDay', 'label':'Starting on', 'v':'', 'fieldtype':'list', 'options':{
           '0':'', '1':'1', '2':'2', '3':'3', '4':'4', '5':'5', '6':'6', '7':'7', '8':'8', '9':'9', '10':'10', '11':'11', '12':'12', '13':'13', '14':'14', '15':'15', '16':'16', '17':'17', '18':'18', '19':'19', '20':'20', '21':'21', '22':'22', '23':'23', '24':'24', '25':'25', '26':'26', '27':'27', '28':'28', '29':'29', '30':'30', '31':'31'
-        }},
-        { 'element':'numOfDays', 'label':'Number of days', 'v':'', 'fieldtype':'text', 'options':{} },
-
+          }
+        },
+        { 'element':'endDay', 'label':'Ending on', 'v':'', 'fieldtype':'list', 'options':{
+          '0':'', '1':'1', '2':'2', '3':'3', '4':'4', '5':'5', '6':'6', '7':'7', '8':'8', '9':'9', '10':'10', '11':'11', '12':'12', '13':'13', '14':'14', '15':'15', '16':'16', '17':'17', '18':'18', '19':'19', '20':'20', '21':'21', '22':'22', '23':'23', '24':'24', '25':'25', '26':'26', '27':'27', '28':'28', '29':'29', '30':'30', '31':'31'
+          }
+        },
       ],
       'columnElements': [
         { 'element':'number', 'date_attr':'goldenNumber.roman', 'label':'Golden Number', 'fieldtype':'fixed', 'head': 'Number', 'options':{} },
