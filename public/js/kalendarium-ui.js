@@ -288,18 +288,13 @@ $(document).ready(function(){
       if (ele.v) { columns.push(ele.v); }
     });
 
-    var $rows = $('<div id="kal_rows"></div>');
+    var $rows = $('<table id="kal_rows" class="table"><tbody></tbody></table>');
 
-    var $header = $('<div id="kal_header" class="row"></div>');
-    $header.append('<div class="col-md-1">Date</div>');
+    var $header = $('<tr id="kal_header"></tr>');
+    $header.append('<th>Date</th>');
     _.each(columns, function(col) {
       var heading = _.findWhere($.kui.calendar.columnElements, { 'element':col })['head'];
-      console.log('col', col);
-      if (col === 'text') {
-        $header.append('<div class="col-md-2"><strong>' + heading + '</strong></div>');
-      } else {
-        $header.append('<div class="col-md-1"><strong>' + heading + '</strong></div>');
-      }
+      $header.append('<th>' + heading + '</th>');
     });
     $rows.append($header);
 
@@ -309,38 +304,40 @@ $(document).ready(function(){
       var day          = String(date['day']);
       var monthDay     = kuiPad(day, 2) + kuiPad(month, 2);
       var displayMonth = _.findWhere($.kui.calendar.nextFolioElements, { 'element':'month'})['options'][month];
-      var displayDate  = day + '/' + displayMonth;
+      var displayDate  = day + '.' + displayMonth;
       var fieldsId     = 'kui-fields-' + monthDay;
-      var $row         = $('<div id="row_' + monthDay + '" class="row show-grid"></div>');
       var $form        = $('<form id="' + monthDay + '"></form>');
-      $row.append($form);
+      var $row         = $('<tr id="row_' + monthDay + '"></tr>');
 
       // this column has the Gregorian day and date
-      var $cell = $('<div class="form-group col-md-1">' + displayDate + '</div>');
-      $cell.append('<input type="hidden" id="cal-val-' + monthDay + '-day" value="' + day + '">');
-      $cell.append('<input type="hidden" id="cal-val-' + monthDay + '-month" value="' + month + '">');
-      $form.append($cell);
+      var $cell = $('<td>' + displayDate + '</td>');
+      $row.append($cell);
+      $form.append('<input type="hidden" id="cal-val-' + monthDay + '-day" value="' + day + '">');
+      $form.append('<input type="hidden" id="cal-val-' + monthDay + '-month" value="' + month + '">');
 
       for(var j = 0; j < columns.length; j++) {
         var column = columns[j];
         var element = _.findWhere($.kui.calendar.columnElements, { 'element': column });
         if (element.element === 'text') {
-          $cell = $('<div class="form-group col-md-2"><select style="width: 250px;" class="form-contrl" id="cal-val-' + monthDay + '-' + column + '"></select></div>');
+          $form.append('<select style="width: 250px;" class="form-contrl" id="cal-val-' + monthDay + '-' + column + '"></select>')
+          $cell = $('<td></td>');
+          $cell.append($form);
           var selectOptions = '<option value="0"></option>';
           _.each(date.primary_saints, function(saint) {
             selectOptions += '<option value="' + saint['@id'] + '">' + saint['name'] + '</option>';
           });
           $cell.find('select').append(selectOptions);
+          $row.append($cell);
         } else if(element.fieldtype === 'fixed') {
           var val = '';
           if (element.date_attr) {
             val = kuiGetProp(date, element.date_attr) || '';
           }
           // create a cell for this column and a hidden field with the value
-          $cell = $('<div class="form-group col-md-1">' + val + '</div>');
-          $cell.append('<input type="hidden" id="cal-val-' + monthDay + '-' + column + '" value="' + val + '"></input>');
+          $cell = $('<td>' + val + '</div>');
+          $row.append($cell);
+          $form.append('<input type="hidden" id="cal-val-' + monthDay + '-' + column + '" value="' + val + '"></input>');
         }
-        $form.append($cell);
       }
       $rows.append($row);
     }
@@ -389,7 +386,7 @@ $(document).ready(function(){
       'nextFolioElements': [
         { 'element':'index', 'label':'Folio', 'v':'', 'fieldtype':'list', 'options':{} },
         { 'element':'month', 'label':'Month', 'v':'', 'fieldtype':'list', 'options':{
-          '0':'', '1':'I', '2':'II', '3':'III', '4':'IIII', '5':'V', '6':'VI', '7':'VII', '8':'VIII', '9':'IX', '10':'X', '11':'XI', '12':'XII'
+          '0':'', '1':'i', '2':'ii', '3':'iii', '4':'iiii', '5':'v', '6':'vi', '7':'vii', '8':'viii', '9':'ix', '10':'x', '11':'xi', '12':'xii'
         }},
         { 'element':'startDay', 'label':'Starting on', 'v':'', 'fieldtype':'list', 'options':{
           '0':'', '1':'1', '2':'2', '3':'3', '4':'4', '5':'5', '6':'6', '7':'7', '8':'8', '9':'9', '10':'10', '11':'11', '12':'12', '13':'13', '14':'14', '15':'15', '16':'16', '17':'17', '18':'18', '19':'19', '20':'20', '21':'21', '22':'22', '23':'23', '24':'24', '25':'25', '26':'26', '27':'27', '28':'28', '29':'29', '30':'30', '31':'31'
