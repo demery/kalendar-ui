@@ -40,7 +40,6 @@ $(document).ready(function(){
     }
   };
 
-  window.kuiGetDateElement
   window.kuiGetProp = function(obj, prop) {
     prop = prop.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
     prop = prop.replace(/^\./, '');           // strip a leading dot
@@ -296,23 +295,28 @@ $(document).ready(function(){
 
   window.kuiEditFolioForm = function() {
     // get contextual information
-    var shelfmark  = _.findWhere($.kmw, { 'element': 'shelfmark' })['v'] || 'No shelfmark';
-    var folioParts = $.kui.calendar.folios[$.kui.calendar.currFolio.folioIndex];
-    var folio      = 'fol. ' + String(folioParts[0]) + kuiRv[folioParts[1]];
-    var folioMonth = _.findWhere($.kui.calendar.nextFolioElements, { 'element': 'month'})['options'][$.kui.calendar.currFolio.month];
-    var startDay   = $.kui.calendar.currFolio.startDay + '.' + folioMonth;
-    var endDay     = $.kui.calendar.currFolio.endDay + '.' + folioMonth;
-    var h1         = '<h1>' + shelfmark + ', ' + folio + ', days ' + startDay + ' - ' + endDay + '</h1>';
-    var canvasId   = _.findWhere($.kui.manifest.sequences[0].canvases, { 'label': folio })['@id'];
-    // get the user selected columns
+    var shelfmark   = _.findWhere($.kmw, { 'element': 'shelfmark' })['v'] || 'No shelfmark';
+    var folioParts  = $.kui.calendar.folios[$.kui.calendar.currFolio.folioIndex];
+    var folio       = 'fol. ' + String(folioParts[0]) + kuiRv[folioParts[1]];
+    var folioMonth  = _.findWhere($.kui.calendar.nextFolioElements, { 'element': 'month'})['options'][$.kui.calendar.currFolio.month];
+    var startDay    = $.kui.calendar.currFolio.startDay + '.' + folioMonth;
+    var endDay      = $.kui.calendar.currFolio.endDay + '.' + folioMonth;
+    var dates       = $.kui.calendar.currFolio.dates;
+    var h1          = '<h1>' + shelfmark + ', ' + folio + ', days ' + startDay + ' - ' + endDay + '</h1>';
     var columns     = [];
     var colElements = _.findWhere($.kmw, { 'element':'columns' })['group'];
     _.each(colElements, function(ele, index) {
       if (ele.v) { columns.push(ele.v); }
     });
 
+    var canvas        = _.findWhere($.kui.manifest.sequences[0].canvases, { 'label': folio });
+    var canvasId      = canvas['@id'];
+    var canvasXOffset = Math.round(canvas['width']/10);
+    var canvasYOffset = Math.round(canvas['height']/10);
+    var lineH         = Math.round((canvas['height'] - (canvasXOffset * 2))/dates.length);
+    var lineW         = Math.round(canvas['width'] - canvas['width']/20);
+
     // KALENDAR TABLE
-    // var $rows = $('<table id="kal_rows" class="table"><tbody></tbody></table>');
     var $rows = $('<table id="kal_rows" style="border-spacing:10px; border-collapse:separate;"><tbody></tbody></table>');
 
     // TABLE HEADER
@@ -326,15 +330,19 @@ $(document).ready(function(){
     $rows.append($header);
 
     // TABLE ROW & FORM for each date
-    for(var i = 0; i < $.kui.calendar.currFolio.dates.length; i++) {
+    for(var i = 0; i < dates.length; i++) {
       var date         = $.kui.calendar.currFolio.dates[i];
       var month        = String(date['month']);
       var day          = String(date['day']);
       // monthDay has format like 0101, 1225
-      var monthDay     = kuiPad(day, 2) + kuiPad(month, 2);
-      var displayMonth = _.findWhere($.kui.calendar.nextFolioElements, { 'element':'month'})['options'][month];
+      var monthDay     = kuiPad(month, 2) + kuiPad(day, 2);
+      var displayMonth = _.findWhere($.kui.calendar.nextFolioElements, { 'element':'month' })['options'][month];
       // displayDate has format like 1.i, 25.xii
       var displayDate  = day + '.' + displayMonth;
+
+      var x = canvasXOffset;
+      var y = canvasYOffset + (i*lineH);
+      var xywh = [x, y, lineW, lineH].join(',');
 
       // each date has a table row and a form
       var $row         = $('<tr id="row_' + monthDay + '"></tr>');
@@ -344,10 +352,13 @@ $(document).ready(function(){
       $row.append($cell);
 
       // Create the form and add hidden inputs for this day
-      var $form = $('<form class="form-inline" id="' + monthDay + '"></form>');
-      $form.append('<input type="hidden" id="cal-val-' + monthDay + '-day" value="' + day + '">');
-      $form.append('<input type="hidden" id="cal-val-' + monthDay + '-month" value="' + month + '">');
-      $form.append('<input type="hidden" id="cal-val-' + monthDay + '-canvas" value="' + canvasId + '">');
+      var $form = $('<form class="form-inline calendar-edit" id="' + monthDay + '"></form>');
+      $form.append('<input type="hidden" name="xywh" id="cal-val-' + monthDay + '-xywh" value="' + xywh + '"></input>');
+      $form.append('<input type="hidden" name="cols" id="cal-val-' + monthDay + '-cols" value="' + columns.join(',') + '"></input>');
+      $form.append('<input type="hidden" name="gDay" id="cal-val-' + monthDay + '-gDay" value="' + day + '"></input>');
+      $form.append('<input type="hidden" name="gMonth" id="cal-val-' + monthDay + '-gMonth" value="' + month + '"></input>');
+      $form.append('<input type="hidden" name="canvas" id="cal-val-' + monthDay + '-canvas" value="' + canvasId + '"></input>');
+      $form.append('<input type="hidden" name="color" id="cal-val-' + monthDay + '-color" value=""></input>');
 
       // create a cell and form input for each column
       for(var j = 0; j < columns.length; j++) {
@@ -409,12 +420,16 @@ $(document).ready(function(){
     // Add click event for colorboxes
     $rows.on('click', '.kui-colorbox', function(event) {
       var $this = $(this);
-      var $rgb = $this.css('color');
+      var rgb = $this.css('color');
       $this.parent().find('.kui-colorbox').each(function(index, e){
         $(e).text($(e).text().replace('*', ''));
       });
       $this.prepend('*');
+      // set the color
+      $this.closest('form').find('input[name=color]').val(rgb);
     });
+
+    $rows.find('form select').change(kuiSubmitAnnotation);
 
     $('#kui').hide();
     $('#kalendar').removeClass('col-sm-3');
@@ -422,7 +437,7 @@ $(document).ready(function(){
     $('#kalendar').append($rows);
   };
 
-  window.kuiSubmitAnnotation = function(element) {
+  window.kuiSubmitAnnotation = function() {
     // {
     //   "@id": "http://www.shared-canvas.org/services/anno/calendars/annotation/ad9a52804-530b-4243-81d0-b06f41a25377.json",
     //   "@type": "oa:Annotation",
@@ -444,9 +459,53 @@ $(document).ready(function(){
     //     "@id": "mailto:azaroth42@gmail.com"
     //   }
     // }
-    $ele = $(element);
+    $ele = $(this);
     var $form = $ele.closest('form');
+    var values = _.reduce($form.find(':input'), function(hsh, inp) {
+      var $inp = $(inp);
+      var v = $inp.val();
+      var t = $inp.is('select') ? $inp.find('option[value="' + v + '"]').text() : $inp.text();
+      hsh[$inp.attr('id').substring(13)] = { 'v': v, 't':t };
+      return hsh;
+    }, {});
+    var annotation = {
+      '@type': 'oa:Annotation',
+      'motivation': 'sc:painting',
+      'resource': {
+        '@type': [
+          'cnt:ContentAsText',
+          'dctypes:Text'
+        ],
+        'format':'text/html',
+        'chars':''
+      },
+      'on':'',
+      'creator': {
+        '@id': 'mailto:emeryr@upenn.edu'
+      }
+    };
 
+    var columns = values['cols'].v.split(',');
+    var itemWidth = Math.round(100/columns.length);
+    var color = values['color'].v;
+    var spans = '<div data-month="' + values['gMonth'].v + '" data-day="' + values['gDay'].v + '" style="width:100%;">';
+    _.each(columns, function(col, index) {
+      var v = values[col].v;
+      var t = values[col].t || v;
+      spans += '<span data-type="' + col + '" data-value="' + v + '" style="display:inline-block;color:' + color + ';width:' + itemWidth + '%;">' + t + '</span>'
+    });
+    spans += '</div>';
+    annotation['resource']['chars'] = spans;
+    annotation['on'] = values['canvas'].v + '#' + values['xywh'].v;
+
+    var jstr = JSON.stringify(annotation);
+    jQuery.ajax({
+      type:"POST",
+      url: kuiAnnotationsUrl,
+      data:jstr,
+      dataType:"json",
+      contentType:"application/json",
+    });
   };
 
   window.kuiUpdateCurrFolio = function() {
