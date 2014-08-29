@@ -1,0 +1,191 @@
+{
+  "@context": "http://www.shared-canvas.org/ns/context.json",
+  "@id": "http://165.123.34.221/services/anno/calendars/manifest/ac95a60a5-5a9f-41a6-897e-f3688c4e4ec8.json",
+  "@type": "sc:Manifest",
+  "label": "MS DE 1",
+  "license": "http://www.example.org/license.html",
+  "metadata": [
+    {
+      "label": "Title",
+      "value": "Call Me the Breeze"
+    }
+  ],
+  "sequences": [
+    {
+      "@type": "sc:Sequence",
+      "canvases": [
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/941e6151-bebe-43af-8007-1c16b1a60a86.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 4v",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/dbe638b0-2b1d-4d67-b89c-d7650b6c78aa.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 5r",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/2c16e0b3-95e6-4f41-b2e2-95274db2157d.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 5v",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/3b2c7f15-7bd7-4913-a7e7-1cc0453565c9.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 6r",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/c2e4b46c-001d-41c3-82d1-83f5aaee3e0d.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 6v",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/c823f8fa-8acc-4e88-867f-391007b7cc9b.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 7r",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/74d48e4c-fd20-4e1d-afb8-3c3a862ec839.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 7v",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/72581696-400f-4165-b13e-d27bfefffffe.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 8r",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/c90c9798-22b9-4022-9970-35f91de8c9dc.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 8v",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/0ae57a61-4b47-4f9d-ae25-490022f3dd70.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 9r",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/bae4eb49-f2d8-4550-912a-ce2214d80268.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 9v",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/b6fbb6ea-d03b-4df0-bc7e-f1e7d5b83541.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 10r",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/35cd8636-b999-4364-b7f2-3d46687e8ec4.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 10v",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/86576ed5-85fe-4a57-8937-b84a419080fb.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 11r",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/7ac0d7fe-9207-4e74-83fd-52c0b5e48a6f.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 11v",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/befa6db1-1970-49e4-933e-d67d2855673f.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 12r",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/d77de847-e22d-487d-aa79-64415d69aca7.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 12v",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/fe7ce2b7-6cc5-4f02-9c7a-bc1548b14107.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 13r",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/b7d1a244-a7a2-43b7-9d43-93f1ab8b9dbc.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 13v",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/d779dfb0-a246-42e9-89c5-a99a49b3ddfe.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 14r",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/054e40c7-c330-4e60-969f-60961210cf9d.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 14v",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/6f84fecc-fc9c-4b3b-9a58-083c8d6a320d.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 15r",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/10471811-3dbe-4f98-975d-b4a2a32e44b6.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 15v",
+          "width": 700
+        },
+        {
+          "@id": "http://www.shared-canvas.org/services/anno/calendars/canvas/11d49f58-cd22-443d-b4de-d25f78e259ce.json",
+          "@type": "sc:Canvas",
+          "height": 1000,
+          "label": "fol. 16r",
+          "width": 700
+        }
+      ],
+      "label": "Normal Page Order",
+      "viewingDirection": "left-to-right",
+      "viewingHint": "paged"
+    }
+  ]
+}
