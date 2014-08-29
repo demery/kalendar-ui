@@ -2,11 +2,12 @@ $(document).ready(function(){
 
   var kuiManuscriptsUrl    = 'http://kalendarium-manuscripts.herokuapp.com';
   var kuiSaintsUrl         = 'http://kalendar-saints.herokuapp.com';
-  var kuiSCHost            = 'http://165.123.34.221';
+  var kuiSCHost            = 'http://sims-dev.library.upenn.edu';
   var kuiSCContext         =  kuiSCHost + '/ns/context.json';
   var kuiCanvasesUrl       =  kuiSCHost + '/services/anno/calendars/canvas';
   var kuiManifestsUrl      =  kuiSCHost + '/services/anno/calendars/manifest';
   var kuiAnnotationsUrl    =  kuiSCHost + '/services/anno/calendars/annotation';
+  var kuiSCListUrl         =  kuiSCHost + '/services/anno/calendars/list';
   var kuiRv                = [ null, 'r', 'v' ];
   var kuiColorMap          = {
     'Black': { color:'Black', code:'Ni'},
@@ -69,6 +70,28 @@ $(document).ready(function(){
     // return 'r', 'v' or undefined
     var m = (val ? (String(val).toLowerCase().match(/r|v/) || []) : [])[0];
     return (m && m === 'r' ? 1 : 2) || 0;
+  };
+
+  window.kuiGetCurrFolio = function() {
+    var folioParts = $.kui.calendar.folios[$.kui.calendar.currFolio.folioIndex];
+    if (folioParts) {
+      return 'fol. ' + String(folioParts[0]) + kuiRv[folioParts[1]];
+    } else {
+      return '';
+    }
+  };
+
+  window.kuiGetCanvas = function(folio) {
+    if ($.kui.manifest.sequences[0]) {
+      return _.findWhere($.kui.manifest.sequences[0].canvases, { 'label': folio });
+    }
+  };
+
+  window.kuiGetCurrCanvas = function() {
+    var folio = kuiGetCurrFolio();
+    if (folio) {
+      return kuiGetCanvas(folio);
+    }
   };
 
   window.kuiCreateFolios = function() {
@@ -135,6 +158,7 @@ $(document).ready(function(){
   };
 
   window.kuiCreateManifest = function() {
+    alert("Howdy!");
     var shelfmark = _.findWhere($.kmw, { 'element': 'shelfmark' })['v'] || 'No shelfmark';
     var ms_name   = _.findWhere($.kmw, { 'element': 'name'})['v'] || 'No name';
     var ms_id     = _.findWhere($.kmw, {'element': 'mid' })['v'];
@@ -172,7 +196,7 @@ $(document).ready(function(){
 
     return jQuery.ajax({
       type:'POST',
-      url:kuiManifestsUrl,
+      url:'http://165.123.34.221//services/anno/calendars/manifest',
       data:jstr,
       dataType:'json',
       crossDomain: true,
@@ -285,7 +309,8 @@ $(document).ready(function(){
       crossDomain: true,
       success: function(data) {
         $.kui.calendar.currFolio['dates'] = data['dates'];
-        kuiEditFolioForm();
+        kuiPrepFolio();
+        // kuiEditFolioForm();
       },
       error: function(data) {
         console.log('problem', data);
@@ -293,7 +318,109 @@ $(document).ready(function(){
     });
   };
 
+  window.kuiPrepFolio = function() {
+    var kfa = kuiFetchAnnotations();
+    kfa.done(function(data) {
+      console.log('kfa.done', JSON.stringify(data));
+    });
+  };
+
+  window.kuiFetchAnnotations = function() {
+    var canvas = kuiGetCurrCanvas();
+    var canvasId = null;
+    if (canvas) {
+      canvasId = canvas['@id'].split('/').pop();
+      var url = kuiSCListUrl + '/' + canvasId;
+      return $.ajax({
+        type: 'GET',
+        url: url,
+        dataType: 'json',
+        crossDomain: true,
+        contentType: 'application/json',
+        success: function(data) {
+          $.kui.calendar.currFolio.annotations = data['resources'];
+        },
+        error: function(data) {
+          console.log('error', data);
+        }
+      });
+    }
+  };
+
+  window.kuiCreateAnnotations = function() {
+    var annotations = [];
+    var dates       = $.kui.calendar.currFolio.dates;
+    var folioParts  = $.kui.calendar.folios[$.kui.calendar.currFolio.folioIndex];
+    var folio       = 'fol. ' + String(folioParts[0]) + kuiRv[folioParts[1]];
+    var columns     = [];
+    var colElements = _.findWhere($.kmw, { 'element':'columns' })['group'];
+    _.each(colElements, function(ele, index) {
+      if (ele.v) { columns.push(ele.v); }
+    });
+    var canvas        = _.findWhere($.kui.manifest.sequences[0].canvases, { 'label': folio });
+    var canvasId      = canvas['@id'];
+    var canvasXOffset = Math.round(canvas['width']/10);
+    var canvasYOffset = Math.round(canvas['height']/10);
+    var lineH         = Math.round((canvas['height'] - (canvasXOffset * 2))/dates.length);
+    var lineW         = Math.round(canvas['width'] - canvas['width']/20);
+    var itemWidth = Math.round(100/columns.length);
+
+    for(var i = 0; i < dates.length; i++) {
+      var date  = $.kui.calendar.currFolio.dates[i];
+      var month = String(date['month']);
+      var day   = String(date['day']);
+      var x     = canvasXOffset;
+      var y     = canvasYOffset + (i*lineH);
+      var xywh  = [ x, y, lineW, lineH ].join(',');
+
+      var spans = '<div data-month="' + month + '" data-day="' + day + '" style="width:100%;">';
+      _.each(columns, function(col, index) {
+        var element = _.findWhere($.kui.calendar.columnElements, { 'element': col });
+        var v       = '';
+        if (element.date_attr) {
+          v = kuiGetProp(date, element.date_attr) || '';
+        }
+        spans += '<span data-type="' + col + '" data-value="' + v + '" style="display:inline-block;color:rgb(0,0,0);width:' + itemWidth + '%;">' + v + '</span>'
+      });
+      spans += '</div>';
+
+      var annotation = {
+        '@type': 'oa:Annotation',
+        'motivation': 'sc:painting',
+        'resource': {
+          '@type': [
+          'cnt:ContentAsText',
+          'dctypes:Text'
+          ],
+          'format':'text/html',
+          'chars':spans
+        },
+        'on':canvasId + '#xywh=' + xywh,
+        'creator': {
+          '@id': 'mailto:emeryr@upenn.edu'
+        }
+      };
+
+      var jstr = JSON.stringify(annotation);
+      jQuery.ajax({
+        type:'POST',
+        url: kuiAnnotationsUrl,
+        data:jstr,
+        dataType:'json',
+        contentType:'application/json',
+        success: function(data) {
+          annotations.push(data);
+        },
+      });
+    }
+    return annotations;
+  };
+
   window.kuiEditFolioForm = function() {
+
+  };
+
+  window.kuiEditFolioFormX = function() {
     // get contextual information
     var shelfmark   = _.findWhere($.kmw, { 'element': 'shelfmark' })['v'] || 'No shelfmark';
     var folioParts  = $.kui.calendar.folios[$.kui.calendar.currFolio.folioIndex];
@@ -437,76 +564,6 @@ $(document).ready(function(){
     $('#kalendar').append($rows);
   };
 
-  window.kuiSubmitAnnotation = function() {
-    // {
-    //   "@id": "http://www.shared-canvas.org/services/anno/calendars/annotation/ad9a52804-530b-4243-81d0-b06f41a25377.json",
-    //   "@type": "oa:Annotation",
-    //   "motivation": "sc:painting",
-    //   "resource": {
-    //     "@type": [
-    //       "cnt:ContentAsText",
-    //       "dctypes:Text"
-    //     ],
-    //     "format": "text/html",
-    //     "chars": "<div data-month=\"1\" data-day=\"1 style=\"width:100%\">
-    //                                <span data-type=\"number\" style=\"display:inline-block;color:rgb(255, 0, 0);width:11%\">iii</span>
-    //                                <span data-type=\"letter\" style=\"display:inline-block;color:rgb(255, 0, 0);width:7%\">A</span>
-    //                                <span data-type=\"other\" style=\"display:inline-block;color:rgb(0, 0, 255);width:10%\">X</span>
-    //                                <span data-type=\"text\" style=\"display:inline-block;color:rgb(0, 0, 0);width:69%\">Cicumcisio domini ??? jhu xpt</span></div>"
-    //   },
-    //   "on": "http://www.shared-canvas.org/cals/canvas/c4.json#xywh=414,660,1270,68",
-    //   "creator": {
-    //     "@id": "mailto:azaroth42@gmail.com"
-    //   }
-    // }
-    $ele = $(this);
-    var $form = $ele.closest('form');
-    var values = _.reduce($form.find(':input'), function(hsh, inp) {
-      var $inp = $(inp);
-      var v = $inp.val();
-      var t = $inp.is('select') ? $inp.find('option[value="' + v + '"]').text() : $inp.text();
-      hsh[$inp.attr('id').substring(13)] = { 'v': v, 't':t };
-      return hsh;
-    }, {});
-    var annotation = {
-      '@type': 'oa:Annotation',
-      'motivation': 'sc:painting',
-      'resource': {
-        '@type': [
-          'cnt:ContentAsText',
-          'dctypes:Text'
-        ],
-        'format':'text/html',
-        'chars':''
-      },
-      'on':'',
-      'creator': {
-        '@id': 'mailto:emeryr@upenn.edu'
-      }
-    };
-
-    var columns = values['cols'].v.split(',');
-    var itemWidth = Math.round(100/columns.length);
-    var color = values['color'].v;
-    var spans = '<div data-month="' + values['gMonth'].v + '" data-day="' + values['gDay'].v + '" style="width:100%;">';
-    _.each(columns, function(col, index) {
-      var v = values[col].v;
-      var t = values[col].t || v;
-      spans += '<span data-type="' + col + '" data-value="' + v + '" style="display:inline-block;color:' + color + ';width:' + itemWidth + '%;">' + t + '</span>'
-    });
-    spans += '</div>';
-    annotation['resource']['chars'] = spans;
-    annotation['on'] = values['canvas'].v + '#' + values['xywh'].v;
-
-    var jstr = JSON.stringify(annotation);
-    jQuery.ajax({
-      type:"POST",
-      url: kuiAnnotationsUrl,
-      data:jstr,
-      dataType:"json",
-      contentType:"application/json",
-    });
-  };
 
   window.kuiUpdateCurrFolio = function() {
     _.each($('#kui-fields input, #kui-fields select'), function(ele) {
@@ -543,6 +600,7 @@ $(document).ready(function(){
         'startDay': null,
         'endDay': null,
         'dates': null,
+        'annotations': null,
       },
       'nextFolioElements': [
         { 'element':'folioIndex', 'label':'Folio', 'v':'', 'fieldtype':'list', 'options':{} },
