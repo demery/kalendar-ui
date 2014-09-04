@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Colors</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 <body>
 <table>
@@ -10,48 +11,60 @@
             <th>Name</th>
             <th>Code</th>
             <th>Web color used</th>
+            <th>RGB</th>
         </tr>
         <tr>
             <td>Black</td>
             <td><span style="font-weight: bold; color: Black;">Ni</span></td>
-            <td><span style="font-weight: bold; color: Black;">Black</span></td>
+            <td class="name"><span style="font-weight: bold; color: Black;">Black</span></td>
+            <td class="rgb"></td>
         </tr>
         <tr>
             <td>Blue</td>
             <td><span style="font-weight: bold; color: Blue;">Li</span></td>
-            <td><span style="font-weight: bold; color: Blue;">Blue</span></td>
+            <td class="name"><span style="font-weight: bold; color: Blue;">Blue</span></td>
+            <td class="rgb"></td>
         </tr>
         <tr>
             <td>Green</td>
             <td><span style="font-weight: bold; color: Green;">Vi</span></td>
-            <td><span style="font-weight: bold; color: Green;">Green</span></td>
+            <td class="name"><span style="font-weight: bold; color: Green;">Green</span></td>
+            <td class="rgb"></td>
         </tr>
         <tr>
             <td>Pink</td>
             <td><span style="font-weight: bold; color: Orchid;">Ro</span></td>
-            <td><span style="font-weight: bold; color: Orchid;">Orchid</span></td>
+            <td class="name"><span style="font-weight: bold; color: Orchid;">Orchid</span></td>
+            <td class="rgb"></td>
         </tr>
         <tr>
             <td>Red</td>
             <td><span style="font-weight: bold; color: Red;">Ru</span></td>
-            <td><span style="font-weight: bold; color: Red;">Red</span></td>
+            <td class="name"><span style="font-weight: bold; color: Red;">Red</span></td>
+            <td class="rgb"></td>
         </tr>
         <tr>
             <td>Purple</td>
             <td><span style="font-weight: bold; color: Purple;">Pu</span></td>
-            <td><span style="font-weight: bold; color: Purple;">Purple</span></td>
+            <td class="name"><span style="font-weight: bold; color: Purple;">Purple</span></td>
+            <td class="rgb"></td>
         </tr>
         <tr>
             <td>Gold</td>
             <td><span style="font-weight: bold; color: Peru;">Au</span></td>
-            <td>
-                <span style="font-weight: bold; color: Peru;">Peru</span>
-                or
-                <span style="font-weight: bold; color: Olive;">Olive</span>
-            </td>
+            <td class="name"><span style="font-weight: bold; color: Peru;">Peru</span></td>
+            <td class="rgb"></td>
         </tr>
-
     </tbody>
 </table>
+<pre>
+</pre>
+<script type="text/javascript">
+$.each($('.name'), function() {
+    var rgb = $(this).find('span').css('color');
+    $(this).next().text(rgb);
+    $('pre:first').append(rgb + '\n');
+});
+</script>
 </body>
 </html>
