@@ -10,15 +10,13 @@ $(document).ready(function(){
   var kuiSCListUrl         =  kuiSCHost + '/services/anno/calendars/list';
   var kuiRv                = [ null, 'r', 'v' ];
   var kuiColorMap          = {
-    'Black': { color:'Black', code:'Ni'},
-    'Brown': { color:'Black', code:'Ni'},
-    'Black/Brown': { color:'Black', code:'Ni'},
-    'Blue': { color:'Blue', code:'Li'},
-    'Green': { color:'Green', code:'Vi'},
-    'Pink': { color:'Orchid', code:'Ro'},
-    'Red': { color:'Red', code:'Ru'},
-    'Purple': { color:'Purple', code:'Pu'},
-    'Gold': { color:'Peru', code:'Au'},
+    'grade_black':  { name:'Black/Brown',  code:'Ni', rgb:'rgb(0, 0, 0)'},
+    'grade_blue':   { name:'Blue',         code:'Li', rgb:'rgb(0, 0, 255)'},
+    'grade_green':  { name:'Green',        code:'Vi', rgb:'rgb(0, 128, 0)'},
+    'grade_pink':   { name:'Orchid',       code:'Ro', rgb:'rgb(218, 112, 214)'},
+    'grade_red':    { name:'Red',          code:'Ru', rgb:'rgb(255, 0, 0)'},
+    'grade_purple': { name:'Purple',       code:'Pu', rgb:'rgb(128, 0, 128)'},
+    'grade_gold':   { name:'Peru',         code:'Au', rgb:'rgb(205, 133, 63)'},
   };
 
 
@@ -60,8 +58,11 @@ $(document).ready(function(){
     var grading = [];
     _.each(_.findWhere($.kmw, { 'element': 'grading'})['group'], function(grade) {
       var weight = grade.v;
-      grading.push([grade.v, grade.element]);
+      if (weight) {
+        grading.push([grade.v, grade.element]);
+      }
     });
+
     switch (grading.length) {
       case 0:
         grading = ['1', 'grade_black'];
@@ -73,6 +74,7 @@ $(document).ready(function(){
           return Number(a[0]) - Number(b[0]);
         });
     }
+
     return grading;
   };
 
@@ -81,8 +83,9 @@ $(document).ready(function(){
     var $select = $('<select name="grade"/>');
     $select.append('<option value="0"></option>');
 
-    _.each(kuiGetGrading(), function(g){
-      $select.append('<option value="' + g[0] + '">' + g[1] + '</option>');
+    _.each(kuiGetGrading(), function(g) {
+      var color = kuiColorMap[g[1]];
+      $select.append('<option value="' + color.rgb + '">' + color.name + '</option>');
     });
 
     return $select;
@@ -124,6 +127,31 @@ $(document).ready(function(){
     if (folio) {
       return kuiGetCanvas(folio);
     }
+  };
+
+  window.kuiGetDate = function(month, day) {
+    var date = _.findWhere($.kui.calendar.currFolio.dates, { 'month':Number(month), 'day':Number(day) });
+    if (!date) {
+      var deferred = $.ajax({
+        url: kuiSaintsUrl + '/api/date/' + month + '/' + day,
+        dataType: 'json',
+        crossDomain: true,
+        success: function(data) {
+          if (! $.kui.calendar.currFolio['dates']) {
+            $.kui.calendar.currFolio['dates'] = [];
+          }
+          $.kui.calendar.currFolio['dates'].push(data);
+        },
+        error: function(data) {
+          console.log('problem', data);
+        }
+      });
+
+      deferred.done(function() {
+        return kuiGetDate(month, day);
+      });
+    }
+    return date;
   };
 
   window.kuiCreateFolios = function() {
@@ -489,6 +517,76 @@ $(document).ready(function(){
     });
   };
 
+  window.kuiEditRow = function(row) {
+    var $row = $(row);
+    var date = kuiGetDate($row.attr('data-month'), $row.attr('data-day'));
+    _.each($row.find('span'), function(span) {
+      var $span = $(span);
+      $span.empty();
+      var col = $span.attr('data-type');
+      var val = $span.attr('data-value');
+      var $select = $('<select name="' + col + '"/>');
+      $select.append('<option value="0"></option>');
+      if (col === 'text') {
+        var saints = [];
+        if(date.secondary_saints) {
+          saints = date.primary_saints.concat(date.secondary_saints);
+        } else {
+          saints = date.primary_saints;
+        }
+
+        _.each(saints, function(saint) {
+          var saintName = saint['name'];
+          if (saintName.indexOf('|') >= 0) {
+            saintName = saintName.slice(0, saintName.indexOf('|')).trim();
+          }
+          $select.append('<option value="' + saint['@id'] + '">' + saintName + '</option>');
+          $select.css('width', '200px');
+        });
+        $span.append($select);
+        $span.append(kuiGradingSelect());
+      } else {
+        var ele = _.findWhere($.kui.calendar.columnElements, { 'element': col });
+        _.each(ele.options, function(v, k) {
+          $select.append('<option value="' + k + '">' + v + '</option>');
+        });
+        $span.append($select);
+      }
+
+      if (val) { $select.val(val); }
+
+      $select.on('change', function(){
+        $(this).closest('span').attr('data-value', $(this).val());
+      });
+
+    });
+    $(row).find('input[type=button]').remove();
+    $(row).append('<input type="button" value="Save" style="width:40px;" class="btn btn-xs">');
+
+    $row.on('change', 'select[name=grade]', function(){
+      $(this).closest('span').css('color', $(this).val());
+    });
+
+    $row.on('click', 'input[type=button]', function() {
+      kuiSaveSaveRow($(this).closest('div'));
+    });
+  };
+
+  window.kuiSaveSaveRow = function(row) {
+    var $row = $(row);
+    _.each($row.find('span'), function(spn) {
+      var $spn = $(spn);
+      var text = $($spn.find('select:first option:selected')).text();
+      $spn.empty();
+      $spn.append(text);
+    });
+    $row.find('input[type=button]').remove();
+    $row.append('<input type="button" value="Edit" style="width:40px;" class="btn btn-xs">');
+    $row.on('click', 'input[type=button]', function() {
+      kuiEditRow($row);
+    });
+  };
+
   window.kuiEditFolioForm = function() {
     $('#kalendar').removeClass('col-sm-3');
     $('#kui').hide();
@@ -499,48 +597,12 @@ $(document).ready(function(){
       $div.append(anno.resource.chars);
     });
 
+    $('#kalendar').append($div);
+
     _.each($div.find('.kalendar-row'), function(row, dayIndex) {
-      var date = $.kui.calendar.currFolio.dates[dayIndex];
-      console.log('dayIndex', dayIndex, '- date', date);
-      _.each($(row).find('span'), function(span) {
-        var $span = $(span);
-        $span.empty();
-        var col = $span.attr('data-type');
-        var val = $span.attr('data-value');
-        var $select = $('<select name="' + col + '"/>');
-        $select.append('<option value="0"></option>');
-        if (col === 'text') {
-          var saints = [];
-          if(date.secondary_saints) {
-            saints = date.primary_saints.concat(date.secondary_saints);
-          } else {
-            saints = date.primary_saints;
-          }
-          _.each(saints, function(saint) {
-            var saintName = saint['name'];
-            if (saintName.indexOf('|') >= 0) {
-              saintName = saintName.slice(0, saintName.indexOf('|')).trim();
-            }
-            $select.append('<option value="' + saint['@id'] + '">' + saintName + '</option>');
-            $select.css('width', '200px');
-          });
-          $span.append($select);
-          $span.append(kuiGradingSelect());
-        } else {
-          var ele = _.findWhere($.kui.calendar.columnElements, { 'element': col });
-          _.each(ele.options, function(v, k) {
-            $select.append('<option value="' + k + '">' + v + '</option>');
-          });
-          $span.append($select);
-        }
-        if (val) { $select.val(val); }
-        $select.on('change', function(){
-          $(this).closest('span').attr('data-value', $(this).val());
-        });
-      });
+      kuiEditRow(row);
     });
 
-    $('#kalendar').append($div);
   };
 
   window.kuiUpdateCurrFolio = function() {
