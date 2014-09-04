@@ -16,10 +16,11 @@ $(document).ready(function(){
     'grade_pink':   { name:'Orchid',       code:'Ro', rgb:'rgb(218, 112, 214)'},
     'grade_red':    { name:'Red',          code:'Ru', rgb:'rgb(255, 0, 0)'},
     'grade_purple': { name:'Purple',       code:'Pu', rgb:'rgb(128, 0, 128)'},
-    'grade_gold':   { name:'Peru',         code:'Au', rgb:'rgb(205, 133, 63)'},
+    'grade_gold':   { name:'Gold',         code:'Au', rgb:'rgb(205, 133, 63)'},
   };
 
 
+  // =============== GENERAL UTILS ============================================
   window.kuiPad = function (str, max) {
     str = str.toString();
     return str.length < max ? kuiPad("0" + str, max) : str;
@@ -54,6 +55,24 @@ $(document).ready(function(){
     return obj;
   };
 
+  // genUuid swiped from Mirador
+  window.kuiGenUUID = function() {
+    var t = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(t) {
+      var e = 0 | 16 * Math.random(), n = "x" == t ? e: 8 | 3 & e;
+      return n.toString(16)
+    });
+    // return "uuid-" + t
+    return t;
+  };
+
+  window.kuiSideToNum = function(val) {
+    // return 'r', 'v' or undefined
+    var m = (val ? (String(val).toLowerCase().match(/r|v/) || []) : [])[0];
+    return (m && m === 'r' ? 1 : 2) || 0;
+  };
+
+  // =============== DATA RETRIEVAL ===========================================
+  // --------------- MS WIDGET DATA ---
   window.kuiGetGrading = function() {
     var grading = [];
     _.each(_.findWhere($.kmw, { 'element': 'grading'})['group'], function(grade) {
@@ -91,22 +110,8 @@ $(document).ready(function(){
     return $select;
   };
 
-  // genUuid swiped from Mirador, if incorporated into Mirador; need to remove this
-  window.kuiGenUUID = function() {
-    var t = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function(t) {
-      var e = 0 | 16 * Math.random(), n = "x" == t ? e: 8 | 3 & e;
-      return n.toString(16)
-    });
-    // return "uuid-" + t
-    return t;
-  };
-
-  window.kuiSideToNum = function(val) {
-    // return 'r', 'v' or undefined
-    var m = (val ? (String(val).toLowerCase().match(/r|v/) || []) : [])[0];
-    return (m && m === 'r' ? 1 : 2) || 0;
-  };
-
+  // =============== DATA RETRIEVAL ===========================================
+  // --------------- KALENDAR UI DATA ----
   window.kuiGetCurrFolio = function() {
     var folioParts = $.kui.calendar.folios[$.kui.calendar.currFolio.folioIndex];
     if (folioParts) {
@@ -127,6 +132,30 @@ $(document).ready(function(){
     if (folio) {
       return kuiGetCanvas(folio);
     }
+  };
+
+  window.kuiGetAnnotation = function(anno_id) {
+    var anno = _.findWhere($.kui.calendar.currFolio.annotations, { '@id': anno_id });
+    if (!anno) {
+      var deferred = $.ajax({
+        url: anno_id,
+        dataType: 'json',
+        crossDomain: true,
+        success: function(data) {
+          if (! $.kui.calendar.currFolio['annotations']) {
+            $.kui.calendar.currFolio['annotations'] = [];
+          }
+          $.kui.calendar.currFolio['annotations'].push(data);
+        },
+        error: function(data) {
+          console.log('problem', data);
+        }
+      });
+      deferred.done(function(){
+        return kuiGetAnnotation(anno_id);
+      });
+    }
+    return anno;
   };
 
   window.kuiGetDate = function(month, day) {
@@ -154,6 +183,7 @@ $(document).ready(function(){
     return date;
   };
 
+  // =============== MANUSCRIPTS & MANIFESTS ==================================
   window.kuiCreateFolios = function() {
     // create all the folios as separate elements
     // this will make iteration and finding easier later
@@ -276,6 +306,7 @@ $(document).ready(function(){
     });
   };
 
+  // =============== FOLIOS ===================================================
   window.kuiNextFolio = function() {
     // get current folio index
     var folioIndex = $.kui.calendar.currFolio['folioIndex'];
@@ -517,10 +548,11 @@ $(document).ready(function(){
     });
   };
 
-  window.kuiEditRow = function(row) {
-    var $row = $(row);
+  window.kuiEditRow = function(cntnr) {
+    var $cntnr = $(cntnr);
+    var $row = $cntnr.find('div:first');
     var date = kuiGetDate($row.attr('data-month'), $row.attr('data-day'));
-    _.each($row.find('span'), function(span) {
+    _.each($cntnr.find('span'), function(span) {
       var $span = $(span);
       $span.empty();
       var col = $span.attr('data-type');
@@ -545,6 +577,9 @@ $(document).ready(function(){
         });
         $span.append($select);
         $span.append(kuiGradingSelect());
+        if ($span.css('color')) {
+          $span.find('select[name=grade]').val($span.css('color'));
+        }
       } else {
         var ele = _.findWhere($.kui.calendar.columnElements, { 'element': col });
         _.each(ele.options, function(v, k) {
@@ -560,47 +595,73 @@ $(document).ready(function(){
       });
 
     });
-    $(row).find('input[type=button]').remove();
-    $(row).append('<input type="button" value="Save" style="width:40px;" class="btn btn-xs">');
+    $row.find('input[type=button]').remove();
+    $row.append('<input type="button" value="Save" style="width:40px;" class="btn btn-xs">');
 
-    $row.on('change', 'select[name=grade]', function(){
+    $cntnr.on('change', 'select[name=grade]', function(){
       $(this).closest('span').css('color', $(this).val());
     });
 
-    $row.on('click', 'input[type=button]', function() {
-      kuiSaveSaveRow($(this).closest('div'));
+    $cntnr.on('click', '[type=button][value=Save]', function() {
+      kuiSaveRow($(this).closest('.row-container'));
     });
   };
 
-  window.kuiSaveSaveRow = function(row) {
-    var $row = $(row);
-    _.each($row.find('span'), function(spn) {
+  window.kuiSaveRow = function(cntnr) {
+    var $cntnr  = $(cntnr);
+    var anno_id = $cntnr.attr('id');
+    var anno    = null;
+    var chars   = null;
+    var jstr    = null;
+
+    // change from selects to text in each span
+    _.each($cntnr.find('span'), function(spn) {
       var $spn = $(spn);
       var text = $($spn.find('select:first option:selected')).text();
       $spn.empty();
       $spn.append(text);
     });
-    $row.find('input[type=button]').remove();
-    $row.append('<input type="button" value="Edit" style="width:40px;" class="btn btn-xs">');
-    $row.on('click', 'input[type=button]', function() {
-      kuiEditRow($row);
+
+    // get the new annotation text
+    chars = $cntnr.html();
+    anno = kuiGetAnnotation(anno_id);
+    anno.resource.chars = chars;
+    jstr = JSON.stringify(anno);
+
+    // update the annotation online
+    $.ajax({
+      type:'PUT',
+      url:anno_id,
+      data:jstr,
+      crossDomain:true,
+      contentType:'application/json',
+    });
+
+    // remove Save button and set up Edit button
+    $cntnr.find('input[type=button]').remove();
+    $cntnr.find('div:first').append('<input type="button" value="Edit" style="width:40px;" class="btn btn-xs">');
+    $cntnr.on('click', '[type=button][value=Edit]', function() {
+      kuiEditRow($cntnr);
     });
   };
 
   window.kuiEditFolioForm = function() {
     $('#kalendar').removeClass('col-sm-3');
     $('#kui').hide();
-    $div = $('<div>');
+    var $div = $('<div>');
 
     // add the plain text data from the annotation
     _.each($.kui.calendar.currFolio.annotations, function(anno) {
-      $div.append(anno.resource.chars);
+      $cntnr = $('<div class="row-container">');
+      $cntnr.attr('id', anno['@id']);
+      $cntnr.append(anno.resource.chars);
+      $div.append($cntnr);
     });
 
     $('#kalendar').append($div);
 
-    _.each($div.find('.kalendar-row'), function(row, dayIndex) {
-      kuiEditRow(row);
+    _.each($div.find('.row-container'), function(cntnr, dayIndex) {
+      kuiEditRow(cntnr);
     });
 
   };
