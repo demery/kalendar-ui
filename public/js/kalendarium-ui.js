@@ -13,7 +13,7 @@ $(document).ready(function(){
     'grade_black':  { name:'Black/Brown',  code:'Ni', rgb:'rgb(0, 0, 0)'},
     'grade_blue':   { name:'Blue',         code:'Li', rgb:'rgb(0, 0, 255)'},
     'grade_green':  { name:'Green',        code:'Vi', rgb:'rgb(0, 128, 0)'},
-    'grade_pink':   { name:'Orchid',       code:'Ro', rgb:'rgb(218, 112, 214)'},
+    'grade_pink':   { name:'Pink',         code:'Ro', rgb:'rgb(218, 112, 214)'},
     'grade_red':    { name:'Red',          code:'Ru', rgb:'rgb(255, 0, 0)'},
     'grade_purple': { name:'Purple',       code:'Pu', rgb:'rgb(128, 0, 128)'},
     'grade_gold':   { name:'Gold',         code:'Au', rgb:'rgb(205, 133, 63)'},
