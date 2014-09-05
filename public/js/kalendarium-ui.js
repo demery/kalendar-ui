@@ -21,11 +21,13 @@ $(document).ready(function(){
 
 
   // =============== GENERAL UTILS ============================================
+  // left pad strings with 0s
   window.kuiPad = function (str, max) {
     str = str.toString();
     return str.length < max ? kuiPad("0" + str, max) : str;
   };
 
+  // truncate whole words to `posn`
   window.kuiTruncWords = function (str, posn) {
     // Truncate this string but leave whole words
     posn = posn || 50;
@@ -40,6 +42,7 @@ $(document).ready(function(){
     }
   };
 
+  // get nested properties
   window.kuiGetProp = function(obj, prop) {
     prop = prop.replace(/\[(\w+)\]/g, '.$1'); // convert indexes to properties
     prop = prop.replace(/^\./, '');           // strip a leading dot
@@ -65,6 +68,7 @@ $(document).ready(function(){
     return t;
   };
 
+  // convert 'r' and 'v' to 1 and 2, resp.
   window.kuiSideToNum = function(val) {
     // return 'r', 'v' or undefined
     var m = (val ? (String(val).toLowerCase().match(/r|v/) || []) : [])[0];
@@ -73,6 +77,11 @@ $(document).ready(function(){
 
   // =============== DATA RETRIEVAL ===========================================
   // --------------- MS WIDGET DATA ---
+  // get and order the grading returning an array like
+  //   [ [ '1', 'grade_black' ],
+  //     [ '1', 'grade_blue'  ],
+  //     [ '2', 'grade_red'   ],
+  //     [ '3', 'grade_gold'  ] ]
   window.kuiGetGrading = function() {
     var grading = [];
     _.each(_.findWhere($.kmw, { 'element': 'grading'})['group'], function(grade) {
@@ -97,6 +106,7 @@ $(document).ready(function(){
     return grading;
   };
 
+  // return a select with grades in order
   window.kuiGradingSelect = function() {
     var grading = kuiGetGrading();
     var $select = $('<select name="grade"/>');
@@ -122,12 +132,14 @@ $(document).ready(function(){
     }
   };
 
+  // find the canvas by `folio` name; which should be something like 'fol. 1r'
   window.kuiGetCanvas = function(folio) {
     if ($.kui.manifest.sequences[0]) {
       return _.findWhere($.kui.manifest.sequences[0].canvases, { 'label': folio });
     }
   };
 
+  // get the canvas for the current folio
   window.kuiGetCurrCanvas = function() {
     var folio = kuiGetCurrFolioName();
     if (folio) {
@@ -135,6 +147,11 @@ $(document).ready(function(){
     }
   };
 
+  // Get the annotation for the given @id `anno_id` locally or from the web.
+  // Anno_id is a URL like:
+  //
+  //     http://165.123.34.221/services/anno/calendars/annotation/ab0ec9098-9aaf-4628-b205-69250d77cd44.json
+  //
   window.kuiGetAnnotation = function(anno_id) {
     var anno = _.findWhere($.kui.calendar.currFolio.annotations, { '@id': anno_id });
     if (!anno) {
@@ -159,6 +176,8 @@ $(document).ready(function(){
     return anno;
   };
 
+  // Get the saints server date object for `month` and `day`; locally or from
+  // the web.
   window.kuiGetDate = function(month, day) {
     var date = _.findWhere($.kui.calendar.currFolio.dates, { 'month':Number(month), 'day':Number(day) });
     if (!date) {
@@ -185,6 +204,8 @@ $(document).ready(function(){
   };
 
   // =============== MANUSCRIPTS & MANIFESTS ==================================
+  // Create all the folios for this calendar using the starting and ending
+  // folio numbers.
   window.kuiCreateFolios = function() {
     // create all the folios as separate elements
     // this will make iteration and finding easier later
@@ -220,6 +241,9 @@ $(document).ready(function(){
     $.kui.calendar.folios = folios;
   };
 
+  // Call kuiGetManifest for the downloaded manuscript if
+  // `sc_cal_manifest_id1` is present or, if it is not, calls
+  // kuiCreateManifest to create a  new manifest.
   window.kuiPrepManifest = function () {
     var sc_cal_manifest_id = _.findWhere($.kmw, { 'element': 'sc_cal_manifest_id'})['v'];
 
@@ -232,6 +256,7 @@ $(document).ready(function(){
     }
   };
 
+  // Get the manifest for `manifest_id` and store it locally.
   window.kuiGetManifest = function(manifest_id) {
     return $.ajax({
       type: 'GET',
@@ -248,6 +273,7 @@ $(document).ready(function(){
     });
   };
 
+  // Create a new manifest for the locally stored manuscript.
   window.kuiCreateManifest = function() {
     var shelfmark = _.findWhere($.kmw, { 'element': 'shelfmark' })['v'] || 'No shelfmark';
     var ms_name   = _.findWhere($.kmw, { 'element': 'name'})['v'] || 'No name';
@@ -308,6 +334,7 @@ $(document).ready(function(){
   };
 
   // =============== FOLIOS ===================================================
+  // Cue up the next foio form
   window.kuiNextFolio = function() {
     // get current folio index
     var folioIndex = $.kui.calendar.currFolio['folioIndex'];
@@ -320,6 +347,7 @@ $(document).ready(function(){
     };
   };
 
+  // display the next folio form
   window.kuiNextFolioForm = function(folioIndex) {
     // create a human friendly list of folios
     var rv        = [ null, 'r', 'v' ];
@@ -390,6 +418,8 @@ $(document).ready(function(){
     $('#kalendar').show();
   };
 
+  // For the current folio, grab the saints from the saints service and
+  // prepare the annotations.
   window.kuiStartFolio = function() {
     // build the request for calendar data
     var currFolio = $.kui.calendar.currFolio;
@@ -408,6 +438,29 @@ $(document).ready(function(){
     });
   };
 
+  // Store all the next folio form data locally.
+  window.kuiUpdateCurrFolio = function() {
+    _.each($('#kui-fields input, #kui-fields select'), function(ele) {
+      var name = $(ele).attr('id').substr(12);
+      var val = $(ele).val();
+      _.each($.kui.calendar.currFolio, function(v,k) {
+        if (k === name) { $.kui.calendar.currFolio[k] = val; }
+      });
+    });
+  };
+  window.kuiUpdateCurrFolio = function() {
+    _.each($('#kui-fields input, #kui-fields select'), function(ele) {
+      var name = $(ele).attr('id').substr(12);
+      var val = $(ele).val();
+      _.each($.kui.calendar.currFolio, function(v,k) {
+        if (k === name) { $.kui.calendar.currFolio[k] = val; }
+      });
+    });
+  };
+
+  // =============== ANNOTATIONS ==============================================
+  // Retrieve the annotiations for the current canvas or make them and then get
+  // them.
   window.kuiPrepAnnotations = function(retries) {
     // we try to get the annotations and
     // create them if they don't exist.
@@ -440,6 +493,7 @@ $(document).ready(function(){
     });
   };
 
+  // Fetch the annotations for the current canvas.
   window.kuiFetchAnnotations = function() {
     var canvas = kuiGetCurrCanvas();
     var canvasId = null;
@@ -472,6 +526,7 @@ $(document).ready(function(){
     }
   };
 
+  // Build all the annotations for each date on the current canvas.
   window.kuiBuildAnnotations = function() {
     // create array of json string annotations for currFolio
     var annotations = [];
@@ -538,6 +593,7 @@ $(document).ready(function(){
     return annotations;
   };
 
+  // POST the annotation in `jstr` to the the kuiAnnotationsUrl.
   window.kuiCreateAnnotation = function(jstr) {
     return $.ajax({
       type:'POST',
@@ -549,6 +605,9 @@ $(document).ready(function(){
     });
   };
 
+  // =============== KALENDAR ROWS ============================================
+  // Conver the annotation characters in `cntnr` (a `div` of class
+  // `row-container`.
   window.kuiEditRow = function(cntnr) {
     var $cntnr = $(cntnr);
     var $row = $cntnr.find('div:first');
@@ -608,6 +667,8 @@ $(document).ready(function(){
     });
   };
 
+  // PUT the annotation content in `cntnr` to the server. Replace row form
+  // elements with the elements' text values.
   window.kuiSaveRow = function(cntnr) {
     var $cntnr  = $(cntnr);
     var anno_id = $cntnr.attr('id');
@@ -646,6 +707,7 @@ $(document).ready(function(){
     });
   };
 
+  // Fill the form with calendar rows.
   window.kuiEditFolioForm = function() {
     $('#kalendar').removeClass('col-sm-3');
     $('#kui').hide();
@@ -667,16 +729,9 @@ $(document).ready(function(){
 
   };
 
-  window.kuiUpdateCurrFolio = function() {
-    _.each($('#kui-fields input, #kui-fields select'), function(ele) {
-      var name = $(ele).attr('id').substr(12);
-      var val = $(ele).val();
-      _.each($.kui.calendar.currFolio, function(v,k) {
-        if (k === name) { $.kui.calendar.currFolio[k] = val; }
-      });
-    });
-  };
-
+  // =============== BEGIN ====================================================
+  // Start the kalendar proces; get or create the manifest; update the record
+  // on the manuscripts server.
   window.kuiStartKalendar = function(ms_id) {
     kuiCreateFolios();
     var mf = kuiPrepManifest();
@@ -693,6 +748,7 @@ $(document).ready(function(){
     });
   };
 
+  // =============== DATA CONTAINER & CONFIG ==================================
   $.kui = {
     'calendar': {
       'folios': [],
