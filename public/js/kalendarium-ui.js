@@ -16,7 +16,7 @@ $(document).ready(function(){
     'grade_pink':   { name:'Pink',         code:'Ro', rgb:'rgb(218, 112, 214)'},
     'grade_red':    { name:'Red',          code:'Ru', rgb:'rgb(255, 0, 0)'},
     'grade_purple': { name:'Purple',       code:'Pu', rgb:'rgb(128, 0, 128)'},
-    'grade_gold':   { name:'Gold',         code:'Au', rgb:'rgb(205, 133, 63)'},
+    'grade_gold':   { name:'Gold',         code:'Au', rgb:'rgb(205, 133, 63)'}
   };
 
 
@@ -145,6 +145,15 @@ $(document).ready(function(){
     if (folio) {
       return kuiGetCanvas(folio);
     }
+  };
+
+  window.kuiGetColumnElements = function() {
+    var colElements = _.findWhere($.kmw, { 'element':'columnns'});
+    return _.filter(colElements, function(ele) { return ele.v !== ''; });
+  };
+
+  window.kuiGetColumnNames = function() {
+     return _.map(kuiGetColumnElements(), function(ele) { return ele.v; });
   };
 
   // Get the annotation for the given @id `anno_id` locally or from the web.
@@ -334,7 +343,7 @@ $(document).ready(function(){
   };
 
   // =============== FOLIOS ===================================================
-  // Cue up the next foio form
+  // Cue up the next folio form
   window.kuiNextFolio = function() {
     // get current folio index
     var folioIndex = $.kui.calendar.currFolio['folioIndex'];
@@ -526,6 +535,50 @@ $(document).ready(function(){
     }
   };
 
+  window.kuiBuildAnnotation = function(date, folioName, xywh, itemWidth) {
+    var annoation = '';
+    var month     = String(date['month']);
+    var day       = String(date['day']);
+    var monthDay  = kuiPad(month, 2) + kuiPad(day, 2);
+    var canvas    = kuiGetCanvas(folioName);
+    var canvasId  = canvas['@id'];
+    var columnns  = kuiGetColumnNames();
+
+    var spans     = '<div data-month="' + month + '" data-day="' + day + '" style="width:100%;" class="kalendar-row">';
+    _.each(columnns, function(col, index) {
+      var colWidth = itemWidth;
+      if (col === 'text') {
+        colWidth = Math.floor(colWidth * 2);
+      }
+      var element = _.findWhere($.kui.calendar.columnElements, { 'element': col });
+      var spanId  = 'val-' + monthDay + '-' + col;
+      var v       = '';
+      if (element.date_attr) {
+        vi = kuiGetProp(date, element.date_attr) || '';
+      }
+      spans += '<span id="' + spanId + '" data-type="' + col + '" data-value="' + v + '"display:inline-block;width:' + colWidth + '%;">' + v + '</span>';
+    });
+    spans += '</div>';
+
+    annoation = {
+      '@type': 'oa:Annotation',
+      'motivation': 'sc:painting',
+      'resource': {
+        '@type': [
+          'cnt:ContentAsText',
+          'dctypes:Text'
+        ],
+        'format':'text/html',
+        'chars':spans
+      },
+      'on':canvasId + '#xywh=' + xywh,
+      'creator': {
+        '@id': 'mailto:emeryr@upenn.edu'
+      }
+    };
+    return annotation;
+  };
+
   // Build all the annotations for each date on the current canvas.
   window.kuiBuildAnnotations = function() {
     // create array of json string annotations for currFolio
@@ -548,47 +601,12 @@ $(document).ready(function(){
 
     for(var i = 0; i < dates.length; i++) {
       var date     = $.kui.calendar.currFolio.dates[i];
-      var month    = String(date['month']);
-      var day      = String(date['day']);
-      var monthDay = kuiPad(month, 2) + kuiPad(day, 2);
       var x        = canvasXOffset;
       var y        = canvasYOffset + (i*lineH);
       var xywh     = [ x, y, lineW, lineH ].join(',');
 
-      var spans = '<div data-month="' + month + '" data-day="' + day + '" style="width:100%;" class="kalendar-row">';
-      _.each(columns, function(col, index) {
-        var colWidth = itemWidth;
-        if (col == 'text') {
-          colWidth = Math.floor(colWidth * 2);
-        }
-        var element = _.findWhere($.kui.calendar.columnElements, { 'element': col });
-        var spanId  = 'val-' + monthDay + '-' + col;
-        var v       = '';
-        if (element.date_attr) {
-          v = kuiGetProp(date, element.date_attr) || '';
-        }
-        spans += '<span id="'+ spanId + '" data-type="' + col + '" data-value="' + v + '" style="display:inline-block;color:rgb(0,0,0);width:' + colWidth + '%;">' + v + '</span>';
-      });
-      spans += '</div>';
-
-      var annotation = {
-        '@type': 'oa:Annotation',
-        'motivation': 'sc:painting',
-        'resource': {
-          '@type': [
-          'cnt:ContentAsText',
-          'dctypes:Text'
-          ],
-          'format':'text/html',
-          'chars':spans
-        },
-        'on':canvasId + '#xywh=' + xywh,
-        'creator': {
-          '@id': 'mailto:emeryr@upenn.edu'
-        }
-      };
-
-      annotations.push(JSON.stringify(annotation));
+      // window.kuiBuildAnnotation = function(date, folioName, xywh, itemWidth)
+      annotations.push(kuiBuildAnnotation(date, folio, xywh, itemWidth));
     }
     return annotations;
   };
