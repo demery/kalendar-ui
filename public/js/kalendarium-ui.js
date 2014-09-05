@@ -112,7 +112,8 @@ $(document).ready(function(){
 
   // =============== DATA RETRIEVAL ===========================================
   // --------------- KALENDAR UI DATA ----
-  window.kuiGetCurrFolio = function() {
+  // get the current folio name
+  window.kuiGetCurrFolioName = function() {
     var folioParts = $.kui.calendar.folios[$.kui.calendar.currFolio.folioIndex];
     if (folioParts) {
       return 'fol. ' + String(folioParts[0]) + kuiRv[folioParts[1]];
@@ -128,7 +129,7 @@ $(document).ready(function(){
   };
 
   window.kuiGetCurrCanvas = function() {
-    var folio = kuiGetCurrFolio();
+    var folio = kuiGetCurrFolioName();
     if (folio) {
       return kuiGetCanvas(folio);
     }
