@@ -13,11 +13,24 @@ $(document).ready(function() {
     kuiStartKalendar(mid);
   });
 
+
   $('#kmw-container').show();
+
+  // list the manuscripts
+  // adds a list of manuscripts to '#kui-ms-list'
+  kuiListManuscripts();
+  // on link click, lookup up the manuscript
+  $('#kui-ms-list').on('click', '.kui-ms-link', function() {
+    var m_id = $(this).attr('data-mid');
+    $('#kmw-browse').remove();
+    $('#kui-ms-list').hide();
+    kmwSubmitLookup(m_id, null, null);
+    $('#kmw-fields').show();
+  });
+
 
   // poll the kmw to see if we've entered the edit mode and have
   // a m_id
-
   var pollKmw = function() {
     if ($('#kmw-fields').hasClass('editing') && $('#kmw-val-mid').val()) {
       $startForm.css('visibility', 'visible');

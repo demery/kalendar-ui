@@ -222,6 +222,44 @@ $(document).ready(function(){
   // MANUSCRIPTS & MANIFESTS
   // ==========================================================================
 
+  // get the dang manuscripts
+  window.kuiListManuscripts = function() {
+    var $div = $('<div id="kui-ms-list" style="width: 800px;">');
+    var deferred = $.ajax({
+      type: 'GET',
+      url: kuiManuscriptsUrl + '/',
+      dataType: 'json',
+      crossDomain: true,
+      success: function(data) {
+        $.kui.mss = data;
+        $.kui.mss.sort(function(a,b) {
+          var na = (a['shelfmark'] || '').toLowerCase();
+          var nb = (b['shelfmark'] || '').toLowerCase();
+          return na >  nb ? 1 : (na < nb ? -1 : 0);
+        });
+      },
+      error: function(data) {
+        console.log('problem', data);
+      }
+    });
+
+    deferred.done(function() {
+      var $table = $('<table class="table"><tbody></tbody></table>');
+      $div.append($table);
+      $table.append('<tr><th>ID</th><th>Shelfmark</th><th>Name</th></tr>');
+      _.each($.kui.mss, function(ms) {
+        var $tr = $('<tr>');
+        var url = kuiManuscriptsUrl + '/api/manuscript/' +  ms.mid;
+        _.each([ms.mid, ms.shelfmark, ms.name], function(val) {
+          $tr.append('<td><a title="Go to manuscript: ' + ms.shelfmark + '" data-mid="' + ms.mid + '" class="kui-ms-link">' + val + '</a></td>');
+        });
+        $table.append($tr);
+      });
+    });
+
+    $('body').prepend($div);
+  };
+
   // Create all the folios for this calendar using the starting and ending
   // folio numbers.
   window.kuiCreateFolios = function() {
@@ -330,7 +368,7 @@ $(document).ready(function(){
 
     return jQuery.ajax({
       type:'POST',
-      url:'http://165.123.34.221//services/anno/calendars/manifest',
+      url:kuiManuscriptsUrl,
       data:jstr,
       dataType:'json',
       crossDomain: true,
@@ -792,6 +830,7 @@ $(document).ready(function(){
   // ==========================================================================
 
   $.kui = {
+    'mss': [],
     'calendar': {
       'folios': [],
       'currFolio': {
