@@ -20,7 +20,10 @@ $(document).ready(function(){
   };
 
 
-  // =============== GENERAL UTILS ============================================
+  // ==========================================================================
+  // GENERAL UTILS
+  // ==========================================================================
+
   // left pad strings with 0s
   window.kuiPad = function (str, max) {
     str = str.toString();
@@ -120,7 +123,10 @@ $(document).ready(function(){
     return $select;
   };
 
-  // =============== DATA RETRIEVAL ===========================================
+  // ==========================================================================
+  // DATA RETRIEVAL
+  // ==========================================================================
+
   // --------------- KALENDAR UI DATA ----
   // get the current folio name
   window.kuiGetCurrFolioName = function() {
@@ -212,7 +218,10 @@ $(document).ready(function(){
     return date;
   };
 
-  // =============== MANUSCRIPTS & MANIFESTS ==================================
+  // ==========================================================================
+  // MANUSCRIPTS & MANIFESTS
+  // ==========================================================================
+
   // Create all the folios for this calendar using the starting and ending
   // folio numbers.
   window.kuiCreateFolios = function() {
@@ -342,7 +351,10 @@ $(document).ready(function(){
     });
   };
 
-  // =============== FOLIOS ===================================================
+  // ==========================================================================
+  // FOLIOS
+  // ==========================================================================
+
   // Cue up the next folio form
   window.kuiNextFolio = function() {
     // get current folio index
@@ -467,7 +479,10 @@ $(document).ready(function(){
     });
   };
 
-  // =============== ANNOTATIONS ==============================================
+  // ==========================================================================
+  // ANNOTATIONS
+  // ==========================================================================
+
   // Retrieve the annotiations for the current canvas or make them and then get
   // them.
   window.kuiPrepAnnotations = function(retries) {
@@ -623,8 +638,11 @@ $(document).ready(function(){
     });
   };
 
-  // =============== KALENDAR ROWS ============================================
-  // Conver the annotation characters in `cntnr` (a `div` of class
+  // ==========================================================================
+  // KALENDAR ROWS
+  // ==========================================================================
+
+  // Convert the annotation characters in `cntnr` (a `div` of class
   // `row-container`.
   window.kuiEditRow = function(cntnr) {
     var $cntnr = $(cntnr);
@@ -747,7 +765,10 @@ $(document).ready(function(){
 
   };
 
-  // =============== BEGIN ====================================================
+  // ==========================================================================
+  // BEGIN
+  // ==========================================================================
+
   // Start the kalendar proces; get or create the manifest; update the record
   // on the manuscripts server.
   window.kuiStartKalendar = function(ms_id) {
@@ -766,7 +787,10 @@ $(document).ready(function(){
     });
   };
 
-  // =============== DATA CONTAINER & CONFIG ==================================
+  // ==========================================================================
+  // DATA CONTAINER & CONFIG
+  // ==========================================================================
+
   $.kui = {
     'calendar': {
       'folios': [],
