@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-  $startForm = $('<div style="visibility:hidden; padding-bottom:15px;"><form id="kal-start-form" role="form"><input type="button" id="kal-start" class="btn btn-default" value="Create calendar"/></form></div>');
+  $startForm = $('<div style="visibility:hidden; padding-bottom:15px;"><form id="kal-start-form" role="form"><input type="button" id="kal-start" class="btn btn-default" value="Edit calendar"/></form></div>');
 
   $('#kmw-fields').before($startForm);
 
@@ -28,6 +28,13 @@ $(document).ready(function() {
     $('#kmw-fields').show();
   });
 
+  $('#kmw').on('click', '#kmw-find', function(event) {
+    $('#kui-ms-list').hide();
+  });
+
+  $('#kmw').on('click', '#kmw-add', function(event) {
+    $('#kui-ms-list').hide();
+  });
 
   // poll the kmw to see if we've entered the edit mode and have
   // a m_id

@@ -128,38 +128,49 @@ $(document).ready(function(){
   // ==========================================================================
 
   // --------------- KALENDAR UI DATA ----
-  // get the current folio name
-  window.kuiGetCurrFolioName = function() {
-    var folioParts = $.kui.calendar.folios[$.kui.calendar.currFolio.folioIndex];
-    if (folioParts) {
-      return 'fol. ' + String(folioParts[0]) + kuiRv[folioParts[1]];
-    } else {
-      return '';
-    }
+  window.kuiAllAnnotations = function() {
+    return _.reduce($.kui.calendar.folios, function(memo, fol) { return memo.concat(fol.annotations) }, []);
+  };
+
+  window.kuiFindAnnotation = function(annoId) {
+    return _.findWhere(kuiAllAnnotations(), { '@id' : annoId });
+  };
+
+  window.kuiCurrFolio = function() {
+    return $.kui.calendar.folios[$.kui.calendar.currFolio];
+  };
+  // get the folio
+  window.kuiGetFolio = function(folioIndex) {
+    return $.kui.calendar.folios[folioIndex] || {};
+  };
+
+  // get the folio name; it should be s.t. like 'fol. 1r'
+  window.kuiGetFolioName = function(folioIndex) {
+    var folio = kuiGetFolio(folioIndex);
+    return folio.label ? ('fol. ' + folio.label) : '' ;
   };
 
   // find the canvas by `folio` name; which should be something like 'fol. 1r'
-  window.kuiGetCanvas = function(folio) {
-    if ($.kui.manifest.sequences[0]) {
-      return _.findWhere($.kui.manifest.sequences[0].canvases, { 'label': folio });
-    }
-  };
-
-  // get the canvas for the current folio
-  window.kuiGetCurrCanvas = function() {
-    var folio = kuiGetCurrFolioName();
-    if (folio) {
-      return kuiGetCanvas(folio);
+  window.kuiGetCanvas = function(folioIndex) {
+    var folioName = kuiGetFolioName(folioIndex);
+    console.log("kuiGetCanvas: folioName", folioName);
+    if (folioName && $.kui.manifest.sequences[0]) {
+      return _.findWhere($.kui.manifest.sequences[0].canvases, { 'label': folioName });
     }
   };
 
   window.kuiGetColumnElements = function() {
-    var colElements = _.findWhere($.kmw, { 'element':'columnns'});
-    return _.filter(colElements, function(ele) { return ele.v !== ''; });
+    var allElements  = _.findWhere($.kmw, { 'element':'columns'})['group'];
+    var usedElements = _.filter(allElements, function(ele) { return ele.v !== ''; });
+
+    return usedElements;
   };
 
   window.kuiGetColumnNames = function() {
-     return _.map(kuiGetColumnElements(), function(ele) { return ele.v; });
+    var elements = kuiGetColumnElements();
+    var names = _.map(elements, function(ele) { return ele.v; });
+
+    return names;
   };
 
   // Get the annotation for the given @id `anno_id` locally or from the web.
@@ -168,17 +179,18 @@ $(document).ready(function(){
   //     http://165.123.34.221/services/anno/calendars/annotation/ab0ec9098-9aaf-4628-b205-69250d77cd44.json
   //
   window.kuiGetAnnotation = function(anno_id) {
-    var anno = _.findWhere($.kui.calendar.currFolio.annotations, { '@id': anno_id });
+    var anno = kuiFindAnnotation(anno_id);
+    var currFolio = kuiCurrFolio();
     if (!anno) {
       var deferred = $.ajax({
         url: anno_id,
         dataType: 'json',
         crossDomain: true,
         success: function(data) {
-          if (! $.kui.calendar.currFolio['annotations']) {
-            $.kui.calendar.currFolio['annotations'] = [];
+          if (! currFolio['annotations']) {
+            currFolio['annotations'] = [];
           }
-          $.kui.calendar.currFolio['annotations'].push(data);
+          currFolio['annotations'].push(data);
         },
         error: function(data) {
           console.log('problem', data);
@@ -194,17 +206,18 @@ $(document).ready(function(){
   // Get the saints server date object for `month` and `day`; locally or from
   // the web.
   window.kuiGetDate = function(month, day) {
-    var date = _.findWhere($.kui.calendar.currFolio.dates, { 'month':Number(month), 'day':Number(day) });
+    var currFolio = kuiCurrFolio();
+    var date =  _.findWhere(currFolio.dates, { 'month': Number(month), 'day': Number(day) } );
     if (!date) {
       var deferred = $.ajax({
         url: kuiSaintsUrl + '/api/date/' + month + '/' + day,
         dataType: 'json',
         crossDomain: true,
         success: function(data) {
-          if (! $.kui.calendar.currFolio['dates']) {
-            $.kui.calendar.currFolio['dates'] = [];
+          if (! currFolio['dates']) {
+            currFolio['dates'] = [];
           }
-          $.kui.calendar.currFolio['dates'].push(data);
+          currFolio['dates'].push(data);
         },
         error: function(data) {
           console.log('problem', data);
@@ -251,7 +264,7 @@ $(document).ready(function(){
         var $tr = $('<tr>');
         var url = kuiManuscriptsUrl + '/api/manuscript/' +  ms.mid;
         _.each([ms.mid, ms.shelfmark, ms.name], function(val) {
-          $tr.append('<td><a title="Go to manuscript: ' + ms.shelfmark + '" data-mid="' + ms.mid + '" class="kui-ms-link">' + val + '</a></td>');
+          $tr.append('<td><a href="#" title="Go to manuscript: ' + ms.shelfmark + '" data-mid="' + ms.mid + '" class="kui-ms-link">' + val + '</a></td>');
         });
         $table.append($tr);
       });
@@ -285,14 +298,20 @@ $(document).ready(function(){
     var folio_end_side   = _.findWhere(folio_sides, { 'element': 'folio_end_side'})['v'];
     var startFolio       = [ Number(folio_start_num), kuiSideToNum(folio_start_side) ];
     var endFolio         = [ Number(folio_end_num), kuiSideToNum(folio_end_side) ];
-    var folios           = [ startFolio ];
+    var folioFields      = { 'month': null, 'startDay': null, 'endDay': null, 'dates': null, 'annotations': [] };
+    console.log('kuiCreateFolios; folio_start_num:', folio_start_num, 'folio_start_side:', folio_start_side);
+    var fol              = { 'n': startFolio, 'label': (String(folio_start_num) + folio_start_side) };
+    _.extend(fol, _.clone(folioFields));
+    var folios           = [ fol ];
 
     // compare [4,2] and [16,1] as 42 < 161, [5,1] and [16,1] as 51 < 161, etc.
-    while (Number(_.last(folios).join('')) < Number(endFolio.join(''))) {
-      var last = _.last(folios), num = last[0], side = last[1];
+    while (Number(_.last(folios)['n'].join('')) < Number(endFolio.join(''))) {
+      var last = _.last(folios), num = last['n'][0], side = last['n'][1];
       // if side is 2 return [num++, 1]; if side is 1 return [num, 2]
       var next = (side == 2) ? ([num + 1, 1]) : ([num, 2]);
-      folios.push(next);
+      fol = { 'n': next, 'label': (String(num) + kuiRv[next[1]]) };
+      _.extend(fol, _.clone(folioFields));
+      folios.push(fol);
     }
     $.kui.calendar.folios = folios;
   };
@@ -304,8 +323,11 @@ $(document).ready(function(){
     var sc_cal_manifest_id = _.findWhere($.kmw, { 'element': 'sc_cal_manifest_id'})['v'];
 
     if (sc_cal_manifest_id) {
-      console.log('Retrieving manifest:', sc_cal_manifest_id);
-      return kuiGetManifest(sc_cal_manifest_id);
+      if ($.kui.manifest && $.kui.manifest['@id'] === sc_cal_manifest_id) {
+        // do nothing
+      } else {
+        return kuiGetManifest(sc_cal_manifest_id);
+      }
     } else {
       console.log('Creating manifest');
       return kuiCreateManifest();
@@ -356,11 +378,10 @@ $(document).ready(function(){
       }],
     };
     manifest.sequences[0].canvases = _.map($.kui.calendar.folios, function(fol) {
-      var folNum = String(fol[0]) + rv[fol[1]];
       return {
         "@id": (kuiCanvasesUrl       + '/' + kuiGenUUID() + ".json"),
         "@type": "sc:Canvas",
-        "label": "fol. " +  folNum,
+        "label": "fol. " +  fol.label,
         "height":1000,
         "width":700, };
       });
@@ -368,7 +389,7 @@ $(document).ready(function(){
 
     return jQuery.ajax({
       type:'POST',
-      url:kuiManuscriptsUrl,
+      url:kuiManifestsUrl,
       data:jstr,
       dataType:'json',
       crossDomain: true,
@@ -393,14 +414,26 @@ $(document).ready(function(){
   // FOLIOS
   // ==========================================================================
 
+  // List edited folios
+  window.kuiListEditedFolios = function() {
+    kuiPrepManifest();
+    var canvases = $.kui.manifest.sequences[0].canvases;
+    for(var i = 0; i < canvases.length; i++) {
+      var cnvsId = canvases[i]['@id'];
+
+    }
+  };
+
   // Cue up the next folio form
   window.kuiNextFolio = function() {
     // get current folio index
-    var folioIndex = $.kui.calendar.currFolio['folioIndex'];
+    var folioIndex = $.kui.calendar.currFolio;
+    // console.log($.kui.calendar.currFolio);
     // get the next index
-    folioIndex = folioIndex === null ? 0 : folioIndex + 1;
-    if (folioIndex < $.kui.calendar.folios.length) {
-      kuiNextFolioForm(folioIndex);
+    $.kui.calendar.currFolio = folioIndex === null ? 0 : folioIndex + 1;
+    console.log("$.kui.calendar.currFolio", $.kui.calendar.currFolio);
+    if ($.kui.calendar.currFolio < $.kui.calendar.folios.length) {
+      kuiNextFolioForm($.kui.calendar.currFolio);
     } else {
       // @todo: last folio behavior ? return to 0?
     };
@@ -411,7 +444,7 @@ $(document).ready(function(){
     // create a human friendly list of folios
     var rv        = [ null, 'r', 'v' ];
     var folioNums = _.map($.kui.calendar.folios, function(fol) {
-      return String(fol[0]) + rv[fol[1]];
+      return fol.label;
     });
 
     // create the form elements
@@ -471,25 +504,29 @@ $(document).ready(function(){
     });
 
     $('#nextFol-edit-btn').on('click', function() {
-      kuiUpdateCurrFolio();
-      kuiStartFolio();
+      kuiUpdateCurrFolio(folioIndex);
+      kuiStartFolio(folioIndex);
     });
     $('#kalendar').show();
   };
 
   // For the current folio, grab the saints from the saints service and
   // prepare the annotations.
-  window.kuiStartFolio = function() {
+  window.kuiStartFolio = function(folioIndex) {
     // build the request for calendar data
-    var currFolio = $.kui.calendar.currFolio;
+    var currFolio = $.kui.calendar.folios[folioIndex];
+    console.log('folioIndex', folioIndex);
+    console.log('folios', JSON.stringify($.kui.calendar.folios));
+    console.log('currFolio', JSON.stringify(currFolio));
     var url       = kuiSaintsUrl + '/api/from/' + currFolio['month'] + '/' + currFolio['startDay'] + '/to/' + currFolio['month'] + '/' + currFolio['endDay'];
     $.ajax({
       url: url,
       dataType: 'json',
       crossDomain: true,
       success: function(data) {
-        $.kui.calendar.currFolio['dates'] = data['dates'];
-        kuiPrepAnnotations();
+        currFolio['dates'] = data['dates'];
+        var canvas = kuiGetCanvas(folioIndex);
+        kuiPrepAnnotations(canvas['@id'], folioIndex);
       },
       error: function(data) {
         console.log('problem', data);
@@ -498,23 +535,16 @@ $(document).ready(function(){
   };
 
   // Store all the next folio form data locally.
-  window.kuiUpdateCurrFolio = function() {
+  window.kuiUpdateCurrFolio = function(folioIndex) {
     _.each($('#kui-fields input, #kui-fields select'), function(ele) {
       var name = $(ele).attr('id').substr(12);
       var val = $(ele).val();
-      _.each($.kui.calendar.currFolio, function(v,k) {
-        if (k === name) { $.kui.calendar.currFolio[k] = val; }
+      var currFolio = $.kui.calendar.folios[folioIndex];
+      _.each(currFolio, function(v,k) {
+        if (k === name) { currFolio[k] = val; }
       });
     });
-  };
-  window.kuiUpdateCurrFolio = function() {
-    _.each($('#kui-fields input, #kui-fields select'), function(ele) {
-      var name = $(ele).attr('id').substr(12);
-      var val = $(ele).val();
-      _.each($.kui.calendar.currFolio, function(v,k) {
-        if (k === name) { $.kui.calendar.currFolio[k] = val; }
-      });
-    });
+    console.log(JSON.stringify($.kui.calendar.folios[folioIndex]));
   };
 
   // ==========================================================================
@@ -523,7 +553,7 @@ $(document).ready(function(){
 
   // Retrieve the annotiations for the current canvas or make them and then get
   // them.
-  window.kuiPrepAnnotations = function(retries) {
+  window.kuiPrepAnnotations = function(canvasId, folioIndex, retries) {
     // we try to get the annotations and
     // create them if they don't exist.
     // if retries is a number, use it; otherwise, use 1
@@ -531,16 +561,17 @@ $(document).ready(function(){
     n = (!isNaN(n) && isFinite(n)) ? Math.floor(n) : 1;
 
     // get/create annotations
-    var kfa = kuiFetchAnnotations();
+    var kfa = kuiFetchAnnotations(folioIndex, canvasId);
     kfa.done(function() {
-      // if we found no annotations and we have retries left,
-      // create the annottions and try to get them again
-      if ($.kui.calendar.currFolio.annotations.length > 0) {
-        kuiEditFolioForm();
+      // if the annotations are there, go to the edit folio form
+      if ($.kui.calendar.folios[folioIndex].annotations.length > 0) {
+        // TODO xxxx change kuiEditFolioForm to use canvasId
+        kuiEditFolioForm(folioIndex);
       } else if (n > 0) {
         // if we found no annotations and we have retries left,
-        // create the annottions and try to get them again
-        var annos = kuiBuildAnnotations();
+        // create the annotations and try to get them again
+        // TODO xxxx change kuiBuildAnnotations to use canvasId
+        var annos = kuiBuildAnnotations(canvasId);
         // get an array of promises for each annotation
         var deferreds = [];
         for(var i = 0; i < annos.length; i++){
@@ -549,56 +580,49 @@ $(document).ready(function(){
         // When all the annotations have been created, reinvoke kuiPrepAnnotations
         // http://stackoverflow.com/questions/14777031/what-does-when-apply-somearray-do
         $.when.apply($, deferreds).done(function() {
-          kuiPrepAnnotations(n - 1);
+          kuiPrepAnnotations(canvasId, folioIndex, n - 1);
         });
       }
     });
   };
 
   // Fetch the annotations for the current canvas.
-  window.kuiFetchAnnotations = function() {
-    var canvas = kuiGetCurrCanvas();
-    var canvasId = null;
-    if (canvas) {
-      canvasId = canvas['@id'].split('/').pop();
-      var url = kuiSCListUrl + '/' + canvasId;
-      return $.ajax({
-        type: 'GET',
-        url: url,
-        dataType: 'json',
-        crossDomain: true,
-        contentType: 'application/json',
-        success: function(data) {
-          $.kui.calendar.currFolio.annotations = data['resources'];
-          // ok, now put them in day order
-          $.kui.calendar.currFolio.annotations.sort(function(a, b){
-            var $a = $(a.resource.chars), $b = $(b.resource.chars);
-            // create numbers for each month/day: 1/1 => 101; 1/31 => 131; 10/1 => 1001
-            var a_val = (Number($a.attr('data-month')) * 100) + (Number($a.attr('data-day')));
-            var b_val = (Number($b.attr('data-month')) * 100) + (Number($b.attr('data-day')));
-            // return the difference of a - b
-            return a_val - b_val;
-          });
-        },
-        error: function(data) {
-          $.kui.calendar.currFolio.annotations = [];
-          console.log('error', data);
-        }
-      });
-    }
+  window.kuiFetchAnnotations = function(folioIndex,canvasId) {
+    var url = kuiSCListUrl + '/' + canvasId.split('/').pop();
+    return $.ajax({
+      type: 'GET',
+      url: url,
+      dataType: 'json',
+      crossDomain: true,
+      contentType: 'application/json',
+      success: function(data) {
+        $.kui.calendar.folios[folioIndex].annotations = data['resources'];
+        // ok, now put them in day order
+        $.kui.calendar.folios[folioIndex].annotations.sort(function(a, b){
+          var $a = $(a.resource.chars), $b = $(b.resource.chars);
+          // create numbers for each month/day: 1/1 => 101; 1/31 => 131; 10/1 => 1001
+          var a_val = (Number($a.attr('data-month')) * 100) + (Number($a.attr('data-day')));
+          var b_val = (Number($b.attr('data-month')) * 100) + (Number($b.attr('data-day')));
+          // return the difference of a - b
+          return a_val - b_val;
+        });
+      },
+      error: function(data) {
+        $.kui.calendar.folios[folioIndex].annotations = [];
+        console.log('error', data);
+      }
+    });
   };
 
-  window.kuiBuildAnnotation = function(date, folioName, xywh, itemWidth) {
+  window.kuiBuildAnnotation = function(canvasId, date, xywh, itemWidth) {
     var annoation = '';
     var month     = String(date['month']);
     var day       = String(date['day']);
     var monthDay  = kuiPad(month, 2) + kuiPad(day, 2);
-    var canvas    = kuiGetCanvas(folioName);
-    var canvasId  = canvas['@id'];
-    var columnns  = kuiGetColumnNames();
+    var columns  = kuiGetColumnNames();
 
     var spans     = '<div data-month="' + month + '" data-day="' + day + '" style="width:100%;" class="kalendar-row">';
-    _.each(columnns, function(col, index) {
+    _.each(columns, function(col, index) {
       var colWidth = itemWidth;
       if (col === 'text') {
         colWidth = Math.floor(colWidth * 2);
@@ -609,11 +633,11 @@ $(document).ready(function(){
       if (element.date_attr) {
         vi = kuiGetProp(date, element.date_attr) || '';
       }
-      spans += '<span id="' + spanId + '" data-type="' + col + '" data-value="' + v + '"display:inline-block;width:' + colWidth + '%;">' + v + '</span>';
+      spans += '<span id="' + spanId + '" data-type="' + col + '" data-value="' + v + '" style="display:inline-block;width:' + colWidth + '%;">' + v + '</span>';
     });
     spans += '</div>';
 
-    annoation = {
+    annotation = {
       '@type': 'oa:Annotation',
       'motivation': 'sc:painting',
       'resource': {
@@ -633,39 +657,38 @@ $(document).ready(function(){
   };
 
   // Build all the annotations for each date on the current canvas.
-  window.kuiBuildAnnotations = function() {
+  window.kuiBuildAnnotations = function(canvasId) {
     // create array of json string annotations for currFolio
-    var annotations = [];
-    var dates       = $.kui.calendar.currFolio.dates;
-    var folioParts  = $.kui.calendar.folios[$.kui.calendar.currFolio.folioIndex];
-    var folio       = 'fol. ' + String(folioParts[0]) + kuiRv[folioParts[1]];
-    var columns     = [];
-    var colElements = _.findWhere($.kmw, { 'element':'columns' })['group'];
-    _.each(colElements, function(ele, index) {
-      if (ele.v) { columns.push(ele.v); }
-    });
-    var canvas        = _.findWhere($.kui.manifest.sequences[0].canvases, { 'label': folio });
-    var canvasId      = canvas['@id'];
+
+    var canvas        = _.findWhere($.kui.manifest.sequences[0].canvases, { '@id': canvasId });
+    var folioName     = canvas.label.replace(/^\s*fol.*\s+/i,'');
+    var folio         = _.findWhere($.kui.calendar.folios, { 'label': folioName });
+    var annotations   = folio.annotations;
+    var dates         = folio.dates;
+
+    var columns       = kuiGetColumnNames();
+
     var canvasXOffset = Math.round(canvas['width']/10);
     var canvasYOffset = Math.round(canvas['height']/10);
-    var lineH         = Math.round((canvas['height'] - (canvasXOffset * 2))/dates.length);
+    var lineH         = Math.round((canvas['height'] - (canvasXOffset * 2))/folio.dates.length);
     var lineW         = Math.round(canvas['width'] - canvas['width']/20);
     var itemWidth     = Math.round(100/(columns.length + 2));
 
     for(var i = 0; i < dates.length; i++) {
-      var date     = $.kui.calendar.currFolio.dates[i];
+      var date     = dates[i];
       var x        = canvasXOffset;
       var y        = canvasYOffset + (i*lineH);
       var xywh     = [ x, y, lineW, lineH ].join(',');
 
       // window.kuiBuildAnnotation = function(date, folioName, xywh, itemWidth)
-      annotations.push(kuiBuildAnnotation(date, folio, xywh, itemWidth));
+      annotations.push(kuiBuildAnnotation(canvasId, date, xywh, itemWidth));
     }
     return annotations;
   };
 
   // POST the annotation in `jstr` to the the kuiAnnotationsUrl.
-  window.kuiCreateAnnotation = function(jstr) {
+  window.kuiCreateAnnotation = function(anno) {
+    var jstr = (typeof anno === 'object') ? JSON.stringify(anno) : anno;
     return $.ajax({
       type:'POST',
       url: kuiAnnotationsUrl,
@@ -685,6 +708,7 @@ $(document).ready(function(){
   window.kuiEditRow = function(cntnr) {
     var $cntnr = $(cntnr);
     var $row = $cntnr.find('div:first');
+    console.log($row);
     var date = kuiGetDate($row.attr('data-month'), $row.attr('data-day'));
     _.each($cntnr.find('span'), function(span) {
       var $span = $(span);
@@ -782,13 +806,13 @@ $(document).ready(function(){
   };
 
   // Fill the form with calendar rows.
-  window.kuiEditFolioForm = function() {
+  window.kuiEditFolioForm = function(folioIndex) {
     $('#kalendar').removeClass('col-sm-3');
     $('#kui').hide();
     var $div = $('<div>');
 
     // add the plain text data from the annotation
-    _.each($.kui.calendar.currFolio.annotations, function(anno) {
+    _.each($.kui.calendar.folios[folioIndex].annotations, function(anno) {
       $cntnr = $('<div class="row-container">');
       $cntnr.attr('id', anno['@id']);
       $cntnr.append(anno.resource.chars);
@@ -799,6 +823,27 @@ $(document).ready(function(){
 
     _.each($div.find('.row-container'), function(cntnr, dayIndex) {
       kuiEditRow(cntnr);
+    });
+
+  };
+
+  window.kuiClearAnnos = function() {
+    var annos = [];
+    var findAnnos = $.ajax({
+      url: kuiAnnotationsUrl,
+      type: 'get',
+      dataType: 'json',
+      success: function(data) {
+        annos = data.resources;
+      },
+    });
+    findAnnos.done(function() {
+      _.each(annos, function(anno) {
+        $.ajax({
+          url: anno['@id'],
+          type: 'delete',
+        });
+      });
     });
 
   };
@@ -819,8 +864,6 @@ $(document).ready(function(){
 
     mf.done(function(data) {
       // make sure we update $.kmw and submit to the manuscript service
-      kmwFormUpdate();
-      kmwSubmitEdit(ms_id);
       kuiNextFolio();
     });
   };
@@ -830,17 +873,13 @@ $(document).ready(function(){
   // ==========================================================================
 
   $.kui = {
+    'manifest': {},
+    'canvases': {},
     'mss': [],
     'calendar': {
       'folios': [],
-      'currFolio': {
-        'folioIndex': null,
-        'month': null,
-        'startDay': null,
-        'endDay': null,
-        'dates': null,
-        'annotations': [],
-      },
+      'annotations': {}, // hash of annotations keyed to canvasId
+      'currFolio': null,
       'nextFolioElements': [
         { 'element':'folioIndex', 'label':'Folio', 'v':'', 'fieldtype':'list', 'options':{} },
         { 'element':'month', 'label':'Month', 'v':'', 'fieldtype':'list', 'options':{
