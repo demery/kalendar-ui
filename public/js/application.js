@@ -7,7 +7,9 @@ $(document).ready(function() {
   $('#kal-start').on('click', function(event){
     // alert("Clicked!")
     // make sure the data is updated
+    console.log("Running kmwDataUpdate()");
     kmwDataUpdate();
+    console.log("Finished kmwDataUpdate()");
     $('#kmw-container').hide();
     var mid = $('#kmw-val-mid').val();
     kuiStartKalendar(mid);
@@ -45,7 +47,10 @@ $(document).ready(function() {
     };
   };
 
-  $.kmwWatcherId = setInterval(pollKmw, 3000);
+  $.kmwWatcherId = setInterval(pollKmw, 1000);
 
+  $('form').on('submit', function(event) {
+    return false;
+  });
 
 })

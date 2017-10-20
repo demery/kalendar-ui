@@ -9,6 +9,9 @@ $(document).ready(function(){
   var kuiAnnotationsUrl    =  kuiSCHost + '/services/anno/calendars/annotation';
   var kuiSCListUrl         =  kuiSCHost + '/services/anno/calendars/list';
   var kuiRv                = [ null, 'r', 'v' ];
+  var kuiMonthToRoman      = {
+    '1':'i', '2':'ii', '3':'iii', '4':'iiii', '5':'v', '6':'vi', '7':'vii', '8':'viii', '9':'ix', '10':'x', '11':'xi', '12':'xii'
+  };
   var kuiColorMap          = {
     'grade_black':  { name:'Black/Brown',  code:'Ni', rgb:'rgb(0, 0, 0)'},
     'grade_blue':   { name:'Blue',         code:'Li', rgb:'rgb(0, 0, 255)'},
@@ -123,6 +126,10 @@ $(document).ready(function(){
     return $select;
   };
 
+  window.kuiGetShelfmark = function() {
+    return _.findWhere($.kmw, { 'element': 'shelfmark'})['v'] || 'No shelfmark';
+  };
+
   // ==========================================================================
   // DATA RETRIEVAL
   // ==========================================================================
@@ -174,7 +181,22 @@ $(document).ready(function(){
 
   window.kuiNextFolioIndex = function() {
     var idx = kuiGetCurrFolioIndex();
-    return (idx === null || isNaN(idx)) ? 0 : idx + 1;
+
+    // if there is no current index, find the first folio without annotations
+    if (idx === null || isNaN(idx)) {
+      for (var i in kuiGetFolios()) {
+        var folio = kuiGetFolio(i);
+        // skip all folios with 1+ annotations
+        if (folio.annotations && folio.annotations.length > 0) {
+          // do nothing
+        } else {
+          return i;
+        }
+      }
+    } else {
+      // we have a current index; return its increment
+      return Number(idx) + 1;
+    }
   };
 
   window.kuiGetCurrFolioIndex = function() {
@@ -182,7 +204,7 @@ $(document).ready(function(){
   };
 
   window.kuiSetCurrFolioIndex = function(folioIndex) {
-    $.kui.calendar.currFolioIndex = folioIndex;
+    $.kui.calendar.currFolioIndex = Number(folioIndex);
   };
 
   // get the folio
@@ -205,7 +227,7 @@ $(document).ready(function(){
   };
 
   window.kuiFindColumnElement = function(colName) {
-    return _.findWhere(kuiGetColumnElements(), { 'element': colName });
+   return _.findWhere(kuiGetColumnElements(), { 'element': colName });
   };
 
   window.kuiGetColumnElements = function() {
@@ -227,11 +249,19 @@ $(document).ready(function(){
     return $.kui.calendar.nextFolioElements;
   };
 
+  window.kuiGetCanvases = function() {
+    if ($.kui.manifest && key($.kui.manifest).length > 0) {
+      return $.kui.manifest.sequences[0].canvases;
+    } else {
+      return [];
+    }
+  };
+
   // find the canvas by `folio` name; which should be something like 'fol. 1r'
   window.kuiGetCanvas = function(folioIndex) {
     var folioName = kuiGetFolioName(folioIndex);
     // console.log("kuiGetCanvas: folioName", folioName);
-    if (folioName && $.kui.manifest.sequences[0]) {
+    if (folioName && $.kui.manifest) {
       return _.findWhere($.kui.manifest.sequences[0].canvases, { 'label': folioName });
     }
   };
@@ -255,7 +285,7 @@ $(document).ready(function(){
   //
   //     http://165.123.34.221/services/anno/calendars/annotation/ab0ec9098-9aaf-4628-b205-69250d77cd44.json
   //
-  window.kuiGetAnnotation = function(anno_id) {
+  window.kuiFetchAnnotation = function(anno_id) {
     var anno = kuiFindAnnotation(anno_id);
     var currFolio = kuiCurrFolio();
     if (!anno) {
@@ -274,7 +304,7 @@ $(document).ready(function(){
         }
       });
       deferred.done(function(){
-        return kuiGetAnnotation(anno_id);
+        return kuiFetchAnnotation(anno_id);
       });
     }
     return anno;
@@ -282,10 +312,15 @@ $(document).ready(function(){
 
   // Get the saints server date object for `month` and `day`; locally or from
   // the web.
-  window.kuiGetDate = function(month, day) {
+  window.kuiGetDate = function(month, day, callback) {
     var currFolio = kuiCurrFolio();
+    console.log('currFolio.dates', JSON.stringify(currFolio.dates));
     var date =  _.findWhere(currFolio.dates, { 'month': Number(month), 'day': Number(day) } );
-    if (!date) {
+    console.log('kuiGetDate date', date);
+    if (date) {
+      callback(date);
+    } else {
+
       var deferred = $.ajax({
         url: kuiSaintsUrl + '/api/date/' + month + '/' + day,
         dataType: 'json',
@@ -295,17 +330,14 @@ $(document).ready(function(){
             currFolio['dates'] = [];
           }
           currFolio['dates'].push(data);
+          kuiGetDate(month,day,callback);
         },
         error: function(data) {
           // console.log('problem', data);
         }
       });
 
-      deferred.done(function() {
-        return kuiGetDate(month, day);
-      });
     }
-    return date;
   };
 
   // ==========================================================================
@@ -330,6 +362,7 @@ $(document).ready(function(){
     });
 
     deferred.done(function() {
+      $div.append('<h3>Select a manuscript</h3>');
       var $table = $('<table class="table"><tbody></tbody></table>');
       $div.append($table);
       $table.append('<tr><th>ID</th><th>Shelfmark</th><th>Name</th></tr>');
@@ -343,7 +376,7 @@ $(document).ready(function(){
       });
     });
 
-    $('body').prepend($div);
+    $('#kmw-container').prepend($div);
   };
 
   // Create all the folios for this calendar using the starting and ending
@@ -364,6 +397,7 @@ $(document).ready(function(){
     //
     //       [ [4,2], [5,1], [5,2], [6,1], [6,2], ..., [16,1] ]
     //
+    console.log("Creating folios");
     var folio_sides      = _.findWhere($.kmw, { 'element': 'folio_sides'})['group']
     var folio_start_num  = _.findWhere(folio_sides, { 'element': 'folio_start_num'})['v'];
     var folio_start_side = _.findWhere(folio_sides, { 'element': 'folio_start_side'})['v'];
@@ -382,28 +416,39 @@ $(document).ready(function(){
       var last = _.last(folios), num = last['n'][0], side = last['n'][1];
       // if side is 2 return [num++, 1]; if side is 1 return [num, 2]
       var next = (side == 2) ? ([num + 1, 1]) : ([num, 2]);
-      fol = { 'n': next, 'label': (String(num) + kuiRv[next[1]]) };
+      fol = { 'n': next, 'label': (String(next[0]) + kuiRv[next[1]]) };
       _.extend(fol, _.clone(folioFields));
       folios.push(fol);
     }
     kuiSetFolios(folios);
+    console.log("kuiCreateFolios created folios");
   };
 
   // Call kuiFetchManifest for the downloaded manuscript if
   // `sc_cal_manifest_id1` is present or, if it is not, calls
   // kuiCreateManifest to create a  new manifest.
-  window.kuiPrepManifest = function () {
+  window.kuiPrepManifest = function (callback) {
     var sc_cal_manifest_id = _.findWhere($.kmw, { 'element': 'sc_cal_manifest_id'})['v'];
 
+    console.log('kuiPrepManifest sc_cal_manifest_id', sc_cal_manifest_id);
     if (sc_cal_manifest_id) {
       if (kuiGetManifest() && kuiGetManifest()['@id'] === sc_cal_manifest_id) {
-        // do nothing
+        console.log('kuiPrepManifest running callback');
+        callback();
       } else {
-        return kuiFetchManifest(sc_cal_manifest_id);
+        console.log('kuiPrepManifest fetching manifest')
+        var deferred = kuiFetchManifest(sc_cal_manifest_id);
+        deferred.done(function() {
+          kuiPrepManifest(callback);
+        });
       }
     } else {
-      // console.log('Creating manifest');
-      return kuiCreateManifest();
+      console.log('kuiPrepManifest Creating manifest');
+      var deferred = kuiCreateManifest();
+      deferred.done(function() {
+        kuiPrepManifest(callback);
+      });
+
     }
   };
 
@@ -489,7 +534,7 @@ $(document).ready(function(){
 
   // List edited folios
   window.kuiListEditedFolios = function() {
-    kuiPrepManifest();
+    // kuiPrepManifest();
     var canvases = kuiGetManifest().sequences[0].canvases;
     for(var i = 0; i < canvases.length; i++) {
       var cnvsId = canvases[i]['@id'];
@@ -497,11 +542,41 @@ $(document).ready(function(){
     }
   };
 
+  window.kuiListFolios = function() {
+    var $div = $('<div id="kui-folio-list" style="width: 300px;">');
+    $div.append('<h3>Select a folio</h3>');
+    var $table = $('<table class="table"><tbody></tbody></table>');
+    $div.append($table);
+    $table.append('<tr><th>Folio</th><th>Dates</th></tr>');
+    _.each(kuiGetFolios(), function(folio, folioIndex) {
+      if (folio.annotations.length > 0) {
+        console.log(JSON.stringify(Object.keys(folio)));
+        var $tr = $('<tr data-folioIndex="' + folioIndex + '">');
+        var cellVals = [ folio.label, folio.startDay + '-' + folio.endDay + '.' + kuiMonthToRoman[folio.month] ];
+        _.each(cellVals, function(val) {
+          $tr.append('<td><a href="#" title="Go to folio ' + folio.label + '" class="kui-folio-link">' + val  + '</a></td>');
+        });
+        $table.append($tr);
+      }
+    });
+
+    $('#kalendar').prepend($div);
+
+    $('#kui-folio-list').on('click', '.kui-folio-link', function() {
+      var folioIndex = $(this).closest('tr').attr('data-folioIndex');
+      kuiSetCurrFolioIndex(folioIndex);
+      kuiEditFolioForm(folioIndex);
+      $('#kui-folio-list').remove();
+    });
+
+    $('#kalendar').show();
+  };
+
   // Cue up the next folio form
   window.kuiNextFolio = function() {
     // get current folio index
     var nextIndex = kuiNextFolioIndex();
-
+    kuiListFolios();
     // console.log("nextIndex", nextIndex);
     if (nextIndex < kuiGetFolios().length) {
       kuiSetCurrFolioIndex(nextIndex);
@@ -518,6 +593,12 @@ $(document).ready(function(){
     var folioNums = _.map(kuiGetFolios(), function(fol) {
       return fol.label;
     });
+
+    $form = $('<form id="kui" role="form"><div id="kui-messages" class="alert"></div><div id="kui-fields"></div></form>');
+    $('#kalendar').append($form);
+    if (! $('#kalendar').hasClass('col-sm-3')) {
+      $('#kalendar').addClass('col-sm-3');
+    }
 
     // create the form elements
     elements = kuiGetNextFolioElements();
@@ -579,7 +660,10 @@ $(document).ready(function(){
     });
 
     $('#nextFol-edit-btn').on('click', function() {
+      $(this).val('Preparing folio...').prop('disabled', true);
+
       kuiUpdateCurrFolio();
+      $('#kui-kalendar').empty();
       kuiStartFolio(kuiGetCurrFolioIndex());
     });
     $('#kalendar').show();
@@ -622,6 +706,20 @@ $(document).ready(function(){
     // console.log(JSON.stringify(kuiCurrFolio()));
   };
 
+  window.kuiFillFolioDetails = function(folioIndex) {
+    var folio = kuiGetFolio(folioIndex);
+
+    if (folio.annotations.length > 0) {
+      var first      = folio.annotations[0];
+      var last       = folio.annotations[folio.annotations.length - 1];
+
+      var folioDates = [ kuiExtractDate(first), kuiExtractDate(last) ];
+      folio.month    = folioDates[0].month;
+      folio.startDay = folioDates[0].day;
+      folio.endDay   = folioDates[1].day;
+    }
+  };
+
   // ==========================================================================
   // ANNOTATIONS
   // ==========================================================================
@@ -652,7 +750,7 @@ $(document).ready(function(){
         for(var i = 0; i < annos.length; i++){
           deferreds.push(kuiCreateAnnotation(annos[i]));
         }
-        // When all the annotations have been created, reinvoke kuiPrepAnnotations
+        // When all the annotationshave been created, reinvoke kuiPrepAnnotations
         // http://stackoverflow.com/questions/14777031/what-does-when-apply-somearray-do
         $.when.apply($, deferreds).done(function() {
           kuiPrepAnnotations(canvasId, folioIndex, n - 1);
@@ -673,12 +771,20 @@ $(document).ready(function(){
       success: function(data) {
         kuiSetAnnotations(folioIndex, data['resources']);
         kuiSortAnnotations(folioIndex);
+        kuiFillFolioDetails(folioIndex);
       },
       error: function(data) {
         kuiSetAnnotations(folioIndex, []);
         // console.log('error', data);
       }
     });
+  };
+
+  window.kuiExtractDate = function(anno) {
+    console.log(anno);
+    var $anno = $(anno.resource.chars);
+
+    return { month: $anno.attr('data-month'), day: $anno.attr('data-day') };
   };
 
   window.kuiBuildAnnotation = function(canvasId, date, xywh, itemWidth) {
@@ -698,7 +804,7 @@ $(document).ready(function(){
       var spanId  = 'val-' + monthDay + '-' + col;
       var v       = '';
       if (element.date_attr) {
-        vi = kuiGetProp(date, element.date_attr) || '';
+        v = kuiGetProp(date, element.date_attr) || '';
       }
       spans += '<span id="' + spanId + '" data-type="' + col + '" data-value="' + v + '" style="display:inline-block;width:' + colWidth + '%;">' + v + '</span>';
     });
@@ -729,7 +835,7 @@ $(document).ready(function(){
 
     var canvas        = _.findWhere(kuiGetManifest().sequences[0].canvases, { '@id': canvasId });
     var folioName     = canvas.label.replace(/^\s*fol.*\s+/i,'');
-    var folio         = _.findWhere(kuiGetFolio(), { 'label': folioName });
+    var folio         = _.findWhere(kuiGetFolios(), { 'label': folioName });
     var annotations   = folio.annotations;
     var dates         = folio.dates;
 
@@ -775,61 +881,66 @@ $(document).ready(function(){
   window.kuiEditRow = function(cntnr) {
     var $cntnr = $(cntnr);
     var $row = $cntnr.find('div:first');
-    // console.log($row);
-    var date = kuiGetDate($row.attr('data-month'), $row.attr('data-day'));
-    _.each($cntnr.find('span'), function(span) {
-      var $span = $(span);
-      $span.empty();
-      var col = $span.attr('data-type');
-      var val = $span.attr('data-value');
-      var $select = $('<select name="' + col + '"/>');
-      $select.append('<option value="0"></option>');
-      if (col === 'text') {
-        var saints = [];
-        if(date.secondary_saints) {
-          saints = date.primary_saints.concat(date.secondary_saints);
-        } else {
-          saints = date.primary_saints;
-        }
 
-        _.each(saints, function(saint) {
-          var saintName = saint['name'];
-          if (saintName.indexOf('|') >= 0) {
-            saintName = saintName.slice(0, saintName.indexOf('|')).trim();
+    console.log($('<div>').append($row.clone()).html());
+    var month = $row.attr('data-month');
+    var day = $row.attr('data-day');
+
+    kuiGetDate($row.attr('data-month'), $row.attr('data-day'), function(date) {
+      _.each($cntnr.find('span'), function(span) {
+        var $span = $(span);
+        $span.empty();
+        var col = $span.attr('data-type');
+        var val = $span.attr('data-value');
+        var $select = $('<select name="' + col + '"/>');
+        $select.append('<option value="0"></option>');
+        if (col === 'text') {
+          var saints = [];
+          if(date.secondary_saints) {
+            saints = date.primary_saints.concat(date.secondary_saints);
+          } else {
+            saints = date.primary_saints;
           }
-          $select.append('<option value="' + saint['@id'] + '">' + saintName + '</option>');
-          $select.css('width', '200px');
-        });
-        $span.append($select);
-        $span.append(kuiGradingSelect());
-        if ($span.css('color')) {
-          $span.find('select[name=grade]').val($span.css('color'));
+
+          _.each(saints, function(saint) {
+            var saintName = saint['name'];
+            if (saintName.indexOf('|') >= 0) {
+              saintName = saintName.slice(0, saintName.indexOf('|')).trim();
+            }
+            $select.append('<option value="' + saint['@id'] + '">' + saintName + '</option>');
+            $select.css('width', '200px');
+          });
+          $span.append($select);
+          $span.append(kuiGradingSelect());
+          if ($span.css('color')) {
+            $span.find('select[name=grade]').val($span.css('color'));
+          }
+        } else {
+          var ele = kuiFindColumnElement(col);
+          // console.log('kuiEditRow ele', JSON.stringify(ele));
+          _.each(ele.options, function(v, k) {
+            $select.append('<option value="' + k + '">' + v + '</option>');
+          });
+          $span.append($select);
         }
-      } else {
-        var ele = kuiFindColumnElement(col);
-        // console.log('kuiEditRow ele', JSON.stringify(ele));
-        _.each(ele.options, function(v, k) {
-          $select.append('<option value="' + k + '">' + v + '</option>');
+
+        if (val) { $select.val(val); }
+
+        $select.on('change', function(){
+          $(this).closest('span').attr('data-value', $(this).val());
         });
-        $span.append($select);
-      }
 
-      if (val) { $select.val(val); }
+      });
+      $row.find('input[type=button]').remove();
+      $row.append('<input type="button" value="Save" style="width:40px;" class="btn btn-xs">');
 
-      $select.on('change', function(){
-        $(this).closest('span').attr('data-value', $(this).val());
+      $cntnr.on('change', 'select[name=grade]', function(){
+        $(this).closest('span').css('color', $(this).val());
       });
 
-    });
-    $row.find('input[type=button]').remove();
-    $row.append('<input type="button" value="Save" style="width:40px;" class="btn btn-xs">');
-
-    $cntnr.on('change', 'select[name=grade]', function(){
-      $(this).closest('span').css('color', $(this).val());
-    });
-
-    $cntnr.on('click', '[type=button][value=Save]', function() {
-      kuiSaveRow($(this).closest('.row-container'));
+      $cntnr.on('click', '[type=button][value=Save]', function() {
+        kuiSaveRow($(this).closest('.row-container'));
+      });
     });
   };
 
@@ -852,7 +963,7 @@ $(document).ready(function(){
 
     // get the new annotation text
     chars = $cntnr.html();
-    anno = kuiGetAnnotation(anno_id);
+    anno = kuiFetchAnnotation(anno_id);
     anno.resource.chars = chars;
     jstr = JSON.stringify(anno);
 
@@ -875,9 +986,16 @@ $(document).ready(function(){
 
   // Fill the form with calendar rows.
   window.kuiEditFolioForm = function(folioIndex) {
-    $('#kalendar').removeClass('col-sm-3');
-    $('#kui').hide();
-    var $div = $('<div>');
+    $('#kalendar').removeClass('col-sm-3').empty();
+    var $h3       = $('<h3>');
+    var shelfmark = kuiGetShelfmark();
+    var folio     = kuiGetFolio(kuiGetCurrFolioIndex());
+    var folioName = 'fol. ' + folio.label;
+    var dates     = folio.startDay + '-' + folio.endDay + '.' + kuiMonthToRoman[folio.month];
+    var $div      = $('<div style="">');
+
+    $h3.append([shelfmark, folioName, dates].join(', '));
+    $div.append($h3);
 
     // add the plain text data from the annotation
     _.each(kuiGetAnnotations(folioIndex), function(anno) {
@@ -891,6 +1009,13 @@ $(document).ready(function(){
 
     _.each($div.find('.row-container'), function(cntnr, dayIndex) {
       kuiEditRow(cntnr);
+    });
+
+    $div.append('<input type="button" id="kui-nextFol-btn" value="Next folio" class="btn btn-default">');
+
+    $('#kui-nextFol-btn').on('click', function(event){
+      $('#kalendar').empty();
+      kuiNextFolio();
     });
 
   };
@@ -923,18 +1048,29 @@ $(document).ready(function(){
   // Start the kalendar proces; get or create the manifest; update the record
   // on the manuscripts server.
   window.kuiStartKalendar = function(ms_id) {
+    console.log("Start the kalendar");
+    console.log("Going to create folios");
     kuiCreateFolios();
-    var mf = kuiPrepManifest();
+    console.log("Going to prepmanifest");
+    kuiPrepManifest(function (){
+      // Set up the form
+      $form = $('<form id="kui" role="form"><div id="kui-messages" class="alert"></div><div id="kui-fields"></div></form>');
+      $('#kalendar').append($form);
 
-    // Set up the form
-    $form = $('<form id="kui" role="form"><div id="kui-messages" class="alert"></div><div id="kui-fields"></div></form>');
-    $('#kalendar').append($form);
+      var deferreds = [];
 
-    mf.done(function(data) {
+      for (var i = 0; i < kuiGetFolios().length; i++) {
+        var canvas = kuiGetCanvas(i);
+        var canvasId = canvas['@id'];
+        deferreds.push(kuiFetchAnnotations(i, canvasId));
+      }
       // make sure we update $.kmw and submit to the manuscript service
-      kuiNextFolio();
+      $.when.apply($, deferreds).done(function() {
+        kuiNextFolio();
+      });
     });
   };
+
 
   // ==========================================================================
   // DATA CONTAINER & CONFIG
